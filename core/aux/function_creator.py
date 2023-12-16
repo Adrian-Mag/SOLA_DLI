@@ -6,6 +6,10 @@ from scipy.interpolate import interp1d
 
 from core.aux.domains import Domain, HyperParalelipiped
 
+def as_function(values: np.ndarray, domain: np.ndarray) -> callable:
+    if np.array_equal(values.shape, domain.shape):
+        return  interp1d(domain, values, kind='linear', fill_value='extrapolate')
+
 class FunctionDrawer:
     def __init__(self, domain:HyperParalelipiped, min_y:float, max_y:float):
         self.points = []
@@ -29,8 +33,13 @@ class FunctionDrawer:
         self.points = [(x, y) for x, y in self.points if x >= self.domain.bounds[0][0] and x <= self.domain.bounds[0][1]]
 
         self.raw_domain, self.values = zip(*self.points)
-        self.raw_domain, self.values = np.array(self.raw_domain), np.array(self.values)
 
+        # Find unique elements in self.raw_domain and get corresponding values
+        unique_raw_domain, indices = np.unique(np.array(self.raw_domain), return_index=True)
+        unique_values = np.array(self.values)[indices]
+
+        self.raw_domain = unique_raw_domain.copy()
+        self.values = unique_values.copy()
 
     def on_click(self, event):
         if event.xdata is not None and event.ydata is not None:
@@ -49,7 +58,7 @@ class FunctionDrawer:
 
     def plot_function(self):
         if self.points is not None:
-            plt.plot(self.domain, self.values)
+            plt.plot(self.raw_domain, self.values)
             plt.title('Function')
             plt.xlabel('x')
             plt.ylabel('y')
@@ -64,8 +73,8 @@ class FunctionDrawer:
         with open(filename, 'r') as file:
             self.points = [tuple(map(float, line.strip().split(','))) for line in file]
 
-        self.domain, self.values = zip(*self.points)
-        self.domain, self.values = np.array(self.domain), np.array(self.values)
+        self.raw_domain, self.values = zip(*self.points)
+        self.raw_domain, self.values = np.array(self.domain), np.array(self.values)
 
     def interpolate_function(self):
         self.interpolated_values = interp1d(self.raw_domain, self.values, kind='linear', fill_value='extrapolate')(self.domain.mesh)
