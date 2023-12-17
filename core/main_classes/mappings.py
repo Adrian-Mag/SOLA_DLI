@@ -9,7 +9,7 @@ class Mapping(ABC):
         pass
 
 class IntegralMapping():
-    def __init__(self, domain: L2Space, codomain: RN, kernels: np.ndarray = None) -> None:
+    def __init__(self, domain: L2Space, codomain: RN, kernels: dict = None) -> None:
         self.domain = domain
         self.codomain = codomain
         self.kernels = kernels

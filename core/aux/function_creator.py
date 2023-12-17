@@ -18,6 +18,7 @@ class FunctionDrawer:
         self.drawing = False  # Track whether the mouse button is pressed
     
     def draw_function(self):
+        self.points = []
         self.fig, self.ax = plt.subplots()
         length = self.domain.total_measure
         self.ax.set_xlim(self.domain.bounds[0][0] - length*0.1, self.domain.bounds[0][1] + length*0.1)
@@ -26,7 +27,7 @@ class FunctionDrawer:
         
         self.fig.canvas.mpl_connect('button_press_event', self.on_click)
         self.fig.canvas.mpl_connect('motion_notify_event', self.on_motion)
-        
+        self.fig.canvas.mpl_connect('button_release_event', self.on_release)
         plt.show()
 
         # Filter points outside x_domain
@@ -42,12 +43,8 @@ class FunctionDrawer:
         self.values = unique_values.copy()
 
     def on_click(self, event):
-        if event.xdata is not None and event.ydata is not None:
-            self.points.append((event.xdata, event.ydata))
-            self.ax.plot(event.xdata, event.ydata, 'ro')
-            self.fig.canvas.draw()
-            self.drawing = True
-
+        if event.button == 1:  # Check if the left mouse button is pressed
+            self.drawing = True  # Start drawing when left click is pressed
 
     def on_motion(self, event):
         if self.drawing and event.xdata is not None and event.ydata is not None:
@@ -55,6 +52,10 @@ class FunctionDrawer:
             self.ax.plot(event.xdata, event.ydata, 'ro')
             self.ax.plot([self.points[-2][0], event.xdata], [self.points[-2][1], event.ydata], 'b-')
             self.fig.canvas.draw()
+
+    def on_release(self, event):
+        if event.button == 1:  # Check if the left mouse button is released
+            self.drawing = False  # Stop drawing when left click is released
 
     def plot_function(self):
         if self.points is not None:

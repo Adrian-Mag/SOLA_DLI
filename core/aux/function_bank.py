@@ -2,6 +2,9 @@ import numpy as np
 from core.aux.domains import Domain, HyperParalelipiped
 from abc import ABC, abstractmethod
 from typing import Union, Callable
+from scipy.interpolate import interp1d
+
+import random
 
 class Function(ABC):
     @abstractmethod
@@ -9,6 +12,71 @@ class Function(ABC):
         pass
 
 # 1D FUNCTIONS 
+
+class Random(Function):
+    def __init__(self, domain: Domain, seed: float, continuous: bool=False) -> None:
+        super().__init__()
+        self.seed = seed
+        self.domain = domain
+        self.continuous = continuous
+        self.function = self._create_function()
+
+    def _create_function(self):
+        if self.seed is None:
+            self.seed = np.random.randint(0,10000)
+        random.seed(self.seed)
+        
+        if self.domain.dimension == 1:
+            # Random number of partitions
+            if self.continuous is True:
+                segments = 1
+            else:
+                segments = random.randint(1,10)
+            values = np.zeros_like(self.domain.mesh)
+            inpoints = [random.uniform(self.domain.bounds[0][0], self.domain.bounds[0][1]) for _ in range(segments-1)]
+            allpoints = sorted(list(self.domain.bounds[0]) + inpoints)
+            partitions = [(allpoints[i], allpoints[i+1]) for i in range(len(allpoints)-1)]
+
+            for _, partition in enumerate(partitions):
+                
+                # Random position of the x-shift in the function
+                x_shift = random.uniform(partition[0], partition[1])
+                # Random coefficients
+                a0 = random.uniform(-1,5)
+                a1 = random.uniform(-1,5)
+                a2 = random.uniform(-1,5)
+                a3 = random.uniform(-1,5)
+                stretch = np.max(self.domain.mesh)
+                model = a0 + a1*(self.domain.mesh + x_shift)/stretch + a2*((self.domain.mesh + x_shift)/stretch)**2 + a3*((self.domain.mesh + x_shift)/stretch)**3
+                model[self.domain.mesh<partition[0]] = 0
+                model[self.domain.mesh>partition[1]] = 0
+
+                values += model
+            return interp1d(self.domain.mesh, values, 
+                            kind='linear', fill_value='extrapolate')
+    
+    def evaluate(self, r, check_if_in_domain=True):
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            return r[in_domain], self.function(r[in_domain])
+        else:
+            return r, self.function(r)
+
+class Interpolation(Function):
+    def __init__(self, values, raw_domain, domain: Domain) -> None:
+        super().__init__()
+        self.values = values
+        self.raw_domain = raw_domain
+        self.domain = domain
+
+    def evaluate(self, r, check_if_in_domain=True):
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            return r[in_domain], interp1d(self.raw_domain, self.values, 
+                                          kind='linear', fill_value='extrapolate')(r[in_domain])
+        else:
+            return r, interp1d(self.raw_domain, self.values, 
+                                kind='linear', fill_value='extrapolate')(r)
 
 class ComplexExponential_1D(Function):
     """
@@ -71,7 +139,6 @@ class Gaussian_1D(Function):
         else:
             gaussian_vector = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
             return r, gaussian_vector / self.normalization
-
 
 class Moorlet_1D(Function):
     """
@@ -141,7 +208,6 @@ class Haar_1D(Function):
             scaled_domain = (r - self.center) / self.width
             haar_vector = 4 * np.where((scaled_domain >= -0.5) & (scaled_domain < 0.5), np.sign(scaled_domain), 0) / self.width**2
             return r, haar_vector
-
 
 class Ricker_1D(Function):
     """

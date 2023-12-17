@@ -42,7 +42,7 @@ class HyperParalelipiped(Domain):
         self.dimension = len(bounds)
         self.bounds = bounds
         self.fineness = fineness
-        self.axes, self.mesh = self.create_mesh()
+        self.axes, self.mesh = self._create_mesh()
 
     def dynamic_mesh(self, fineness):
         axes = [np.linspace(bound[0], bound[1], fineness) for bound in self.bounds]
@@ -52,7 +52,7 @@ class HyperParalelipiped(Domain):
             mesh = np.meshgrid(*axes)
         return mesh
 
-    def create_mesh(self):
+    def _create_mesh(self):
         """
         Creates the discretized frame for the domain.
 
@@ -97,10 +97,10 @@ class HyperParalelipiped(Domain):
         if self.dimension == 1:
             if isinstance(values, (int, float)):
                 return (values >= self.bounds[0][0] and values <= self.bounds[0][1])  
-            elif values.ndim == 1:
+            elif isinstance(values, np.ndarray) and values.ndim == 1:
                 return ((values >= self.bounds[0][0]) & (values <= self.bounds[0][1]))
             else:
-                raise Exception('Wrong dimension')
+                raise Exception('Wrong dimension or type')
         else:
             if values.ndim == 1:
                 if len(values) == self.dimension:
@@ -109,7 +109,7 @@ class HyperParalelipiped(Domain):
                     else:
                         return False
                 else: 
-                    raise Exception('Wrong dimension')
+                    raise Exception('Wrong dimension or type')
             else:
                 values_in_domain = []
                 for value in values:
@@ -120,7 +120,7 @@ class HyperParalelipiped(Domain):
                             values_in_domain.append(False)
                     else:
                         values_in_domain.append(False)
-                        raise Exception('Wrong dimension')
+                        raise Exception('Wrong dimension or type')
                 return values_in_domain
 
     @property
