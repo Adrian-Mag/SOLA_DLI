@@ -29,6 +29,11 @@ class Domain(ABC):
         - float: Total measure of the domain.
         """
         pass
+    
+    @abstractmethod
+    def __eq__(self, other):
+        pass
+
 
 class HyperParalelipiped(Domain):
     def __init__(self, bounds: list, fineness: int) -> None:
@@ -43,6 +48,22 @@ class HyperParalelipiped(Domain):
         self.bounds = bounds
         self.fineness = fineness
         self.axes, self.mesh = self._create_mesh()
+
+    def __eq__(self, other):
+        """
+        Checks if two HyperParalelipiped instances are equal.
+
+        Args:
+        - other (HyperParalelipiped): Another instance of HyperParalelipiped to compare.
+
+        Returns:
+        - bool: True if the instances are equal, False otherwise.
+        """
+        if isinstance(other, HyperParalelipiped):
+            # Check if the bounds are identical, including order
+            if self.bounds == other.bounds:
+                return True
+        return False
 
     def dynamic_mesh(self, fineness):
         axes = [np.linspace(bound[0], bound[1], fineness) for bound in self.bounds]

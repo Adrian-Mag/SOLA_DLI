@@ -11,7 +11,116 @@ class Function(ABC):
     def evaluate(self, r, check_if_in_domain=True):
         pass
 
+    def is_compatible_with(self, other):
+        if isinstance(other, Function):
+            if self.domain == other.domain:
+                return True
+            else:
+                raise Exception('The two functions have different domains')
+        else:
+            raise Exception('The other function is not of type Function')
+
+    def __rmul__(self, other):
+        return self.__mul__(other)
+
+    def __mul__(self, other):
+        if isinstance(other, (float, int)):
+            return _ScaledFunction(self, other)
+        elif self.is_compatible_with(other):
+            return _ProductFunction(self, other)
+
+    def __add__(self, other):
+        if self.is_compatible_with(other):
+            return _SumFunction(self, other)
+    
+    def __sub__(self, other):
+        if self.is_compatible_with(other):
+            return _SubtractFunction(self, other)
+        
+    def __truediv__(self, other):
+        if self.is_compatible_with(other):
+            return _DivideFunction(self, other)
+
 # 1D FUNCTIONS 
+class _ScaledFunction(Function):
+    def __init__(self, function: Function, scalar: float):
+        super().__init__()
+        self.function = function
+        self.scalar = scalar
+        self.domain = function.domain
+
+    def evaluate(self, r, check_if_in_domain=True):
+        eval_function = self.function.evaluate(r, check_if_in_domain)
+        return eval_function[0], eval_function[1] * self.scalar
+
+class _DivideFunction(Function):
+    def __init__(self, function1: Function, function2: Function) -> None:
+        super().__init__()
+        self.function1 = function1
+        self.function2 = function2
+        self.domain = function1.domain
+
+    def evaluate(self, r, check_if_in_domain=True):
+        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        eval2 = self.function2.evaluate(r, check_if_in_domain)
+        return eval1[0], eval1[1] / eval2[1]
+
+class _SubtractFunction(Function):
+    def __init__(self, function1: Function, function2: Function) -> None:
+        super().__init__()
+        self.function1 = function1
+        self.function2 = function2
+        self.domain = function1.domain
+
+    def evaluate(self, r, check_if_in_domain=True):
+        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        eval2 = self.function2.evaluate(r, check_if_in_domain)
+        return eval1[0], eval1[1] - eval2[1]
+
+class _SumFunction(Function):
+    def __init__(self, function1: Function, function2: Function) -> None:
+        super().__init__()
+        self.function1 = function1
+        self.function2 = function2
+        self.domain = function1.domain
+
+    def evaluate(self, r, check_if_in_domain=True):
+        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        eval2 = self.function2.evaluate(r, check_if_in_domain)
+        return eval1[0], eval1[1] + eval2[1]
+
+class _ProductFunction(Function):
+    def __init__(self, function1: Function, function2: Function) -> None:
+        super().__init__()
+        self.function1 = function1
+        self.function2 = function2
+        self.domain = function1.domain
+
+    def evaluate(self, r, check_if_in_domain=True):
+        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        eval2 = self.function2.evaluate(r, check_if_in_domain)
+        return eval1[0], eval1[1] * eval2[1]
+
+class Constant(Function):
+    """
+    Compute the constant function over a given domain.
+
+    Args:
+    - domain (HyperParalelipiped): Array representing the domain for computation.
+
+    Returns:
+    - numpy.ndarray: Computed Haar wavelet function values over the domain.
+    """
+    def __init__(self, domain: HyperParalelipiped):
+        super().__init__()
+        self.domain = domain
+
+    def evaluate(self, r, check_if_in_domain=True):
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            return r[in_domain], np.ones_like(r[in_domain])
+        else:
+            return r, np.ones_like(r)
 
 class Random(Function):
     def __init__(self, domain: Domain, seed: float, continuous: bool=False) -> None:
@@ -56,6 +165,8 @@ class Random(Function):
                             kind='linear', fill_value='extrapolate')
     
     def evaluate(self, r, check_if_in_domain=True):
+        if isinstance(r, (float, int)):
+            r = np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             return r[in_domain], self.function(r[in_domain])
@@ -102,6 +213,189 @@ class ComplexExponential_1D(Function):
         else:
             fourier_vector = np.exp(-2 * np.pi * self.frequency * 1j * r / self.domain.total_measure) / self.domain.total_measure
             return r, fourier_vector
+
+class Polynomial_1D(Function):
+    def __init__(self, domain: HyperParalelipiped, order, min_val, max_val):
+        super().__init__()
+        self.order = order
+        self.min_val = min_val
+        self.max_val = max_val
+        self.domain = domain
+        self.coefficients = self.generate_random_coefficients()
+
+    def generate_random_coefficients(self):
+        if self.order < 0:
+            raise ValueError("The order of the polynomial must be non-negative.")
+
+        # Generate random coefficients within the specified range
+        coefficients = np.random.uniform(self.min_val, self.max_val, self.order + 1)
+
+        # Set some coefficients to zero to introduce more variation
+        num_zero_coefficients = np.random.randint(1, self.order + 1)
+        zero_indices = np.random.choice(range(self.order + 1), num_zero_coefficients, replace=False)
+        coefficients[zero_indices] = 0
+
+        return coefficients
+
+    def evaluate(self, r, check_if_in_domain=True):
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            poly_function = np.poly1d(self.coefficients)
+            return r[in_domain], poly_function(r[in_domain])
+        else:
+            poly_function = np.poly1d(self.coefficients)
+            return r, poly_function(r)
+
+class SinusoidalPolynomial_1D(Function):
+    def __init__(self, domain: HyperParalelipiped, order, min_val, max_val, min_f, max_f, seed):
+        super().__init__()
+        self.order = order
+        self.min_val = min_val
+        self.max_val = max_val
+        self.min_f = min_f
+        self.max_f = max_f
+        self.seed = seed
+        self.domain = domain
+        self.coefficients, self.frequencies, self.phases = self.generate_random_parameters()
+
+    def generate_random_parameters(self):
+        if self.order < 0:
+            raise ValueError("The order of the polynomial must be non-negative.")
+
+        np.random.seed(self.seed)
+
+        # Generate random coefficients within the specified range
+        coefficients = np.random.uniform(self.min_val, self.max_val, self.order + 1)
+
+        # Generate random frequencies and phases for the sinusoidal functions
+        frequencies = np.random.uniform(self.min_f, self.max_f, self.order + 1)
+        phases = np.random.uniform(0, 2 * np.pi, self.order + 1)
+
+        return coefficients, frequencies, phases
+
+    def poly_with_sinusoidal(self, x):
+            result = 0
+            for i in range(self.order + 1):
+                term = self.coefficients[i] * np.sin(self.frequencies[i] * x + self.phases[i])
+                result += term
+            return result
+
+    def evaluate(self, r, check_if_in_domain=True):
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            return r[in_domain], self.poly_with_sinusoidal(r[in_domain])
+        else:
+            return r, self.poly_with_sinusoidal(r)
+
+class SinusoidalGaussianPolynomial_1D(Function):
+    def __init__(self, domain: HyperParalelipiped, order, min_val, max_val, min_f, max_f, spread, seed=None):
+        super().__init__()
+        self.order = order
+        self.min_val = min_val
+        self.max_val = max_val
+        self.min_f = min_f
+        self.max_f = max_f
+        self.spread = spread
+        self.seed = seed
+        self.domain = domain
+        self.coefficients, self.frequencies, self.phases = self.generate_random_parameters()
+        self.mean, self.std_dev = self.generate_gaussian_parameters()
+
+    def generate_random_parameters(self):
+        if self.order < 0:
+            raise ValueError("The order of the polynomial must be non-negative.")
+        
+        if self.seed is not None:
+            np.random.seed(self.seed)
+
+        # Generate random coefficients within the specified range
+        coefficients = np.random.uniform(self.min_val, self.max_val, self.order + 1)
+
+        # Generate random frequencies and phases for the sinusoidal functions
+        frequencies = np.random.uniform(self.min_f, self.max_f, self.order + 1)
+        phases = np.random.uniform(0, 2 * np.pi, self.order + 1)
+
+        return coefficients, frequencies, phases
+
+    def generate_gaussian_parameters(self):
+        # Generate Gaussian function parameters
+        mean = np.random.uniform(self.domain.bounds[0][0], self.domain.bounds[0][-1])
+        std_dev = np.random.uniform(self.spread / 2, self.spread * 2)
+
+        return mean, std_dev
+
+    def evaluate(self, r, check_if_in_domain=True):
+        def poly_with_sinusoidal(x):
+            result = 0
+            for i in range(self.order + 1):
+                term = self.coefficients[i] * np.sin(self.frequencies[i] * x + self.phases[i])
+                result += term
+            return result
+
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r[in_domain] - self.mean) / self.std_dev) ** 2)
+            return r[in_domain], poly_with_sinusoidal(r[in_domain]) * gaussian_function
+        else:
+            gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.mean) / self.std_dev) ** 2)
+            return r, poly_with_sinusoidal(r) * gaussian_function
+
+class NormalModes_1D(Function):
+    def __init__(self, domain: HyperParalelipiped, order, spread, max_freq, seed=None):
+        super().__init__()
+        self.order = order
+        self.seed = seed
+        self.spread = spread
+        self.max_freq = max_freq
+        self.domain = domain
+        self.coefficients, self.shifts = self.generate_random_parameters()
+        self.mean, self.std_dev, self.frequency = self.generate_function_parameters()
+
+    def generate_random_parameters(self):
+        if self.order < 0:
+            raise ValueError("The order of the polynomial must be non-negative.")
+        
+        if self.seed is not None:
+            np.random.seed(self.seed)
+
+        # Generate random coefficients within the specified range
+        coefficients = np.random.uniform(-1, 1, self.order)
+
+        # Generate random shifts
+        shifts = np.random.uniform(0, 1, self.order)
+        
+        # Set some coefficients to zero to introduce more variation
+        num_zero_coefficients = np.random.randint(1, self.order)  # Random number of coefficients to set to zero
+        zero_indices = np.random.choice(range(self.order), num_zero_coefficients, replace=False)
+        coefficients[zero_indices] = 0
+
+        return coefficients, shifts
+
+    def generate_function_parameters(self):
+        # Generate sinusoidal part
+        frequency = np.sqrt(np.random.uniform(0, self.max_freq, 1))
+
+        # Generate Gaussian function parameters
+        mean = np.random.uniform(self.domain.bounds[0][0], self.domain.bounds[0][-1])
+        std_dev = np.random.uniform(self.spread / 2, self.spread * 2)
+
+        return mean, std_dev, frequency
+
+    def evaluate(self, r, check_if_in_domain=True):
+        shifted_poly = np.zeros_like(r)
+        for i in range(self.order):
+            shifted_domain = r - self.shifts[i]
+            shifted_poly += np.power(shifted_domain, i + 1)
+
+        sin_poly = np.sin(r * self.frequency) * shifted_poly
+
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r[in_domain] - self.mean) / self.std_dev) ** 2)
+            return r[in_domain], sin_poly[in_domain] * gaussian_function
+        else:
+            gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.mean) / self.std_dev) ** 2)
+            return r, sin_poly * gaussian_function
 
 class Gaussian_1D(Function):
     """
@@ -291,6 +585,8 @@ class Boxcar_1D(Function):
         self.unimodularity_precision = unimodularity_precision
 
     def evaluate(self, r, check_if_in_domain=True):
+        if isinstance(r, (int, float)):
+            r = np.array([r])  # Convert single value to a numpy array
 
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)

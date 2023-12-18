@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractclassmethod
 from core.aux.domains import Domain, HyperParalelipiped
-from core.aux.function_bank import *
+from core.aux.functions import *
 from core.aux.function_creator import *
 import random
 import scipy
@@ -48,13 +48,20 @@ class PCb(Space):
 
     def add_member(self, member_name, member: Function, domain=None):
         if isinstance(member, Function):
-            self.members[member_name] = member
+            if self.domain == member.domain:
+                self.members[member_name] = member
+            else: 
+                raise Exception('The domain of the function does not match the domain of the space')
         else:
             raise Exception('Only functions can be added as members.')
 
-    def inner_product(self, member1, member2) -> float:
+    def inner_product(self, member1, member2, fineness=None) -> float:
+        if fineness is None:
+            mesh = self.domain.mesh
+        else:
+            mesh = self.domain.dynamic_mesh(fineness)
         if type(self.domain) == HyperParalelipiped and self.domain.dimension == 1:
-            return scipy.integrate.simpson(member1 * member2, self.domain.mesh)
+            return scipy.integrate.simpson((member1*member2).evaluate(mesh)[1], mesh)
 
     def norm(self, member) -> float:
         return np.sqrt(self.inner_product(member, member))
@@ -62,7 +69,7 @@ class PCb(Space):
 
 class RN(Space):
     def __init__(self, dimension:int) -> None:
-        self.dimensinon = dimension
+        self.dimension = dimension
         self.members = {}
 
     def check_if_member(self, member):
@@ -89,7 +96,7 @@ class RN(Space):
             else:
                 return np.random.uniform(-100, 100, N)
         else:
-            return np.random.uniform(-100, 100, self.dimensinon)
+            return np.random.uniform(-100, 100, self.dimension)
 
     def add_member(self, member_name, member):
         if self.check_if_member(member):
