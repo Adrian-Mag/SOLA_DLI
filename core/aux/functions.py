@@ -1,12 +1,20 @@
-import numpy as np
 from core.aux.domains import Domain, HyperParalelipiped
+
+import numpy as np
 from abc import ABC, abstractmethod
 from typing import Union, Callable
 from scipy.interpolate import interp1d
-
 import random
+import matplotlib
+matplotlib.use('tkagg')
+import matplotlib.pyplot as plt 
+
 
 class Function(ABC):
+    def __init__(self, domain: Domain) -> None:
+        super().__init__()
+        self.domain = domain
+
     @abstractmethod
     def evaluate(self, r, check_if_in_domain=True):
         pass
@@ -44,10 +52,9 @@ class Function(ABC):
 # 1D FUNCTIONS 
 class _ScaledFunction(Function):
     def __init__(self, function: Function, scalar: float):
-        super().__init__()
+        super().__init__(function.domain)
         self.function = function
         self.scalar = scalar
-        self.domain = function.domain
 
     def evaluate(self, r, check_if_in_domain=True):
         eval_function = self.function.evaluate(r, check_if_in_domain)
@@ -101,7 +108,7 @@ class _ProductFunction(Function):
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] * eval2[1]
 
-class Constant(Function):
+class Constant_1D(Function):
     """
     Compute the constant function over a given domain.
 
@@ -115,6 +122,10 @@ class Constant(Function):
         super().__init__()
         self.domain = domain
 
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
     def evaluate(self, r, check_if_in_domain=True):
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
@@ -122,13 +133,17 @@ class Constant(Function):
         else:
             return r, np.ones_like(r)
 
-class Random(Function):
+class Random_1D(Function):
     def __init__(self, domain: Domain, seed: float, continuous: bool=False) -> None:
         super().__init__()
         self.seed = seed
         self.domain = domain
         self.continuous = continuous
         self.function = self._create_function()
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def _create_function(self):
         if self.seed is None:
@@ -173,12 +188,16 @@ class Random(Function):
         else:
             return r, self.function(r)
 
-class Interpolation(Function):
+class Interpolation_1D(Function):
     def __init__(self, values, raw_domain, domain: Domain) -> None:
         super().__init__()
         self.values = values
         self.raw_domain = raw_domain
         self.domain = domain
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
         if check_if_in_domain:
@@ -223,6 +242,10 @@ class Polynomial_1D(Function):
         self.domain = domain
         self.coefficients = self.generate_random_coefficients()
 
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
     def generate_random_coefficients(self):
         if self.order < 0:
             raise ValueError("The order of the polynomial must be non-negative.")
@@ -257,6 +280,10 @@ class SinusoidalPolynomial_1D(Function):
         self.seed = seed
         self.domain = domain
         self.coefficients, self.frequencies, self.phases = self.generate_random_parameters()
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def generate_random_parameters(self):
         if self.order < 0:
@@ -300,6 +327,10 @@ class SinusoidalGaussianPolynomial_1D(Function):
         self.domain = domain
         self.coefficients, self.frequencies, self.phases = self.generate_random_parameters()
         self.mean, self.std_dev = self.generate_gaussian_parameters()
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def generate_random_parameters(self):
         if self.order < 0:
@@ -350,6 +381,10 @@ class NormalModes_1D(Function):
         self.domain = domain
         self.coefficients, self.shifts = self.generate_random_parameters()
         self.mean, self.std_dev, self.frequency = self.generate_function_parameters()
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def generate_random_parameters(self):
         if self.order < 0:
@@ -410,14 +445,17 @@ class Gaussian_1D(Function):
     - numpy.ndarray: Computed Gaussian function values over the domain.
     """
     def __init__(self, domain:HyperParalelipiped, center, width, unimodularity_precision=1000) -> None:
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain=domain)
         self.center = center
         self.width = width
         self.unimodularity_precision = unimodularity_precision
         self.spread = self.width / (5 * np.sqrt(2 * np.log(2)))
         self.normalization = self._compute_normalization()
         
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
     def _compute_normalization(self):
         precise_mesh = self.domain.dynamic_mesh(self.unimodularity_precision)
         gaussian_vector_full = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((precise_mesh - self.center) / self.spread) ** 2)
@@ -456,6 +494,10 @@ class Moorlet_1D(Function):
         self.unimodularity_precision = unimodularity_precision
         self.normalization = self._compute_normalization()
 
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
     def _compute_normalization(self):
         moorlet_vector = np.cos(self.frequency * (self.domain.dynamic_mesh(self.unimodularity_precision) - self.center)) \
             * np.exp(-0.5 * ((self.domain.dynamic_mesh(self.unimodularity_precision) - self.center) / self.spread) ** 2)
@@ -492,6 +534,10 @@ class Haar_1D(Function):
         self.center = center
         self.width = width
 
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
     def evaluate(self, r, check_if_in_domain=True):
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
@@ -520,6 +566,10 @@ class Ricker_1D(Function):
         self.domain = domain
         self.center = center
         self.width = width
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
         A = 2 / (np.sqrt(3 * self.width) * (np.pi ** 0.25))
@@ -554,6 +604,10 @@ class Dgaussian_1D(Function):
         self.width = width
         self.spread = width / (5 * np.sqrt(2 * np.log(2)))
 
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
     def evaluate(self, r, check_if_in_domain=True):
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
@@ -583,6 +637,10 @@ class Boxcar_1D(Function):
         self.center = center
         self.width = width
         self.unimodularity_precision = unimodularity_precision
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
         if isinstance(r, (int, float)):
@@ -617,6 +675,10 @@ class Bump_1D(Function):
         self.width = width
         self.unimodularity_precision = unimodularity_precision
         self.normalization = self._compute_normalization()
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def _compute_normalization(self):
         limits = [-0.5 * self.width + self.center, 0.5 * self.width + self.center]
@@ -666,6 +728,10 @@ class Dbump_1D(Function):
         self.unimodularity_precision = unimodularity_precision
         self.area = self._compute_area()
 
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
     def _compute_area(self):
         limits = [-0.5 * self.width + self.center, 0.5 * self.width + self.center]
         mask = (self.domain.dynamic_mesh(self.unimodularity_precision) >= limits[0]) & (
@@ -714,6 +780,10 @@ class Triangular_1D(Function):
         self.domain = domain
         self.center = center
         self.width = width
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
         limits = [-0.5 * self.width + self.center, 0.5 * self.width + self.center]
