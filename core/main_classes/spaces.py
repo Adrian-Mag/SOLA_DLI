@@ -92,8 +92,8 @@ class RN(Space):
 
     def random_member(self, N=1) -> np.ndarray:
         if N > 1:
-            if self.dimensinon > 1:
-                return np.vstack([np.random.uniform(-100, 100, self.dimensinon) for _ in range(N)])
+            if self.dimension > 1:
+                return np.vstack([np.random.uniform(-100, 100, self.dimension) for _ in range(N)])
             else:
                 return np.random.uniform(-100, 100, N)
         else:

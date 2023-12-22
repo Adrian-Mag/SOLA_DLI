@@ -57,7 +57,7 @@ plt.show()
 T = IntegralMapping(domain=M, codomain=P, kernels=targets)
 
 # Create a true model
-true_model = Random(domain=my_domain, seed=0)
+true_model = Random_1D(domain=my_domain, seed=0)
 # Create error-free fake data
 data = G.map(true_model)
 
@@ -75,4 +75,3 @@ for i in range(P_dim):
 Tau = FiniteLinearMapping(domain=D, codomain=P, matrix=tau)
 
 # Compute R
-R = Tau * G.
