@@ -44,7 +44,7 @@ class PCb(Space):
         return function.interpolated_values
 
     def random_member(self, seed=None, continuous=False) -> np.ndarray:
-        return Random(domain=self.domain, seed=seed, continuous=continuous)
+        return Random_1D(domain=self.domain, seed=seed, continuous=continuous)
 
     def add_member(self, member_name, member: Function, domain=None):
         if isinstance(member, Function):
@@ -74,18 +74,19 @@ class RN(Space):
 
     def check_if_member(self, member):
         if isinstance(member, (float, int)):
-            if self.dimensinon == 1:
+            if self.dimension == 1:
                 return True
             else:
                 return False
         elif isinstance(member, np.ndarray):
-            if member.shape == (self.dimensinon,):
+            if member.ndim == 1 or (member.ndim == 2 and member.shape[0] == 1):
+                logging.warn('The member is a row vector')
+                return False
+            else:
                 if np.issubdtype(member.dtype, np.integer) or np.issubdtype(member.dtype, np.floating):
                     return True
                 else:
                     return False
-            else:
-                return False
         else:
             return False
 

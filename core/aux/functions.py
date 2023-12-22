@@ -62,10 +62,9 @@ class _ScaledFunction(Function):
 
 class _DivideFunction(Function):
     def __init__(self, function1: Function, function2: Function) -> None:
-        super().__init__()
+        super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
-        self.domain = function1.domain
 
     def evaluate(self, r, check_if_in_domain=True):
         eval1 = self.function1.evaluate(r,check_if_in_domain)
@@ -74,10 +73,9 @@ class _DivideFunction(Function):
 
 class _SubtractFunction(Function):
     def __init__(self, function1: Function, function2: Function) -> None:
-        super().__init__()
+        super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
-        self.domain = function1.domain
 
     def evaluate(self, r, check_if_in_domain=True):
         eval1 = self.function1.evaluate(r,check_if_in_domain)
@@ -86,10 +84,9 @@ class _SubtractFunction(Function):
 
 class _SumFunction(Function):
     def __init__(self, function1: Function, function2: Function) -> None:
-        super().__init__()
+        super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
-        self.domain = function1.domain
 
     def evaluate(self, r, check_if_in_domain=True):
         eval1 = self.function1.evaluate(r,check_if_in_domain)
@@ -98,10 +95,9 @@ class _SumFunction(Function):
 
 class _ProductFunction(Function):
     def __init__(self, function1: Function, function2: Function) -> None:
-        super().__init__()
+        super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
-        self.domain = function1.domain
 
     def evaluate(self, r, check_if_in_domain=True):
         eval1 = self.function1.evaluate(r,check_if_in_domain)
@@ -119,14 +115,15 @@ class Constant_1D(Function):
     - numpy.ndarray: Computed Haar wavelet function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
 
     def plot(self):
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
         plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             return r[in_domain], np.ones_like(r[in_domain])
@@ -135,9 +132,8 @@ class Constant_1D(Function):
 
 class Random_1D(Function):
     def __init__(self, domain: Domain, seed: float, continuous: bool=False) -> None:
-        super().__init__()
+        super().__init__(domain)
         self.seed = seed
-        self.domain = domain
         self.continuous = continuous
         self.function = self._create_function()
 
@@ -190,16 +186,17 @@ class Random_1D(Function):
 
 class Interpolation_1D(Function):
     def __init__(self, values, raw_domain, domain: Domain) -> None:
-        super().__init__()
+        super().__init__(domain)
         self.values = values
         self.raw_domain = raw_domain
-        self.domain = domain
 
     def plot(self):
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
         plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             return r[in_domain], interp1d(self.raw_domain, self.values, 
@@ -220,11 +217,12 @@ class ComplexExponential_1D(Function):
         np.ndarray: Computed Complex exponential function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, frequency):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.frequency = frequency
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             fourier_vector = np.exp(-2 * np.pi * self.frequency * 1j * r[in_domain] / self.domain.total_measure) / self.domain.total_measure
@@ -235,11 +233,10 @@ class ComplexExponential_1D(Function):
 
 class Polynomial_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, min_val, max_val):
-        super().__init__()
+        super().__init__(domain)
         self.order = order
         self.min_val = min_val
         self.max_val = max_val
-        self.domain = domain
         self.coefficients = self.generate_random_coefficients()
 
     def plot(self):
@@ -261,6 +258,8 @@ class Polynomial_1D(Function):
         return coefficients
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             poly_function = np.poly1d(self.coefficients)
@@ -271,14 +270,13 @@ class Polynomial_1D(Function):
 
 class SinusoidalPolynomial_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, min_val, max_val, min_f, max_f, seed):
-        super().__init__()
+        super().__init__(domain)
         self.order = order
         self.min_val = min_val
         self.max_val = max_val
         self.min_f = min_f
         self.max_f = max_f
         self.seed = seed
-        self.domain = domain
         self.coefficients, self.frequencies, self.phases = self.generate_random_parameters()
 
     def plot(self):
@@ -308,6 +306,8 @@ class SinusoidalPolynomial_1D(Function):
             return result
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             return r[in_domain], self.poly_with_sinusoidal(r[in_domain])
@@ -316,7 +316,7 @@ class SinusoidalPolynomial_1D(Function):
 
 class SinusoidalGaussianPolynomial_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, min_val, max_val, min_f, max_f, spread, seed=None):
-        super().__init__()
+        super().__init__(domain)
         self.order = order
         self.min_val = min_val
         self.max_val = max_val
@@ -324,7 +324,6 @@ class SinusoidalGaussianPolynomial_1D(Function):
         self.max_f = max_f
         self.spread = spread
         self.seed = seed
-        self.domain = domain
         self.coefficients, self.frequencies, self.phases = self.generate_random_parameters()
         self.mean, self.std_dev = self.generate_gaussian_parameters()
 
@@ -362,7 +361,8 @@ class SinusoidalGaussianPolynomial_1D(Function):
                 term = self.coefficients[i] * np.sin(self.frequencies[i] * x + self.phases[i])
                 result += term
             return result
-
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r[in_domain] - self.mean) / self.std_dev) ** 2)
@@ -373,12 +373,11 @@ class SinusoidalGaussianPolynomial_1D(Function):
 
 class NormalModes_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, spread, max_freq, seed=None):
-        super().__init__()
+        super().__init__(domain)
         self.order = order
         self.seed = seed
         self.spread = spread
         self.max_freq = max_freq
-        self.domain = domain
         self.coefficients, self.shifts = self.generate_random_parameters()
         self.mean, self.std_dev, self.frequency = self.generate_function_parameters()
 
@@ -421,7 +420,8 @@ class NormalModes_1D(Function):
         for i in range(self.order):
             shifted_domain = r - self.shifts[i]
             shifted_poly += np.power(shifted_domain, i + 1)
-
+        try: r[0] 
+        except: r=np.array([r])
         sin_poly = np.sin(r * self.frequency) * shifted_poly
 
         if check_if_in_domain:
@@ -486,8 +486,7 @@ class Moorlet_1D(Function):
     - numpy.ndarray: Computed Moorlet function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, spread, frequency, unimodularity_precision=1000):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.spread = spread
         self.frequency = frequency
@@ -506,6 +505,8 @@ class Moorlet_1D(Function):
         return area
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             moorlet_vector = np.cos(self.frequency * (r[in_domain] - self.center)) \
@@ -529,8 +530,7 @@ class Haar_1D(Function):
     - numpy.ndarray: Computed Haar wavelet function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, width):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.width = width
 
@@ -539,6 +539,8 @@ class Haar_1D(Function):
         plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             scaled_domain = (r[in_domain] - self.center) / self.width
@@ -562,8 +564,7 @@ class Ricker_1D(Function):
     - numpy.ndarray: Computed Ricker wavelet function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, width):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.width = width
 
@@ -574,7 +575,8 @@ class Ricker_1D(Function):
     def evaluate(self, r, check_if_in_domain=True):
         A = 2 / (np.sqrt(3 * self.width) * (np.pi ** 0.25))
         ricker_specific_width = self.width / 7
-
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             vector = A * (1 - ((r[in_domain] - self.center) / ricker_specific_width) ** 2) * np.exp(
@@ -598,8 +600,7 @@ class Dgaussian_1D(Function):
     - numpy.ndarray: Computed Polynomial wavelet function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, width):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.width = width
         self.spread = width / (5 * np.sqrt(2 * np.log(2)))
@@ -609,6 +610,8 @@ class Dgaussian_1D(Function):
         plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             Dgaussian_vector = ((r[in_domain] - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp(
@@ -632,8 +635,7 @@ class Boxcar_1D(Function):
     - numpy.ndarray: Computed Boxcar function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, width, unimodularity_precision=1000):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.width = width
         self.unimodularity_precision = unimodularity_precision
@@ -669,8 +671,7 @@ class Bump_1D(Function):
     - numpy.ndarray: Computed Bump function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, width, unimodularity_precision=1000):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.width = width
         self.unimodularity_precision = unimodularity_precision
@@ -692,6 +693,8 @@ class Bump_1D(Function):
         return area
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             limits = [-0.5 * self.width + self.center, 0.5 * self.width + self.center]
@@ -721,8 +724,7 @@ class Dbump_1D(Function):
     - numpy.ndarray: Computed Bump derivative function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, width, unimodularity_precision=1000):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.width = width
         self.unimodularity_precision = unimodularity_precision
@@ -743,6 +745,8 @@ class Dbump_1D(Function):
         return area
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             limits = [-0.5 * self.width + self.center, 0.5 * self.width + self.center]
@@ -776,8 +780,7 @@ class Triangular_1D(Function):
     - numpy.ndarray: Computed Triangular function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped, center, width):
-        super().__init__()
-        self.domain = domain
+        super().__init__(domain)
         self.center = center
         self.width = width
 
@@ -786,6 +789,8 @@ class Triangular_1D(Function):
         plt.show()
 
     def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
         limits = [-0.5 * self.width + self.center, 0.5 * self.width + self.center]
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
