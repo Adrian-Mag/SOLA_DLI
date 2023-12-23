@@ -90,11 +90,11 @@ class FiniteLinearMapping(Mapping):
             if self.determinant() != 0:
                 condition_number = np.linalg.cond(self.matrix)
                 if condition_number > 1e10:
-                    logging.warning(f'The matrix has a high conditioning number ({condition_number}) '
-                        '-> it will not be inverted. Will use np.linalg.solve instead.')
-                    return _InverseFiniteLinearMapping(domain=self.codomain,
+                    logging.warning(f'The matrix has a high conditioning number ({condition_number})')
+                    inverse = np.linalg.solve(self.matrix, np.eye(self.domain.dimension))
+                    return FiniteLinearMapping(domain=self.codomain,
                                                     codomain=self.domain,
-                                                    inverse=self.matrix)
+                                                    matrix=inverse)
                 else:
                     return FiniteLinearMapping(domain=self.codomain, 
                                             codomain=self.domain,
@@ -120,42 +120,14 @@ class FiniteLinearMapping(Mapping):
         else:
             raise Exception('Other mapping must also be a FiniteLinearMapping')
 
-class _InverseFiniteLinearMapping(Mapping):
-    def __init__(self, domain: RN, codomain: RN, inverse: np.ndarray) -> None:
-        super().__init__(domain, codomain)
-        self.inverse = inverse
-    
-    def map(self, member: RN):
-        return np.linalg.solve(self.inverse, member)
-
-    def determinant(self):
-        return 1 / np.linalg.det(self.inverse)
-    
-    def invert(self):
-        return FiniteLinearMapping(domain=self.codomain,
-                                   codomain=self.domain,
-                                   matrix=self.inverse)
-
-    def adjoint(self):
-        # Assuming the inverse matrix is real-valued,
-        # the adjoint is the transpose of the inverse matrix.
-        return _InverseFiniteLinearMapping(domain=self.codomain,
-                                           codomain=self.domain,
-                                           inverse=self.inverse.T)
-        
-    def __mul__(self, other: Mapping):
+    def __add__(self, other: Mapping):
         if isinstance(other, FiniteLinearMapping):
-            # Perform the composition of mappings.
-            # _InverseFiniteLinearMapping * FiniteLinearMapping
-            # This should result in an instance of FiniteLinearMapping
-            inverse_matrix = self.map(np.eye(self.domain.dimension))
-            composed_matrix = np.dot(inverse_matrix, other.matrix)
-            return FiniteLinearMapping(domain=self.domain, 
-                                        codomain=other.codomain,
-                                        matrix=composed_matrix)
-        elif isinstance(other, _InverseFiniteLinearMapping):
-            return _InverseFiniteLinearMapping(domain=other.domain,
-                                               codomain=self.codomain,
-                                               inverse=np.dot(other.inverse, self.inverse))
-        else:
-            raise Exception('Other mapping must also be a FiniteLinearMapping or _InverseFiniteLinearMapping')
+            return FiniteLinearMapping(domain=self.domain,
+                                       codomain=self.codomain,
+                                       matrix=self.matrix + other.matrix)
+
+    def __sub__(self, other: Mapping):
+        if isinstance(other, FiniteLinearMapping):
+            return FiniteLinearMapping(domain=self.domain,
+                                       codomain=self.codomain,
+                                       matrix=self.matrix - other.matrix)

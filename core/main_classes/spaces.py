@@ -80,8 +80,10 @@ class RN(Space):
                 return False
         elif isinstance(member, np.ndarray):
             if member.ndim == 1 or (member.ndim == 2 and member.shape[0] == 1):
-                logging.warn('The member is a row vector')
-                return False
+                if self.dimension == 1:
+                    return False
+                else:
+                    return False
             else:
                 if np.issubdtype(member.dtype, np.integer) or np.issubdtype(member.dtype, np.floating):
                     return True
@@ -111,8 +113,11 @@ class RN(Space):
                 return np.dot(member1, member2)
             else: 
                 raise Exception('Both elements must be members of the space.')
-        else:            
-            return np.dot(member1, member2)
+        else:
+            if self.dimension == 1:
+                return member1*member2
+            else:
+                return np.dot(member1.T, member2)[0,0]
     
     def norm(self, member, check_if_member=False) -> float:
         if check_if_member:
