@@ -95,11 +95,11 @@ class RN(Space):
     def random_member(self, N=1) -> np.ndarray:
         if N > 1:
             if self.dimension > 1:
-                return np.vstack([np.random.uniform(-100, 100, self.dimension) for _ in range(N)])
+                return np.array([np.random.uniform(-100, 100, self.dimension)[:, np.newaxis] for _ in range(N)])
             else:
                 return np.random.uniform(-100, 100, N)
         else:
-            return np.random.uniform(-100, 100, self.dimension)
+            return np.reshape(np.random.uniform(-100, 100, self.dimension), (self.dimension, 1))
 
     def add_member(self, member_name, member):
         if self.check_if_member(member):
