@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractclassmethod
-from core.aux.domains import Domain, HyperParalelipiped
-from core.aux.functions import *
+from core.main_classes.domains import Domain, HyperParalelipiped
+from core.main_classes.functions import *
 from core.aux.function_creator import *
 import random
 import scipy

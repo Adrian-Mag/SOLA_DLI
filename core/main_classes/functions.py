@@ -1,4 +1,4 @@
-from core.aux.domains import Domain, HyperParalelipiped
+from core.main_classes.domains import Domain, HyperParalelipiped
 
 import numpy as np
 from abc import ABC, abstractmethod
