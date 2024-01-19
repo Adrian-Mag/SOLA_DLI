@@ -12,14 +12,19 @@ def load_normal_data(kernel_type, data_directory):
     modes_df = pd.read_csv("/home/adrian/PhD/BGSOLA/mysola/normal_data/kernels_modeplotaat_Adrian/data_list_SP12RTS", 
                            header=None, names=["Mode"])
     # Create a new column with the full filenames
-    modes_df['filenames'] = modes_df['Mode'].apply(generate_filenames, kernel_type=kernel_type, data_directory=data_directory)
+    modes_df['filenames'] = modes_df['Mode'].apply(generate_filenames, 
+                                                   kernel_type=kernel_type, 
+                                                   data_directory=data_directory)
     # Get all the data
     kernels = []
     domain = None
     for file in modes_df['filenames']:
-        df = pd.read_csv(os.path.join(data_directory, file), delim_whitespace=True, header=None, names=['Radius', 'Sensitivity'])
+        df = pd.read_csv(os.path.join(data_directory, file), 
+                         delim_whitespace=True, 
+                         header=None, 
+                         names=['Radius', 'Sensitivity'])
         if domain is None:
             domain = df['Radius'].values
         kernels.append(df['Sensitivity'].values)
-    kernels = np.array(kernels, dtype=float)
-    N = kernels.shape[0]
+    return domain, kernels
+    

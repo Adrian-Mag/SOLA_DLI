@@ -54,9 +54,22 @@ class IntegralMapping(Mapping):
                 GramMatrix[i,j] = entry
                 if i!= j:
                     GramMatrix[j, i] = entry
-        self.GramMatrix = FiniteLinearMapping(domain=self.codomain, 
-                                              codomain=self.codomain, 
-                                              matrix=GramMatrix)
+        return FiniteLinearMapping(domain=self.codomain, 
+                                    codomain=self.codomain, 
+                                    matrix=GramMatrix)
+        
+    def __mul__(self, other: Mapping):
+        if isinstance(other, FunctionMapping):
+            # Compute the matrix defining this composition
+            matrix = np.empty((len(self.kernels), len(other.kernels)))
+            for i, ker1 in enumerate(self.kernels):
+                for j, ker2 in enumerate(other.kernels):
+                    # The kernels of both must live in the same space on which an inner product is defined
+                    matrix[i, j] = self.domain.inner_product(ker1, ker2)
+            return FiniteLinearMapping(domain=other.domain, codomain=self.codomain, matrix=matrix)
+        else:
+            raise Exception('Other mapping must also be a FuncionMapping')
+  
 
 class FunctionMapping(Mapping):
     def __init__(self, domain: RN, codomain: PCb, kernels: list) -> None:
@@ -77,6 +90,7 @@ class FunctionMapping(Mapping):
                                codomain=self.domain, 
                                kernels=self.kernels)
 
+
 class FiniteLinearMapping(Mapping):
     def __init__(self, domain: RN, codomain: RN, matrix: np.ndarray) -> None:
         super().__init__(domain, codomain)
@@ -85,25 +99,35 @@ class FiniteLinearMapping(Mapping):
     def map(self, member: RN):
         return np.dot(self.matrix, member)
 
-    def invert(self):
+    def invert(self, check_determinant=False):
         if self.domain.dimension == self.codomain.dimension:
-            if self.determinant() != 0:
+            if check_determinant:
+                if self.determinant != 0:
+                    condition_number = np.linalg.cond(self.matrix)
+                    if condition_number > 1e10:
+                        return ImplicitInvFiniteLinearMapping(domain=self.codomain,
+                                                        codomain=self.domain,
+                                                        inverse_matrix=self.matrix)
+                    else:
+                        return FiniteLinearMapping(domain=self.codomain, 
+                                                codomain=self.domain,
+                                                matrix=np.linalg.inv(self.matrix))
+                else:
+                    raise Exception('This linear map has 0 determinant.')
+            else:
                 condition_number = np.linalg.cond(self.matrix)
                 if condition_number > 1e10:
-                    logging.warning(f'The matrix has a high conditioning number ({condition_number})')
-                    inverse = np.linalg.solve(self.matrix, np.eye(self.domain.dimension))
-                    return FiniteLinearMapping(domain=self.codomain,
+                    return ImplicitInvFiniteLinearMapping(domain=self.codomain,
                                                     codomain=self.domain,
-                                                    matrix=inverse)
+                                                    inverse_matrix=self.matrix)
                 else:
                     return FiniteLinearMapping(domain=self.codomain, 
                                             codomain=self.domain,
                                             matrix=np.linalg.inv(self.matrix))
-            else:
-                raise Exception('This linear map has 0 determinant.')
         else:
             raise Exception('Only square matrices may have inverse.')
 
+    @property
     def determinant(self):
         return np.linalg.det(self.matrix)
 
@@ -117,6 +141,14 @@ class FiniteLinearMapping(Mapping):
             return FiniteLinearMapping(domain=other.domain,
                                        codomain=self.codomain,
                                        matrix=np.dot(self.matrix, other.matrix))
+        elif isinstance(other, ImplicitInvFiniteLinearMapping):
+            other_transposed = other.inverse_matrix.T
+            ans = np.ones((self.matrix.shape[0], other.inverse_matrix.shape[0]))
+            for i, row in enumerate(self.matrix):
+                ans[i, :] = np.linalg.solve(other_transposed, row.reshape(row.shape[0],1)).T
+            return FiniteLinearMapping(domain=other.domain,
+                                       codomain=self.codomain,
+                                       matrix=ans)
         else:
             raise Exception('Other mapping must also be a FiniteLinearMapping')
 
@@ -131,3 +163,36 @@ class FiniteLinearMapping(Mapping):
             return FiniteLinearMapping(domain=self.domain,
                                        codomain=self.codomain,
                                        matrix=self.matrix - other.matrix)
+        
+class ImplicitInvFiniteLinearMapping(Mapping):
+    def __init__(self, domain: RN, codomain: RN, inverse_matrix: np.ndarray) -> None:
+        super().__init__(domain, codomain)
+        self.inverse_matrix = inverse_matrix
+
+    def invert(self):
+        return FiniteLinearMapping(domain=self.codomain,
+                                   codomain=self.domain,
+                                   matrix=self.inverse_matrix)
+    
+    def map(self, member: RN):
+        return np.linalg.solve(self.inverse_matrix, member)
+    
+    def adjoint(self):
+        return ImplicitInvFiniteLinearMapping(domain=self.codomain,
+                                              codomain=self.domain,
+                                              inverse_matrix=self.inverse_matrix.T)
+
+    def __mul__(self, other: Mapping):
+        if isinstance(other, FiniteLinearMapping):
+            answer = np.ones((self.inverse_matrix.shape[0], other.matrix.shape[1]))
+            for i, column in enumerate(other.matrix.T):
+                answer[:, i] = np.linalg.solve(self.inverse_matrix, column)
+
+            return FiniteLinearMapping(domain=other.domain, 
+                                    codomain=self.codomain, 
+                                    matrix=answer)
+        elif isinstance(other, ImplicitInvFiniteLinearMapping):
+            return ImplicitInvFiniteLinearMapping(domain=other.domain,
+                                                  codomain=self.codomain,
+                                                  inverse_matrix=np.dot(other.inverse_matrix, self.inverse_matrix))
+    

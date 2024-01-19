@@ -67,7 +67,7 @@ class _DivideFunction(Function):
         self.function2 = function2
 
     def evaluate(self, r, check_if_in_domain=True):
-        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] / eval2[1]
 
@@ -78,7 +78,7 @@ class _SubtractFunction(Function):
         self.function2 = function2
 
     def evaluate(self, r, check_if_in_domain=True):
-        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] - eval2[1]
 
@@ -89,7 +89,7 @@ class _SumFunction(Function):
         self.function2 = function2
 
     def evaluate(self, r, check_if_in_domain=True):
-        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] + eval2[1]
 
@@ -103,6 +103,49 @@ class _ProductFunction(Function):
         eval1 = self.function1.evaluate(r,check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] * eval2[1]
+
+class Piecewise_1D(Function):
+    def __init__(self, domain: HyperParalelipiped, 
+                 intervals: np.ndarray, values: np.ndarray) -> None:
+        super().__init__(domain)
+        self.intervals = intervals
+        self.values = values
+
+    def evaluate(self, r, check_if_in_domain=True):
+        if isinstance(r, (float, int)):
+            r = np.array([r])
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            # Initialize the result array
+            result = np.zeros_like(r[in_domain], dtype=float)
+
+            # Evaluate the piecewise function for each interval
+            for i in range(len(self.values)):
+                mask = np.logical_and(self.intervals[i] <= r[in_domain], r[in_domain] < self.intervals[i + 1])
+                result[mask] = self.values[i]
+
+            # Handle values outside the specified intervals
+            result[r[in_domain] < self.intervals[0]] = self.values[0]
+            result[r[in_domain] >= self.intervals[-1]] = self.values[-1]
+            return r[in_domain], result
+        else:
+            # Initialize the result array
+            result = np.zeros_like(r, dtype=float)
+
+            # Evaluate the piecewise function for each interval
+            for i in range(len(self.values)):
+                mask = np.logical_and(self.intervals[i] <= r, r < self.intervals[i + 1])
+                result[mask] = self.values[i]
+
+            # Handle values outside the specified intervals
+            result[r < self.intervals[0]] = self.values[0]
+            result[r >= self.intervals[-1]] = self.values[-1]
+
+            return r, result
+        
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
 
 class Constant_1D(Function):
     """
