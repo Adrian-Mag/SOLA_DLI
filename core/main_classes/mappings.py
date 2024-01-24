@@ -17,6 +17,9 @@ class Mapping(ABC):
     def adjoint(self):
         pass
 
+class DirectSumMapping(Mapping):
+    def __init__(self, domain: Space, codomain: Space) -> None:
+        super().__init__(domain, codomain)
 
 class IntegralMapping(Mapping):
     def __init__(self, domain: PCb, codomain: RN, kernels: list) -> None:
