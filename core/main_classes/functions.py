@@ -147,6 +147,32 @@ class Piecewise_1D(Function):
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
         plt.show()
 
+class Null_1D(Function):
+    """
+    Compute the 0 function over a given domain.
+
+    Args:
+    - domain (HyperParalelipiped): Array representing the domain for computation.
+
+    Returns:
+    - numpy.ndarray: Computed null function values over the domain.
+    """
+    def __init__(self, domain: HyperParalelipiped):
+        super().__init__(domain)
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
+    def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            return r[in_domain], np.zeros_like(r[in_domain])
+        else:
+            return r, np.zeros_like(r)
+
 class Constant_1D(Function):
     """
     Compute the constant function over a given domain.
@@ -155,7 +181,7 @@ class Constant_1D(Function):
     - domain (HyperParalelipiped): Array representing the domain for computation.
 
     Returns:
-    - numpy.ndarray: Computed Haar wavelet function values over the domain.
+    - numpy.ndarray: Computed Constant function values over the domain.
     """
     def __init__(self, domain: HyperParalelipiped):
         super().__init__(domain)

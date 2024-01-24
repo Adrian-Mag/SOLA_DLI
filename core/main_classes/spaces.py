@@ -27,6 +27,15 @@ class Space(ABC):
     def norm(self, member):
         pass
 
+class DirectSumSpace(Space):
+    def __init__(self, spaces: list) -> None:
+        super().__init__()
+        self.spaces = spaces
+
+    def random_member(self, args_list):
+        for space in self.spaces:
+            space.random_member()
+
 
 class PCb(Space):
     def __init__(self, domain:HyperParalelipiped) -> None:
