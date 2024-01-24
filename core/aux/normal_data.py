@@ -9,7 +9,7 @@ def generate_filenames(mode, kernel_type, data_directory):
     return os.path.join(data_directory, filename)
 
 def load_normal_data(kernel_type, data_directory):
-    modes_df = pd.read_csv("/home/adrian/PhD/BGSOLA/mysola/normal_data/kernels_modeplotaat_Adrian/data_list_SP12RTS", 
+    modes_df = pd.read_csv(os.path.join(data_directory,'data_list_SP12RTS'), 
                            header=None, names=["Mode"])
     # Create a new column with the full filenames
     modes_df['filenames'] = modes_df['Mode'].apply(generate_filenames, 
