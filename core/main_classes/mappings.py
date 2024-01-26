@@ -1,5 +1,5 @@
 import numpy as np
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod, abstractproperty
 
 from core.main_classes.spaces import *
 
@@ -17,9 +17,59 @@ class Mapping(ABC):
     def adjoint(self):
         pass
 
+
 class DirectSumMapping(Mapping):
-    def __init__(self, domain: Space, codomain: Space) -> None:
+    def __init__(self, domain: Space, codomain: Space, mappings: tuple) -> None:
         super().__init__(domain, codomain)
+        self.mappings = mappings
+
+    def map(self, member: tuple):
+        ans = self.codomain.zero
+        for sub_member, mapping in zip(member, self.mappings):
+            ans += mapping.map(sub_member)
+
+        return ans
+
+    def adjoint(self):
+        adjoint_mappings = []
+        for mapping in self.mappings:
+            adjoint_mappings.append(mapping.adjoint())
+        
+        return DirectSumMappingAdj(domain=self.codomain,
+                                   codomain=self.domain,
+                                   mappings=tuple(adjoint_mappings))        
+    def _compute_GramMatrix(self, return_matrix_only=False):
+        matrix = np.zeros((self.codomain.dimension, self.codomain.dimension))
+        for mapping in self.mappings:
+            matrix += mapping._compute_GramMatrix(return_matrix_only=True)
+        if return_matrix_only:
+            return matrix
+        else:
+            return FiniteLinearMapping(domain=self.codomain, 
+                                   codomain=self.codomain,
+                                   matrix=matrix)
+
+class DirectSumMappingAdj(Mapping):
+    def __init__(self, domain: Space, codomain: Space, mappings: tuple) -> None:
+        super().__init__(domain, codomain)
+        self.mappings = mappings
+
+    def map(self, member):
+        ans = []
+        for mapping in self.mappings:
+            ans.append(mapping.map(member))
+
+        return tuple(ans)
+
+    def adjoint(self):
+        adjoint_mappings = []
+        for mapping in self.mappings:
+            adjoint_mappings.append(mapping.adjoint())
+        
+        return DirectSumMappingAdj(domain=self.codomain,
+                                   codomain=self.domain,
+                                   mappings=tuple(adjoint_mappings)) 
+
 
 class IntegralMapping(Mapping):
     def __init__(self, domain: PCb, codomain: RN, kernels: list) -> None:
@@ -49,7 +99,7 @@ class IntegralMapping(Mapping):
         return FunctionMapping(domain=self.codomain, codomain=self.domain,
                                kernels=self.kernels)
 
-    def _compute_GramMatrix(self):
+    def _compute_GramMatrix(self, return_matrix_only=False):
         GramMatrix = np.empty((self.codomain.dimension,self.codomain.dimension))
         for i in range(self.codomain.dimension):
             for j in range(self.codomain.dimension):
@@ -57,7 +107,10 @@ class IntegralMapping(Mapping):
                 GramMatrix[i,j] = entry
                 if i!= j:
                     GramMatrix[j, i] = entry
-        return FiniteLinearMapping(domain=self.codomain, 
+        if return_matrix_only:
+            return GramMatrix
+        else:
+            return FiniteLinearMapping(domain=self.codomain, 
                                     codomain=self.codomain, 
                                     matrix=GramMatrix)
         
@@ -72,7 +125,7 @@ class IntegralMapping(Mapping):
             return FiniteLinearMapping(domain=other.domain, codomain=self.codomain, matrix=matrix)
         else:
             raise Exception('Other mapping must also be a FuncionMapping')
-  
+
 
 class FunctionMapping(Mapping):
     def __init__(self, domain: RN, codomain: PCb, kernels: list) -> None:
@@ -130,6 +183,14 @@ class FiniteLinearMapping(Mapping):
         else:
             raise Exception('Only square matrices may have inverse.')
 
+    def _compute_GramMatrix(self, return_matrix_only=False):
+        matrix = np.dot(self.matrix, self.matrix.T)
+        if return_matrix_only:
+            return matrix
+        else:
+            return FiniteLinearMapping(domain=self.codomain, 
+                                   codomain=self.codomain,
+                                   matrix=matrix)
     @property
     def determinant(self):
         return np.linalg.det(self.matrix)

@@ -1,5 +1,5 @@
 import numpy as np
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractclassmethod, abstractproperty
 from core.main_classes.domains import Domain, HyperParalelipiped
 from core.main_classes.functions import *
 from core.aux.function_creator import *
@@ -11,9 +11,6 @@ logging.basicConfig(level=logging.WARNING)  # Set the logging level
 from typing import Union, Callable
 
 class Space(ABC):
-    @abstractmethod
-    def add_member(self, member_name, member):
-        pass
 
     @abstractclassmethod
     def random_member(self):
@@ -27,15 +24,43 @@ class Space(ABC):
     def norm(self, member):
         pass
 
+    @abstractproperty
+    def zero(self):
+        pass
+
 class DirectSumSpace(Space):
-    def __init__(self, spaces: list) -> None:
+    def __init__(self, spaces: tuple) -> None:
         super().__init__()
         self.spaces = spaces
 
-    def random_member(self, args_list):
-        for space in self.spaces:
-            space.random_member()
+    def random_member(self, args_list: list):
+        list_of_random_members = []
+        for space, space_args in zip(self.spaces, args_list):
+            list_of_random_members.append(space.random_member(*space_args))
+        
+        return tuple(list_of_random_members)
 
+    def inner_product(self, member1: tuple, member2: tuple):
+        inner_product = 0
+        for sub_member1, sub_member2, space in zip(member1, member2, self.spaces):
+            inner_product += space.inner_product(sub_member1, sub_member2)
+
+        return inner_product
+
+    def norm(self, member):
+        norm = 0
+        for sub_member, space in zip(member, self.spaces):
+            norm += space.norm(sub_member)
+
+        return norm
+    
+    @property
+    def zero(self):
+        list_of_zeros = []
+        for space in self.spaces:
+            list_of_zeros.append(space.zero)
+        
+        return tuple(list_of_zeros)
 
 class PCb(Space):
     def __init__(self, domain:HyperParalelipiped) -> None:
@@ -75,6 +100,9 @@ class PCb(Space):
     def norm(self, member) -> float:
         return np.sqrt(self.inner_product(member, member))
 
+    @property
+    def zero(self):
+        return Null_1D(domain=self.domain)
 
 class RN(Space):
     def __init__(self, dimension:int) -> None:
@@ -136,3 +164,7 @@ class RN(Space):
                 raise Exception('Both elements must be members of the space.')
         else:            
             return np.linalg.norm(member)
+        
+    @property
+    def zero(self):
+        return np.zeros((self.dimension, 1))
