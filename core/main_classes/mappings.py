@@ -48,6 +48,15 @@ class DirectSumMapping(Mapping):
             return FiniteLinearMapping(domain=self.codomain, 
                                    codomain=self.codomain,
                                    matrix=matrix)
+    def __mul__(self, other: Mapping):
+        if isinstance(other, DirectSumMappingAdj):
+            matrix = np.zeros((other.domain.dimension, self.codomain.dimension))
+            for sub_mapping_1, sub_mapping_2 in zip(self.mappings, other.mappings):
+                matrix += (sub_mapping_1*sub_mapping_2).matrix
+        
+        return FiniteLinearMapping(domain=other.domain,
+                                   codomain=self.codomain,
+                                   matrix=matrix)
 
 class DirectSumMappingAdj(Mapping):
     def __init__(self, domain: Space, codomain: Space, mappings: tuple) -> None:
@@ -69,7 +78,6 @@ class DirectSumMappingAdj(Mapping):
         return DirectSumMappingAdj(domain=self.codomain,
                                    codomain=self.domain,
                                    mappings=tuple(adjoint_mappings)) 
-
 
 class IntegralMapping(Mapping):
     def __init__(self, domain: PCb, codomain: RN, kernels: list) -> None:
@@ -124,7 +132,7 @@ class IntegralMapping(Mapping):
                     matrix[i, j] = self.domain.inner_product(ker1, ker2)
             return FiniteLinearMapping(domain=other.domain, codomain=self.codomain, matrix=matrix)
         else:
-            raise Exception('Other mapping must also be a FuncionMapping')
+            raise Exception('Other mapping must be a FuncionMapping')
 
 
 class FunctionMapping(Mapping):
