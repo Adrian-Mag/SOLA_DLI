@@ -6,7 +6,7 @@ import numpy as np
 # Function to generate full filenames
 def generate_filenames(mode, kernel_type, data_directory):
     filename = f"{kernel_type}-sens_{mode}_iso.dat"
-    return os.path.join(data_directory, filename)
+    return filename
 
 def load_normal_data(kernel_type, data_directory):
     modes_df = pd.read_csv(os.path.join(data_directory,'data_list_SP12RTS'), 
