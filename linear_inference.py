@@ -4,7 +4,22 @@ from core.aux.normal_data import load_normal_data
 from core.main_classes.functions import *
 from core.main_classes.mappings import *
 import numpy as np
+import logging
+import time
 
+def log_and_time(section_name, start_time):
+    elapsed_time = time.time() - start_time
+    logging.info(f"{section_name}: Done. Time taken: {elapsed_time:.2f} seconds")
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s [%(levelname)s]: %(message)s',
+    handlers=[
+        logging.FileHandler('app.log'),
+        logging.StreamHandler()
+    ]
+)
 
 ####################
 # Create model space
@@ -12,6 +27,7 @@ import numpy as np
 # Edit region -------------
 physical_parameters = ['vs', 'vp', 'rho']
 # Edit region -------------
+start_time = time.time()
 
 no_of_params = len(physical_parameters)
 EarthDomain = HyperParalelipiped(bounds=[[0, 6371]], fineness=1000)
@@ -19,6 +35,7 @@ constituent_models_spaces = [PCb(domain=EarthDomain) for _ in physical_parameter
 # Create a dictionary with physical_parameters as keys
 models_dict = {param: model_space for param, model_space in zip(physical_parameters, constituent_models_spaces)}
 M = DirectSumSpace(tuple(constituent_models_spaces))
+log_and_time('Create model space', start_time)
 
 ###################
 # Create Data space
@@ -38,10 +55,12 @@ for param in physical_parameters:
     if param not in raw_sensitivity_domains_dict:
         raw_sensitivity_domains_dict[param] = raw_sensitivity_domain
 D = RN(dimension=how_many_data)
+log_and_time('Created data space', start_time)
 
 ###########################
 # Create model-data mapping 
 ###########################
+start_time = time.time()
 # Make them into functions via interpolation
 sensitivity_dict = {}
 for param in physical_parameters:
@@ -54,10 +73,12 @@ constituent_mappings = [IntegralMapping(domain=models_dict[param], codomain=D,
                                         kernels=sensitivity_dict[param]) for param in physical_parameters]
 mappings_dict = {param: mapping for param, mapping in zip(physical_parameters, constituent_mappings)}
 G = DirectSumMapping(domain=M, codomain=D, mappings=tuple(constituent_mappings))
+log_and_time('Created model-data mapping', start_time)
 
-#########################
-# Create property mapping
-#########################
+
+###################################
+# Create property mapping and space
+###################################
 # Edit region -------------
 target_types = {'vs': Gaussian_1D,
                 'vp': Null_1D,
@@ -68,6 +89,8 @@ enquiry_points = np.linspace(EarthDomain.bounds[0][0],
                              EarthDomain.bounds[0][1], 
                              how_many_targets)
 # Edit region -------------
+start_time = time.time()
+P = RN(dimension=how_many_targets)
 targets_dict = {}
 for param, target_type in target_types.items():
     targets_dict[param] = []
@@ -78,3 +101,46 @@ for param, target_type in target_types.items():
                                                    width=width))
         else: 
             targets_dict[param].append(target_type(domain=EarthDomain))
+constituent_mappings = [IntegralMapping(domain=models_dict[param], codomain=P, 
+                                        kernels=targets_dict[param]) for param in physical_parameters]
+T = DirectSumMapping(domain=M, codomain=P, mappings=tuple(constituent_mappings))
+log_and_time('Created property space and data-property mapping', start_time)
+
+#################################
+# Create fake true model and data
+#################################
+start_time = time.time()
+true_model = M.random_member(args_list=[(1,), (2,), (3,)])
+data = G.map(true_model)
+log_and_time('Compute fake model and data', start_time)
+
+########################################
+# Compute Lambda and instanciate inverse
+########################################
+start_time=time.time()
+Lambda = G._compute_GramMatrix()
+Lambda_inv = Lambda.invert()
+log_and_time('Compute Lambda',start_time)
+
+#########################
+# Compute reshuffled data
+#########################
+start_time = time.time()
+sdata = Lambda_inv.map(data)
+log_and_time('Reshuffled data', start_time)
+
+####################
+# Compute least norm
+####################
+start_time = time.time()
+least_norm = D.inner_product(data, sdata)
+log_and_time('Compute least norm', start_time)
+
+################################
+# Compute adjoint of G and Gamma
+################################
+start_time = time.time()
+G_adjoint = G.adjoint()
+Gamma = T*G_adjoint
+log_and_time('Compute Gamma', start_time)
+

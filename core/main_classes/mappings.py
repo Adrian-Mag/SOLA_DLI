@@ -50,7 +50,7 @@ class DirectSumMapping(Mapping):
                                    matrix=matrix)
     def __mul__(self, other: Mapping):
         if isinstance(other, DirectSumMappingAdj):
-            matrix = np.zeros((other.domain.dimension, self.codomain.dimension))
+            matrix = np.zeros((self.codomain.dimension, other.domain.dimension))
             for sub_mapping_1, sub_mapping_2 in zip(self.mappings, other.mappings):
                 matrix += (sub_mapping_1*sub_mapping_2).matrix
         

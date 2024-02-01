@@ -5,10 +5,6 @@ from core.main_classes.functions import *
 from core.aux.function_creator import *
 import random
 import scipy
-import logging 
-# Configure logging
-logging.basicConfig(level=logging.WARNING)  # Set the logging level
-from typing import Union, Callable
 
 class Space(ABC):
 

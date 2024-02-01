@@ -1,0 +1,63 @@
+2024-02-01 10:01:48,662 [DEBUG]: This is a debug message
+2024-02-01 10:01:48,663 [INFO]: This is an info message
+2024-02-01 10:01:48,663 [WARNING]: This is a warning message
+2024-02-01 10:01:48,663 [ERROR]: This is an error message
+2024-02-01 10:01:48,663 [CRITICAL]: This is a critical message
+2024-02-01 10:03:25,000 [DEBUG]: This is a debug message
+2024-02-01 10:03:25,000 [INFO]: This is an info message
+2024-02-01 10:03:25,000 [WARNING]: This is a warning message
+2024-02-01 10:03:25,000 [ERROR]: This is an error message
+2024-02-01 10:03:25,000 [CRITICAL]: This is a critical message
+2024-02-01 10:05:24,202 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 10:06:02,457 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 10:06:02,570 [INFO]: Created data space: Done. Time taken: 0.11 seconds
+2024-02-01 10:06:25,889 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 10:06:26,003 [INFO]: Created data space: Done. Time taken: 0.11 seconds
+2024-02-01 10:06:28,755 [INFO]: Created model-data mapping: Done. Time taken: 2.87 seconds
+2024-02-01 10:06:50,397 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 10:06:50,519 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-01 10:06:53,369 [INFO]: Created model-data mapping: Done. Time taken: 2.97 seconds
+2024-02-01 10:06:53,385 [INFO]: Created property space and data-property mapping: Done. Time taken: 2.99 seconds
+2024-02-01 10:46:08,371 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 10:46:08,490 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-01 10:46:11,363 [INFO]: Created model-data mapping: Done. Time taken: 2.99 seconds
+2024-02-01 10:46:11,379 [INFO]: Created property space and data-property mapping: Done. Time taken: 3.01 seconds
+2024-02-01 10:46:11,407 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-01 10:46:14,324 [INFO]: Compute Lambda: Done. Time taken: 2.92 seconds
+2024-02-01 10:46:14,324 [INFO]: Reshuffled data: Done. Time taken: 0.00 seconds
+2024-02-01 10:46:14,325 [INFO]: Compute least norm: Done. Time taken: 0.00 seconds
+2024-02-01 10:46:58,206 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 10:46:58,326 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-01 10:47:01,214 [INFO]: Created model-data mapping: Done. Time taken: 3.01 seconds
+2024-02-01 10:47:01,229 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-01 10:47:01,257 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-01 10:47:04,195 [INFO]: Compute Lambda: Done. Time taken: 2.94 seconds
+2024-02-01 10:47:04,195 [INFO]: Reshuffled data: Done. Time taken: 0.00 seconds
+2024-02-01 10:47:04,195 [INFO]: Compute least norm: Done. Time taken: 0.00 seconds
+2024-02-01 11:02:04,836 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 11:02:04,957 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-01 11:02:07,893 [INFO]: Created model-data mapping: Done. Time taken: 3.06 seconds
+2024-02-01 11:02:07,909 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-01 11:02:07,937 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-01 11:02:10,919 [INFO]: Compute Lambda: Done. Time taken: 2.98 seconds
+2024-02-01 11:02:10,919 [INFO]: Reshuffled data: Done. Time taken: 0.00 seconds
+2024-02-01 11:02:10,919 [INFO]: Compute least norm: Done. Time taken: 0.00 seconds
+2024-02-01 11:02:11,149 [INFO]: Compute Gamma: Done. Time taken: 0.23 seconds
+2024-02-01 11:03:02,812 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 11:03:02,926 [INFO]: Created data space: Done. Time taken: 0.11 seconds
+2024-02-01 11:03:05,674 [INFO]: Created model-data mapping: Done. Time taken: 2.75 seconds
+2024-02-01 11:03:05,689 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.01 seconds
+2024-02-01 11:03:05,716 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-01 11:03:08,516 [INFO]: Compute Lambda: Done. Time taken: 2.80 seconds
+2024-02-01 11:03:08,517 [INFO]: Reshuffled data: Done. Time taken: 0.00 seconds
+2024-02-01 11:03:08,517 [INFO]: Compute least norm: Done. Time taken: 0.00 seconds
+2024-02-01 11:03:08,753 [INFO]: Compute Gamma: Done. Time taken: 0.24 seconds
+2024-02-01 11:04:07,557 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-01 11:04:07,676 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-01 11:04:10,574 [INFO]: Created model-data mapping: Done. Time taken: 2.90 seconds
+2024-02-01 11:04:10,589 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-01 11:04:10,617 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-01 11:04:13,540 [INFO]: Compute Lambda: Done. Time taken: 2.92 seconds
+2024-02-01 11:04:13,541 [INFO]: Reshuffled data: Done. Time taken: 0.00 seconds
+2024-02-01 11:04:13,541 [INFO]: Compute least norm: Done. Time taken: 0.00 seconds
+2024-02-01 11:04:13,780 [INFO]: Compute Gamma: Done. Time taken: 0.24 seconds
