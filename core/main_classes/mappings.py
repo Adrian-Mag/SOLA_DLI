@@ -37,7 +37,8 @@ class DirectSumMapping(Mapping):
         
         return DirectSumMappingAdj(domain=self.codomain,
                                    codomain=self.domain,
-                                   mappings=tuple(adjoint_mappings))        
+                                   mappings=tuple(adjoint_mappings))    
+    
     def _compute_GramMatrix(self, return_matrix_only=False):
         matrix = np.zeros((self.codomain.dimension, self.codomain.dimension))
         for mapping in self.mappings:
@@ -48,6 +49,13 @@ class DirectSumMapping(Mapping):
             return FiniteLinearMapping(domain=self.codomain, 
                                    codomain=self.codomain,
                                    matrix=matrix)
+
+    def _compute_GramMatrix_diag(self):
+        matrix = np.zeros((self.codomain.dimension, 1))
+        for mapping in self.mappings:
+            matrix += mapping._compute_GramMatrix_diag()
+        return matrix
+
     def __mul__(self, other: Mapping):
         if isinstance(other, DirectSumMappingAdj):
             matrix = np.zeros((self.codomain.dimension, other.domain.dimension))
@@ -121,7 +129,14 @@ class IntegralMapping(Mapping):
             return FiniteLinearMapping(domain=self.codomain, 
                                     codomain=self.codomain, 
                                     matrix=GramMatrix)
-        
+    
+    def _compute_GramMatrix_diag(self):
+        GramMatrix_diag = np.empty((self.codomain.dimension,1))
+        for i in range(self.codomain.dimension):
+            entry = self.domain.inner_product(self.kernels[i], self.kernels[i])
+            GramMatrix_diag[i] = entry
+        return GramMatrix_diag        
+
     def __mul__(self, other: Mapping):
         if isinstance(other, FunctionMapping):
             # Compute the matrix defining this composition
