@@ -1,5 +1,7 @@
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
+import matplotlib 
+matplotlib.use('tkagg')
 import matplotlib.pyplot as plt
 
 class DependencyTree:

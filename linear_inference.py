@@ -42,7 +42,7 @@ log_and_time('Create model space', start_time)
 # Create Data space
 ###################
 # Edit region -------------
-data_directory = '/disks/data/PhD/BGSOLA/SOLA_DLI/kernels_modeplotaat_Adrian'
+data_directory = '/home/adrian/PhD/BGSOLA/SOLA_DLI/kernels_modeplotaat_Adrian'
 which_data = list(np.arange(0, 100))
 # Edit region -------------
 
