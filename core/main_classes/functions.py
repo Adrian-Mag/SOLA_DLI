@@ -11,15 +11,50 @@ import matplotlib.pyplot as plt
 
 
 class Function(ABC):
+    """
+    Abstract base class representing a mathematical function.
+
+    Attributes:
+    - domain (Domain): The domain of the function.
+
+    Methods:
+    - evaluate(r, check_if_in_domain=True): Abstract method to evaluate the function at given points.
+    - is_compatible_with(other): Check compatibility with another function.
+    """
     def __init__(self, domain: Domain) -> None:
+        """
+        Initialize the Function object.
+
+        Parameters:
+        - domain (Domain): The domain of the function.
+        """
         super().__init__()
         self.domain = domain
 
     @abstractmethod
     def evaluate(self, r, check_if_in_domain=True):
+        """
+        Abstract method to evaluate the function at given points.
+
+        Parameters:
+        - r: Points at which to evaluate the function.
+        - check_if_in_domain (bool): Whether to check if points are in the function's domain. Default is True.
+
+        Returns:
+        - Tuple: A tuple containing the points and the evaluated values.
+        """
         pass
 
     def is_compatible_with(self, other):
+        """
+        Check compatibility with another function.
+
+        Parameters:
+        - other: Another function to check compatibility.
+
+        Returns:
+        - bool: True if the functions are compatible, otherwise raises an exception.
+        """
         if isinstance(other, Function):
             if self.domain == other.domain:
                 return True
@@ -32,77 +67,248 @@ class Function(ABC):
         return self.__mul__(other)
 
     def __mul__(self, other):
+        """
+        Multiply the function by a scalar or another compatible function.
+
+        Parameters:
+        - other: Scalar or another compatible function.
+
+        Returns:
+        - Function: Result of the multiplication.
+        """
         if isinstance(other, (float, int)):
             return _ScaledFunction(self, other)
         elif self.is_compatible_with(other):
             return _ProductFunction(self, other)
 
     def __add__(self, other):
+        """
+        Add another compatible function.
+
+        Parameters:
+        - other: Another compatible function.
+
+        Returns:
+        - Function: Result of the addition.
+        """
         if self.is_compatible_with(other):
             return _SumFunction(self, other)
     
     def __sub__(self, other):
+        """
+        Subtract another compatible function.
+
+        Parameters:
+        - other: Another compatible function.
+
+        Returns:
+        - Function: Result of the subtraction.
+        """
         if self.is_compatible_with(other):
             return _SubtractFunction(self, other)
         
     def __truediv__(self, other):
+        """
+        Divide by another compatible function.
+
+        Parameters:
+        - other: Another compatible function.
+
+        Returns:
+        - Function: Result of the division.
+        """
         if self.is_compatible_with(other):
             return _DivideFunction(self, other)
 
-# 1D FUNCTIONS 
+# 1D FUNCTIONS
 class _ScaledFunction(Function):
+    """
+    Represents a scaled version of a function.
+
+    Attributes:
+    - function (Function): The function to be scaled.
+    - scalar (float): The scalar value to multiply with.
+
+    Methods:
+    - evaluate(r, check_if_in_domain=True): Evaluate the scaled function at given points.
+    """
     def __init__(self, function: Function, scalar: float):
+        """
+        Initialize the ScaledFunction object.
+
+        Parameters:
+        - function (Function): The function to be scaled.
+        - scalar (float): The scalar value to multiply with.
+        """
         super().__init__(function.domain)
         self.function = function
         self.scalar = scalar
 
     def evaluate(self, r, check_if_in_domain=True):
+        """
+        Evaluate the scaled function at given points.
+
+        Parameters:
+        - r: Points at which to evaluate the function.
+        - check_if_in_domain (bool): Whether to check if points are in the function's domain. Default is True.
+
+        Returns:
+        - Tuple: A tuple containing the points and the evaluated values of the scaled function.
+        """
         eval_function = self.function.evaluate(r, check_if_in_domain)
         return eval_function[0], eval_function[1] * self.scalar
-
 class _DivideFunction(Function):
+    """
+    Represents the division of two functions.
+
+    Attributes:
+    - function1 (Function): The numerator function.
+    - function2 (Function): The denominator function.
+
+    Methods:
+    - evaluate(r, check_if_in_domain=True): Evaluate the division function at given points.
+    """
     def __init__(self, function1: Function, function2: Function) -> None:
+        """
+        Initialize the DivideFunction object.
+
+        Parameters:
+        - function1 (Function): The numerator function.
+        - function2 (Function): The denominator function.
+        """
         super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
 
     def evaluate(self, r, check_if_in_domain=True):
+        """
+        Evaluate the division function at given points.
+
+        Parameters:
+        - r: Points at which to evaluate the function.
+        - check_if_in_domain (bool): Whether to check if points are in the function's domain. Default is True.
+
+        Returns:
+        - Tuple: A tuple containing the points and the evaluated values of the division function.
+        """
         eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] / eval2[1]
 
 class _SubtractFunction(Function):
+    """
+    Represents the subtraction of two functions.
+
+    Attributes:
+    - function1 (Function): The minuend function.
+    - function2 (Function): The subtrahend function.
+
+    Methods:
+    - evaluate(r, check_if_in_domain=True): Evaluate the subtraction function at given points.
+    """
     def __init__(self, function1: Function, function2: Function) -> None:
+        """
+        Initialize the SubtractFunction object.
+
+        Parameters:
+        - function1 (Function): The minuend function.
+        - function2 (Function): The subtrahend function.
+        """
         super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
 
     def evaluate(self, r, check_if_in_domain=True):
+        """
+        Evaluate the subtraction function at given points.
+
+        Parameters:
+        - r: Points at which to evaluate the function.
+        - check_if_in_domain (bool): Whether to check if points are in the function's domain. Default is True.
+
+        Returns:
+        - Tuple: A tuple containing the points and the evaluated values of the subtraction function.
+        """
         eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] - eval2[1]
 
 class _SumFunction(Function):
+    """
+    Represents the sum of two functions.
+
+    Attributes:
+    - function1 (Function): The first function to be summed.
+    - function2 (Function): The second function to be summed.
+
+    Methods:
+    - evaluate(r, check_if_in_domain=True): Evaluate the sum function at given points.
+    """
     def __init__(self, function1: Function, function2: Function) -> None:
+        """
+        Initialize the SumFunction object.
+
+        Parameters:
+        - function1 (Function): The first function to be summed.
+        - function2 (Function): The second function to be summed.
+        """
         super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
 
     def evaluate(self, r, check_if_in_domain=True):
+        """
+        Evaluate the sum function at given points.
+
+        Parameters:
+        - r: Points at which to evaluate the function.
+        - check_if_in_domain (bool): Whether to check if points are in the function's domain. Default is True.
+
+        Returns:
+        - Tuple: A tuple containing the points and the evaluated values of the sum function.
+        """
         eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] + eval2[1]
 
 class _ProductFunction(Function):
+    """
+    Represents the product of two functions.
+
+    Attributes:
+    - function1 (Function): The first function to be multiplied.
+    - function2 (Function): The second function to be multiplied.
+
+    Methods:
+    - evaluate(r, check_if_in_domain=True): Evaluate the product function at given points.
+    """
     def __init__(self, function1: Function, function2: Function) -> None:
+        """
+        Initialize the ProductFunction object.
+
+        Parameters:
+        - function1 (Function): The first function to be multiplied.
+        - function2 (Function): The second function to be multiplied.
+        """
         super().__init__(function1.domain)
         self.function1 = function1
         self.function2 = function2
 
     def evaluate(self, r, check_if_in_domain=True):
-        eval1 = self.function1.evaluate(r,check_if_in_domain)
+        """
+        Evaluate the product function at given points.
+
+        Parameters:
+        - r: Points at which to evaluate the function.
+        - check_if_in_domain (bool): Whether to check if points are in the function's domain. Default is True.
+
+        Returns:
+        - Tuple: A tuple containing the points and the evaluated values of the product function.
+        """
+        eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] * eval2[1]
+
 
 class Piecewise_1D(Function):
     def __init__(self, domain: HyperParalelipiped, 

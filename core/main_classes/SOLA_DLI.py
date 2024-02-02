@@ -15,10 +15,11 @@ class DependencyTree:
     - start_node (str): The starting node for operations like finding reachable or dependent nodes.
 
     Methods:
-    - plot_dependency_tree(save_filename='tree.png'): Plot the entire dependency tree and save the plot.
-    - find_reachable_nodes(start_node): Find and return all nodes reachable from the given start node.
-    - find_dependent_nodes(start_node, plot_dependent_tree=False, save_filename='dependent_tree.png'):
-      Find and return all nodes dependent on the given start node. Optionally plot and save the dependent tree.
+    - plot_dependency_tree(): Plot the entire dependency tree and optionally save the plot.
+    - find_reachable_nodes(start_node, plot_reachable_graph=False): Find and return all nodes reachable from the given start node.
+      Optionally plot and save the reachable graph.
+    - find_dependent_nodes(start_node, plot_dependent_tree=False): Find and return all nodes dependent on the given start node.
+      Optionally plot and save the dependent tree.
     """
 
     def __init__(self):
@@ -51,12 +52,9 @@ class DependencyTree:
         self.G.add_edges_from(dependencies)
         self.start_node = None
 
-    def plot_dependency_tree(self, save_filename='tree.png'):
+    def plot_dependency_tree(self):
         """
         Plot the entire dependency tree and optionally save the plot.
-
-        Parameters:
-        - save_filename (str): The filename to save the plot. Default is 'tree.png'.
         """
         pos = graphviz_layout(self.G, prog='dot')
 
@@ -85,12 +83,14 @@ class DependencyTree:
 
         plt.show()
 
-    def find_reachable_nodes(self, start_node):
+    def find_reachable_nodes(self, start_node, plot_reachable_graph=False):
         """
         Find and return all nodes reachable from the given start node.
+        Optionally plot and save the reachable graph.
 
         Parameters:
         - start_node (str): The starting node.
+        - plot_reachable_graph (bool): Whether to plot and save the reachable graph. Default is False.
 
         Returns:
         - set: A set of reachable nodes.
@@ -105,9 +105,41 @@ class DependencyTree:
                     dfs(neighbor)
 
         dfs(self.item_aliases[start_node])
+
+        if plot_reachable_graph:
+            reachable_graph = self.G.subgraph(reachable_nodes)
+            pos = graphviz_layout(reachable_graph, prog='dot')
+
+            # Set node colors and edge colors
+            reachable_node_colors = []
+            reachable_edge_colors = []
+            for node in reachable_graph.nodes:
+                if node == self.start_node:
+                    reachable_node_colors.append('gold')  # Color for the starting node
+                elif node in ['M', '$\mathcal{M}$', '$\mathcal{D}$',
+                            'G', 'T', '$\mathcal{P}$', 'd']:
+                    reachable_node_colors.append('red')
+                elif node in ['$\widetilde{p}$', '$\widetilde{m}$',
+                            'sol', 'A', '$\epsilon_i$']:
+                    reachable_node_colors.append('green')
+                else:
+                    reachable_node_colors.append('skyblue')
+
+            # Draw nodes with different colors
+            plt.figure(figsize=(12, 8))
+            nx.draw_networkx_nodes(reachable_graph, pos, node_size=700, node_color=reachable_node_colors, edgecolors='black',
+                                linewidths=1, alpha=0.8)
+
+            # Draw edges and labels
+            nx.draw_networkx_edges(reachable_graph, pos, edge_color='gray', arrowsize=20, connectionstyle='arc3,rad=0.1',
+                                width=1.0)
+            nx.draw_networkx_labels(reachable_graph, pos, font_weight='bold', font_color='black', font_size=10)
+
+            plt.show()
+
         return reachable_nodes
 
-    def find_dependent_nodes(self, start_node, plot_dependent_tree=False, save_filename='dependent_tree.png'):
+    def find_dependent_nodes(self, start_node, plot_dependent_tree=False):
         """
         Find and return all nodes dependent on the given start node.
         Optionally plot and save the dependent tree.
@@ -115,7 +147,6 @@ class DependencyTree:
         Parameters:
         - start_node (str): The starting node.
         - plot_dependent_tree (bool): Whether to plot and save the dependent tree. Default is False.
-        - save_filename (str): The filename to save the dependent tree plot. Default is 'dependent_tree.png'.
 
         Returns:
         - set: A set of dependent nodes.
@@ -164,6 +195,7 @@ class DependencyTree:
 
         return dependent_nodes
 
+
 class Problem():
     def __init__(self, M: Space, D: Space, P: Space, G: Mapping,
                  T: Mapping, norm_bound: float, data: np.ndarray=None) -> None:
@@ -205,6 +237,7 @@ class Problem():
                       self.least_norm_property_solution, self.solution, 
                       self.A]
         self.aliases = dict(zip(aliases, attributes))
+        self.dependencies = DependencyTree()
 
     def change_M(self, new_M: Space, new_G: Mapping, new_T: Mapping):
         self.M = new_M
