@@ -33,6 +33,7 @@ class DependencyTree:
                    'Lambda', 'Lambda_inv', 'Gamma', 'sdata', 'least_norm',
                    'least_norm_solution', 'M', 'H', 'chi', 'X', 'npf', 'epsilon',
                    'least_norm_property', 'solution', 'A']
+    
         self.item_aliases = dict(zip(aliases, items))
         self.aliases_item = dict(zip(items, aliases))
 
@@ -153,7 +154,7 @@ class DependencyTree:
         """
         self.start_node = self.item_aliases[start_node]
         dependent_nodes = set()
-
+        # These items cannot be turned to None 
         def dfs(node):
             dependent_nodes.add(node)
             for predecessor in self.G.predecessors(node):
@@ -230,6 +231,8 @@ class Problem():
                    'Lambda', 'Lambda_inv', 'Gamma', 'sdata', 'least_norm',
                    'least_norm_solution', 'M', 'H', 'chi', 'X', 'npf', 'epsilon',
                    'least_norm_property', 'solution', 'A']
+        self.fixed_items = ['model_space', 'data_space', 'property_space', 'G', 'T', 'd','M']
+
         attributes = [self.M, self.D, self.P, self.G, self.T, self.data, 
                       self.Lambda, self.Lambda_inv, self.Gamma, self.sdata,
                       self.least_norm, self.least_norm_solution, self.norm_bound, 
@@ -246,13 +249,13 @@ class Problem():
         self.G_adjoint = new_G.adjoint()
         self.T_adjoint = new_T.adjoint()
 
-        
+        dependent_nodes = self.dependencies.find_dependent_nodes('model_space')
     
     def _compute_Lambda(self):
         self.Lambda = self.G._compute_GramMatrix()
 
     def _compute_Lambda_inv(self):
-        if self.Lambda is not None:
+        if self.Lambda is None:
             self._compute_Lambda()
         self.Lambda_inv = self.Lambda.invert()
 
@@ -266,12 +269,13 @@ class Problem():
     def _compute_least_norm(self):
         if self.sdata is None:
             self._compute_sdata()
-        self.least_norm = self.D.inner_product(self.data, self.sdata)
+        self.least_norm = np.sqrt(self.D.inner_product(self.data, self.sdata))
 
     def _compute_norm_prefactor(self):
         if self.least_norm is None:
             self._compute_least_norm()
-        self.npf = np.sqrt(self.M**2 - self.least_norm**2)
+        
+        self.npf = np.sqrt(self.norm_bound**2 - self.least_norm**2)
 
     def _compute_least_norm_solution(self):
         if self.sdata is None:
@@ -298,7 +302,7 @@ class Problem():
             self._compute_X()
         if self.Gamma is None:
             self._compute_Gamma()
-        self.H_diag = self.chi_diag - np.sum(self.X.matrix*self.Gamma.matrix.T, axis=1)
+        self.H_diag = self.chi_diag - np.sum(self.X.matrix*self.Gamma.matrix, axis=1).reshape(self.chi_diag.shape)
 
     def _compute_epsilon(self):
         if self.npf is None:

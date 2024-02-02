@@ -91,7 +91,6 @@ class IntegralMapping(Mapping):
     def __init__(self, domain: PCb, codomain: RN, kernels: list) -> None:
         super().__init__(domain, codomain)
         self.kernels = kernels
-        self._compute_GramMatrix()
         self.pseudo_inverse = None
 
     def pseudoinverse_map(self, member: RN):

@@ -42,7 +42,7 @@ log_and_time('Create model space', start_time)
 # Create Data space
 ###################
 # Edit region -------------
-data_directory = '/home/adrian/PhD/BGSOLA/SOLA_DLI/kernels_modeplotaat_Adrian'
+data_directory = '/disks/data/PhD/BGSOLA/SOLA_DLI/kernels_modeplotaat_Adrian'
 which_data = list(np.arange(0, 100))
 # Edit region -------------
 
@@ -138,4 +138,27 @@ log_and_time('Compute fake model and data', start_time)
 # SOlve the Problem
 ###################
 problem = Problem(M=M, D=D, P=P, G=G, T=T, norm_bound=norm_bound, data=data)
-problem._compute_Lambda()
+problem._compute_resolving_kernels()
+
+###############
+# Plot solution
+###############
+# Calculate the number of rows and columns based on the number of subplots
+num_subplots = len(physical_parameters)
+num_rows = int(num_subplots**0.5)
+num_cols = (num_subplots + num_rows - 1) // num_rows
+# Create a figure and an array of subplots
+fig, axes = plt.subplots(num_rows, num_cols, figsize=(12, 8))
+# Flatten the 2D array of subplots into a 1D array
+axes = axes.flatten()
+# Remove any empty subplots at the end (if the number of subplots is not a perfect square)
+for i in range(num_subplots, len(axes)):
+    fig.delaxes(axes[i])
+# Customize each subplot (optional)
+for i, ax in enumerate(axes):
+    ax.set_title(f'Subplot {i+1}')
+# Adjust layout
+plt.tight_layout()
+# Show or save the figure
+plt.show()
+

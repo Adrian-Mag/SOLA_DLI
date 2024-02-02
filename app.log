@@ -100,3 +100,48 @@
 2024-02-02 11:23:05,376 [INFO]: Created model-data mapping: Done. Time taken: 2.92 seconds
 2024-02-02 11:23:05,391 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
 2024-02-02 11:23:05,419 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-02 15:20:21,556 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 15:20:34,590 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 15:20:34,717 [INFO]: Created data space: Done. Time taken: 0.13 seconds
+2024-02-02 15:20:37,547 [INFO]: Created model-data mapping: Done. Time taken: 2.83 seconds
+2024-02-02 15:20:37,563 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-02 15:20:37,590 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-02 15:20:37,591 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-02 15:40:18,173 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 15:40:18,294 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-02 15:40:21,136 [INFO]: Created model-data mapping: Done. Time taken: 2.84 seconds
+2024-02-02 15:40:21,152 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-02 15:40:21,179 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-02 15:40:21,180 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-02 15:41:32,739 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 15:41:32,863 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-02 15:41:35,754 [INFO]: Created model-data mapping: Done. Time taken: 2.89 seconds
+2024-02-02 15:41:35,770 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-02 15:41:35,807 [INFO]: Compute fake model and data: Done. Time taken: 0.04 seconds
+2024-02-02 15:41:35,808 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-02 15:58:11,891 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 15:58:12,013 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-02 16:04:36,913 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 16:04:37,035 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-02 16:04:39,923 [INFO]: Created model-data mapping: Done. Time taken: 2.89 seconds
+2024-02-02 16:04:39,939 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-02 16:04:39,967 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-02 16:04:39,967 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-02 16:24:08,615 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 16:24:08,731 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-02 16:24:11,471 [INFO]: Created model-data mapping: Done. Time taken: 2.74 seconds
+2024-02-02 16:24:11,485 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.01 seconds
+2024-02-02 16:24:11,512 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-02 16:24:11,512 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-02 16:24:34,023 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 16:24:34,146 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-02 16:24:37,030 [INFO]: Created model-data mapping: Done. Time taken: 2.88 seconds
+2024-02-02 16:24:37,045 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-02 16:24:37,075 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-02 16:24:37,075 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-02 16:35:34,378 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 16:35:34,497 [INFO]: Created data space: Done. Time taken: 0.12 seconds
+2024-02-02 16:35:37,424 [INFO]: Created model-data mapping: Done. Time taken: 2.93 seconds
+2024-02-02 16:35:37,439 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
+2024-02-02 16:35:37,468 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
+2024-02-02 16:35:37,469 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
