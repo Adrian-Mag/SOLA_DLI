@@ -31,7 +31,7 @@ class DependencyTree:
         aliases = ['model_space', 'data_space', 'property_space', 'G', 'T', 'd',
                    'Lambda', 'Lambda_inv', 'Gamma', 'sdata', 'least_norm',
                    'least_norm_solution', 'M', 'H', 'chi', 'X', 'npf', 'epsilon',
-                   'least_norm_property', 'solution', 'resolving_kernel']
+                   'least_norm_property', 'solution', 'A']
         self.item_aliases = dict(zip(aliases, items))
         self.aliases_item = dict(zip(items, aliases))
 
@@ -191,11 +191,20 @@ class Problem():
         self.least_norm_model_solution = None
         self.least_norm_property_solution = None
         self.solution = None
+        self.A = None
+        self.H_diag = None
 
         aliases = ['model_space', 'data_space', 'property_space', 'G', 'T', 'd',
                    'Lambda', 'Lambda_inv', 'Gamma', 'sdata', 'least_norm',
                    'least_norm_solution', 'M', 'H', 'chi', 'X', 'npf', 'epsilon',
-                   'least_norm_property', 'solution', 'resolving_kernel']
+                   'least_norm_property', 'solution', 'A']
+        attributes = [self.M, self.D, self.P, self.G, self.T, self.data, 
+                      self.Lambda, self.Lambda_inv, self.Gamma, self.sdata,
+                      self.least_norm, self.least_norm_solution, self.norm_bound, 
+                      self.H_diag, self.chi_diag, self.X, self.npf, self.epsilon,
+                      self.least_norm_property_solution, self.solution, 
+                      self.A]
+        self.aliases = dict(zip(aliases, attributes))
 
     def change_M(self, new_M: Space, new_G: Mapping, new_T: Mapping):
         self.M = new_M
@@ -284,3 +293,8 @@ class Problem():
             self._compute_epsilon()
         self.solution = {'upper bound': self.least_norm_property_solution + self.epsilon,
                          'lower bound': self.least_norm_property_solution - self.epsilon}
+    
+    def _compute_resolving_kernels(self):
+        if self.X is None:
+            self._compute_X()
+        self.A = self.X*self.G
