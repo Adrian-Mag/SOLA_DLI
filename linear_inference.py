@@ -3,6 +3,7 @@ from core.main_classes.spaces import PCb, DirectSumSpace, RN
 from core.aux.normal_data import load_normal_data
 from core.main_classes.functions import *
 from core.main_classes.mappings import *
+from core.main_classes.SOLA_DLI import Problem
 import numpy as np
 import logging
 import time
@@ -45,6 +46,7 @@ data_directory = '/disks/data/PhD/BGSOLA/SOLA_DLI/kernels_modeplotaat_Adrian'
 which_data = list(np.arange(0, 100))
 # Edit region -------------
 
+start_time = time.time()
 # Import sensitivity data
 how_many_data = len(which_data)
 raw_sensitivity_dict = {}
@@ -114,33 +116,26 @@ true_model = M.random_member(args_list=[(1,), (2,), (3,)])
 data = G.map(true_model)
 log_and_time('Compute fake model and data', start_time)
 
-########################################
-# Compute Lambda and instanciate inverse
-########################################
-start_time=time.time()
-Lambda = G._compute_GramMatrix()
-Lambda_inv = Lambda.invert()
-log_and_time('Compute Lambda',start_time)
-
-#########################
-# Compute reshuffled data
-#########################
-start_time = time.time()
-sdata = Lambda_inv.map(data)
-log_and_time('Reshuffled data', start_time)
-
 ####################
-# Compute least norm
+# Compute norm bound
 ####################
+# Edit region -------------
+# Places where the true model will be evaluated
+intervals = np.array([0,1000, 2000, 5000, EarthDomain.bounds[0][1]])
+# Edit region -------------
 start_time = time.time()
-least_norm = D.inner_product(data, sdata)
-log_and_time('Compute least norm', start_time)
+upper_bounds = []
+for model in true_model:
+    values = model.evaluate(intervals[1:])[1]*1.2
+    upper_bound = Piecewise_1D(domain=model.domain,
+                               intervals=intervals,
+                               values=values)
+    upper_bounds.append(upper_bound)
+norm_bound = M.norm(tuple(upper_bounds))
+log_and_time('Compute fake model and data', start_time)
 
-################################
-# Compute adjoint of G and Gamma
-################################
-start_time = time.time()
-G_adjoint = G.adjoint()
-Gamma = T*G_adjoint
-log_and_time('Compute Gamma', start_time)
-
+###################
+# SOlve the Problem
+###################
+problem = Problem(M=M, D=D, P=P, G=G, T=T, norm_bound=norm_bound, data=data)
+problem._compute_Lambda()
