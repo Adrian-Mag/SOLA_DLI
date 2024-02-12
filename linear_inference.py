@@ -1,6 +1,7 @@
 from core.main_classes.domains import HyperParalelipiped
 from core.main_classes.spaces import PCb, DirectSumSpace, RN
 from core.aux.normal_data import load_normal_data
+from core.aux.plots import plot_solution
 from core.main_classes.functions import *
 from core.main_classes.mappings import *
 from core.main_classes.SOLA_DLI import Problem
@@ -14,7 +15,7 @@ def log_and_time(section_name, start_time):
 
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)s [%(levelname)s]: %(message)s',
     handlers=[
         logging.FileHandler('app.log'),
@@ -26,7 +27,7 @@ logging.basicConfig(
 # Create model space
 ####################
 # Edit region -------------
-physical_parameters = ['vs', 'vp', 'rho']
+physical_parameters = ['vs', 'vp']
 # Edit region -------------
 start_time = time.time()
 
@@ -83,10 +84,9 @@ log_and_time('Created model-data mapping', start_time)
 ###################################
 # Edit region -------------
 target_types = {'vs': Gaussian_1D,
-                'vp': Null_1D,
-                'rho': Null_1D}
+                'vp': Null_1D}
 width = 1000 # same units as domain (km here)
-how_many_targets = 10
+how_many_targets = 100
 enquiry_points = np.linspace(EarthDomain.bounds[0][0], 
                              EarthDomain.bounds[0][1], 
                              how_many_targets)
@@ -132,33 +132,29 @@ for model in true_model:
                                values=values)
     upper_bounds.append(upper_bound)
 norm_bound = M.norm(tuple(upper_bounds))
-log_and_time('Compute fake model and data', start_time)
+log_and_time('Compute norm bound', start_time)
 
 ###################
-# SOlve the Problem
+# Solve the Problem
 ###################
+start_time = time.time()
 problem = Problem(M=M, D=D, P=P, G=G, T=T, norm_bound=norm_bound, data=data)
+problem.solve()
+# We also compute resolving kernels
 problem._compute_resolving_kernels()
+log_and_time('Solve problem', start_time)
 
-###############
-# Plot solution
-###############
-# Calculate the number of rows and columns based on the number of subplots
-num_subplots = len(physical_parameters)
-num_rows = int(num_subplots**0.5)
-num_cols = (num_subplots + num_rows - 1) // num_rows
-# Create a figure and an array of subplots
-fig, axes = plt.subplots(num_rows, num_cols, figsize=(12, 8))
-# Flatten the 2D array of subplots into a 1D array
-axes = axes.flatten()
-# Remove any empty subplots at the end (if the number of subplots is not a perfect square)
-for i in range(num_subplots, len(axes)):
-    fig.delaxes(axes[i])
-# Customize each subplot (optional)
-for i, ax in enumerate(axes):
-    ax.set_title(f'Subplot {i+1}')
-# Adjust layout
-plt.tight_layout()
-# Show or save the figure
-plt.show()
+problem.plot_solution(enquiry_points=enquiry_points)
+""" true_property = T.map(true_model)
+evaluated_resolving_kernels = []
+evaluated_targets = []
+for kernel, target in zip(problem.A.mappings[0].kernels, T.mappings[0].kernels):
+    evaluated_resolving_kernels.append(kernel.evaluate(EarthDomain.mesh)[1])
+    evaluated_targets.append(target.evaluate(EarthDomain.mesh)[1])
 
+plot_solution(domain=EarthDomain.mesh, least_norm_property=problem.least_norm_property, 
+              resolving_kernels=np.array(evaluated_resolving_kernels), 
+              enquiry_points=enquiry_points,
+              targets=np.array(evaluated_targets), true_property=true_property, 
+              upper_bound=problem.solution['upper bound'], 
+              lower_bound=problem.solution['lower bound']) """

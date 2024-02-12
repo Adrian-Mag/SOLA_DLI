@@ -61,87 +61,851 @@
 2024-02-01 11:04:13,541 [INFO]: Reshuffled data: Done. Time taken: 0.00 seconds
 2024-02-01 11:04:13,541 [INFO]: Compute least norm: Done. Time taken: 0.00 seconds
 2024-02-01 11:04:13,780 [INFO]: Compute Gamma: Done. Time taken: 0.24 seconds
-2024-02-02 10:53:32,005 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 10:53:32,127 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 10:53:34,998 [INFO]: Created model-data mapping: Done. Time taken: 2.87 seconds
-2024-02-02 10:53:35,013 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 10:53:35,041 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 10:53:37,928 [INFO]: Compute Lambda: Done. Time taken: 2.89 seconds
-2024-02-02 10:53:37,929 [INFO]: Reshuffled data: Done. Time taken: 0.00 seconds
-2024-02-02 10:53:37,929 [INFO]: Compute least norm: Done. Time taken: 0.00 seconds
-2024-02-02 10:53:38,161 [INFO]: Compute Gamma: Done. Time taken: 0.23 seconds
-2024-02-02 10:53:50,578 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 10:53:50,703 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 10:53:53,592 [INFO]: Created model-data mapping: Done. Time taken: 2.89 seconds
-2024-02-02 10:53:53,607 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 10:53:53,636 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 11:16:42,744 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 11:16:42,874 [INFO]: Created data space: Done. Time taken: 0.13 seconds
-2024-02-02 11:16:45,758 [INFO]: Created model-data mapping: Done. Time taken: 2.88 seconds
-2024-02-02 11:16:45,774 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 11:16:45,802 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 11:20:18,312 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 11:20:18,430 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 11:20:21,219 [INFO]: Created model-data mapping: Done. Time taken: 2.79 seconds
-2024-02-02 11:20:21,234 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.01 seconds
-2024-02-02 11:20:21,261 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 11:20:51,801 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 11:20:51,918 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 11:20:54,674 [INFO]: Created model-data mapping: Done. Time taken: 2.76 seconds
-2024-02-02 11:20:54,689 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.01 seconds
-2024-02-02 11:20:54,716 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 11:21:17,326 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 11:21:17,446 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 11:21:20,286 [INFO]: Created model-data mapping: Done. Time taken: 2.84 seconds
-2024-02-02 11:21:20,301 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 11:21:20,330 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 11:23:02,336 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 11:23:02,457 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 11:23:05,376 [INFO]: Created model-data mapping: Done. Time taken: 2.92 seconds
-2024-02-02 11:23:05,391 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 11:23:05,419 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 15:20:21,556 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 15:20:34,590 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 15:20:34,717 [INFO]: Created data space: Done. Time taken: 0.13 seconds
-2024-02-02 15:20:37,547 [INFO]: Created model-data mapping: Done. Time taken: 2.83 seconds
-2024-02-02 15:20:37,563 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 15:20:37,590 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 15:20:37,591 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
-2024-02-02 15:40:18,173 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 15:40:18,294 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 15:40:21,136 [INFO]: Created model-data mapping: Done. Time taken: 2.84 seconds
-2024-02-02 15:40:21,152 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 15:40:21,179 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 15:40:21,180 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
-2024-02-02 15:41:32,739 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 15:41:32,863 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 15:41:35,754 [INFO]: Created model-data mapping: Done. Time taken: 2.89 seconds
-2024-02-02 15:41:35,770 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 15:41:35,807 [INFO]: Compute fake model and data: Done. Time taken: 0.04 seconds
-2024-02-02 15:41:35,808 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
-2024-02-02 15:58:11,891 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 15:58:12,013 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 16:04:36,913 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 16:04:37,035 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 16:04:39,923 [INFO]: Created model-data mapping: Done. Time taken: 2.89 seconds
-2024-02-02 16:04:39,939 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 16:04:39,967 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 16:04:39,967 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
-2024-02-02 16:24:08,615 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 16:24:08,731 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 16:24:11,471 [INFO]: Created model-data mapping: Done. Time taken: 2.74 seconds
-2024-02-02 16:24:11,485 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.01 seconds
-2024-02-02 16:24:11,512 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 16:24:11,512 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
-2024-02-02 16:24:34,023 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 16:24:34,146 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 16:24:37,030 [INFO]: Created model-data mapping: Done. Time taken: 2.88 seconds
-2024-02-02 16:24:37,045 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 16:24:37,075 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 16:24:37,075 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
-2024-02-02 16:35:34,378 [INFO]: Create model space: Done. Time taken: 0.00 seconds
-2024-02-02 16:35:34,497 [INFO]: Created data space: Done. Time taken: 0.12 seconds
-2024-02-02 16:35:37,424 [INFO]: Created model-data mapping: Done. Time taken: 2.93 seconds
-2024-02-02 16:35:37,439 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.02 seconds
-2024-02-02 16:35:37,468 [INFO]: Compute fake model and data: Done. Time taken: 0.03 seconds
-2024-02-02 16:35:37,469 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-02 11:50:04,882 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 11:50:46,747 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-02 11:50:46,985 [INFO]: Created data space: Done. Time taken: 0.24 seconds
+2024-02-02 11:50:53,327 [INFO]: Created model-data mapping: Done. Time taken: 6.34 seconds
+2024-02-02 11:50:53,362 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.03 seconds
+2024-02-02 11:50:53,422 [INFO]: Compute fake model and data: Done. Time taken: 0.06 seconds
+2024-02-02 11:50:53,422 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-04 18:57:39,052 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-04 18:57:39,285 [INFO]: Created data space: Done. Time taken: 0.23 seconds
+2024-02-04 18:57:39,286 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-04 18:57:39,286 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-04 18:57:39,349 [INFO]: Compute fake model and data: Done. Time taken: 0.06 seconds
+2024-02-04 18:57:39,350 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-04 18:58:38,564 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-04 18:58:38,821 [INFO]: Created data space: Done. Time taken: 0.26 seconds
+2024-02-04 18:58:38,821 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-04 18:58:38,822 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-04 18:58:38,887 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-04 18:58:38,888 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-04 18:58:45,912 [DEBUG]: Loaded backend TkAgg version 8.6.
+2024-02-04 18:58:46,046 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,047 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,047 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,047 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,047 [DEBUG]: STREAM b'IDAT' 78 1189
+2024-02-04 18:58:46,049 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,049 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,049 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,050 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,050 [DEBUG]: STREAM b'IDAT' 78 2994
+2024-02-04 18:58:46,114 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,114 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,115 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,115 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,115 [DEBUG]: STREAM b'IDAT' 78 374
+2024-02-04 18:58:46,117 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,117 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,117 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,117 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,117 [DEBUG]: STREAM b'IDAT' 78 286
+2024-02-04 18:58:46,119 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,120 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,120 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,120 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,120 [DEBUG]: STREAM b'IDAT' 78 263
+2024-02-04 18:58:46,124 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,124 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,124 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,124 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,124 [DEBUG]: STREAM b'IDAT' 78 387
+2024-02-04 18:58:46,126 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,126 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,126 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,126 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,126 [DEBUG]: STREAM b'IDAT' 78 436
+2024-02-04 18:58:46,128 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,129 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,129 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,129 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,129 [DEBUG]: STREAM b'IDAT' 78 351
+2024-02-04 18:58:46,131 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-04 18:58:46,131 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-04 18:58:46,131 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-04 18:58:46,132 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-04 18:58:46,132 [DEBUG]: STREAM b'IDAT' 78 364
+2024-02-04 18:58:46,144 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,145 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-04 18:58:46,146 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,147 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,148 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,149 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-04 18:58:46,149 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-04 18:58:46,190 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0.
+2024-02-04 18:58:46,190 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,191 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-04 18:58:46,192 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,193 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-04 18:58:46,194 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-04 18:58:46,195 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-04 18:58:46,195 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:32:50,927 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 16:32:51,210 [INFO]: Created data space: Done. Time taken: 0.28 seconds
+2024-02-05 16:32:51,211 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:32:51,211 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:32:51,278 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 16:32:51,279 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-05 16:32:58,307 [DEBUG]: Loaded backend TkAgg version 8.6.
+2024-02-05 16:32:58,427 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,427 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,427 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,428 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,428 [DEBUG]: STREAM b'IDAT' 78 1189
+2024-02-05 16:32:58,429 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,429 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,429 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,429 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,429 [DEBUG]: STREAM b'IDAT' 78 2994
+2024-02-05 16:32:58,516 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,516 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,516 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,516 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,516 [DEBUG]: STREAM b'IDAT' 78 374
+2024-02-05 16:32:58,518 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,518 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,518 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,518 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,518 [DEBUG]: STREAM b'IDAT' 78 286
+2024-02-05 16:32:58,520 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,520 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,520 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,520 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,520 [DEBUG]: STREAM b'IDAT' 78 263
+2024-02-05 16:32:58,523 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,523 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,523 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,524 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,524 [DEBUG]: STREAM b'IDAT' 78 387
+2024-02-05 16:32:58,525 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,525 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,525 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,526 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,526 [DEBUG]: STREAM b'IDAT' 78 436
+2024-02-05 16:32:58,527 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,527 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,528 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,528 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,528 [DEBUG]: STREAM b'IDAT' 78 351
+2024-02-05 16:32:58,530 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:32:58,530 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:32:58,530 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:32:58,530 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:32:58,531 [DEBUG]: STREAM b'IDAT' 78 364
+2024-02-05 16:32:58,544 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
+2024-02-05 16:32:58,545 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,545 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,545 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,545 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,546 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,547 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,547 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,547 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,547 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,547 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,547 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,547 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,548 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,549 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,549 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-05 16:32:58,549 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,549 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:32:58,549 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,549 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,549 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,550 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,550 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,550 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,550 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,550 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,550 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,550 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:32:58,551 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,551 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,551 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:32:58,551 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:32:58,610 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0.
+2024-02-05 16:32:58,610 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,610 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,611 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,611 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,611 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,611 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,611 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,611 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,611 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,612 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,613 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,613 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,613 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,613 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-05 16:32:58,613 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:32:58,613 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:32:58,613 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,614 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,615 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:32:58,616 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:32:58,616 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:32:58,616 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:32:58,616 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:34:06,691 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:06,933 [INFO]: Created data space: Done. Time taken: 0.24 seconds
+2024-02-05 16:34:06,933 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:06,934 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:07,000 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 16:34:07,001 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:14,179 [DEBUG]: Loaded backend TkAgg version 8.6.
+2024-02-05 16:34:14,276 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,276 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,276 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,276 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,276 [DEBUG]: STREAM b'IDAT' 78 1189
+2024-02-05 16:34:14,277 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,277 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,277 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,278 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,278 [DEBUG]: STREAM b'IDAT' 78 2994
+2024-02-05 16:34:14,337 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,337 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,337 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,337 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,337 [DEBUG]: STREAM b'IDAT' 78 374
+2024-02-05 16:34:14,339 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,339 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,339 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,339 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,339 [DEBUG]: STREAM b'IDAT' 78 286
+2024-02-05 16:34:14,341 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,341 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,341 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,341 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,341 [DEBUG]: STREAM b'IDAT' 78 263
+2024-02-05 16:34:14,343 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,344 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,344 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,344 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,344 [DEBUG]: STREAM b'IDAT' 78 387
+2024-02-05 16:34:14,345 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,345 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,346 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,346 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,346 [DEBUG]: STREAM b'IDAT' 78 436
+2024-02-05 16:34:14,347 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,347 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,347 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,348 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,348 [DEBUG]: STREAM b'IDAT' 78 351
+2024-02-05 16:34:14,349 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:14,349 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:14,349 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:14,349 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:14,350 [DEBUG]: STREAM b'IDAT' 78 364
+2024-02-05 16:34:14,356 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
+2024-02-05 16:34:14,356 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:14,356 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,356 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:14,356 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:14,357 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,358 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:14,359 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,360 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,361 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:34:14,361 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:14,361 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:14,361 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:34:14,361 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:34:36,179 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:36,418 [INFO]: Created data space: Done. Time taken: 0.24 seconds
+2024-02-05 16:34:36,418 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:36,419 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:36,484 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 16:34:36,485 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:43,538 [DEBUG]: Loaded backend TkAgg version 8.6.
+2024-02-05 16:34:43,636 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,636 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,636 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,636 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,636 [DEBUG]: STREAM b'IDAT' 78 1189
+2024-02-05 16:34:43,637 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,637 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,637 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,637 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,638 [DEBUG]: STREAM b'IDAT' 78 2994
+2024-02-05 16:34:43,685 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,686 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,686 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,686 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,686 [DEBUG]: STREAM b'IDAT' 78 374
+2024-02-05 16:34:43,687 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,687 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,688 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,688 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,688 [DEBUG]: STREAM b'IDAT' 78 286
+2024-02-05 16:34:43,689 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,689 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,689 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,689 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,690 [DEBUG]: STREAM b'IDAT' 78 263
+2024-02-05 16:34:43,692 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,692 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,692 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,692 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,693 [DEBUG]: STREAM b'IDAT' 78 387
+2024-02-05 16:34:43,694 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,694 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,694 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,694 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,694 [DEBUG]: STREAM b'IDAT' 78 436
+2024-02-05 16:34:43,696 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,696 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,696 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,696 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,696 [DEBUG]: STREAM b'IDAT' 78 351
+2024-02-05 16:34:43,698 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:34:43,698 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:34:43,698 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:34:43,698 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:34:43,698 [DEBUG]: STREAM b'IDAT' 78 364
+2024-02-05 16:34:43,705 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
+2024-02-05 16:34:43,705 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,706 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,707 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,708 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,709 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,710 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:34:43,710 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:34:43,816 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0.
+2024-02-05 16:34:43,816 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,816 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,816 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,816 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,816 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,816 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,816 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,817 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,818 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,819 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:34:43,820 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:34:43,820 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:34:56,411 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:56,676 [INFO]: Created data space: Done. Time taken: 0.26 seconds
+2024-02-05 16:34:56,677 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:56,681 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:34:56,747 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 16:34:56,748 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-05 16:35:08,416 [DEBUG]: Loaded backend TkAgg version 8.6.
+2024-02-05 16:35:08,510 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,510 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,510 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,510 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,510 [DEBUG]: STREAM b'IDAT' 78 1189
+2024-02-05 16:35:08,511 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,511 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,511 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,511 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,511 [DEBUG]: STREAM b'IDAT' 78 2994
+2024-02-05 16:35:08,559 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,559 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,559 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,559 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,559 [DEBUG]: STREAM b'IDAT' 78 374
+2024-02-05 16:35:08,561 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,561 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,561 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,561 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,561 [DEBUG]: STREAM b'IDAT' 78 286
+2024-02-05 16:35:08,562 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,563 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,563 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,563 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,563 [DEBUG]: STREAM b'IDAT' 78 263
+2024-02-05 16:35:08,565 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,565 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,565 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,565 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,565 [DEBUG]: STREAM b'IDAT' 78 387
+2024-02-05 16:35:08,566 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,566 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,567 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,567 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,567 [DEBUG]: STREAM b'IDAT' 78 436
+2024-02-05 16:35:08,569 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,569 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,569 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,569 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,569 [DEBUG]: STREAM b'IDAT' 78 351
+2024-02-05 16:35:08,571 [DEBUG]: STREAM b'IHDR' 16 13
+2024-02-05 16:35:08,571 [DEBUG]: STREAM b'sBIT' 41 4
+2024-02-05 16:35:08,571 [DEBUG]: b'sBIT' 41 4 (unknown)
+2024-02-05 16:35:08,571 [DEBUG]: STREAM b'pHYs' 57 9
+2024-02-05 16:35:08,571 [DEBUG]: STREAM b'IDAT' 78 364
+2024-02-05 16:35:08,577 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0.
+2024-02-05 16:35:08,577 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,577 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,577 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,577 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,577 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,578 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:35:08,579 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,580 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,581 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:35:08,581 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=10.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:35:08,686 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0.
+2024-02-05 16:35:08,686 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-BoldItalic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,686 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmmi10.ttf', name='cmmi10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,686 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBolIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,686 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmtt10.ttf', name='cmtt10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralItalic.ttf', name='STIXGeneral', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFiveSymReg.ttf', name='STIXSizeFiveSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmss10.ttf', name='cmss10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniIta.ttf', name='STIXNonUnicode', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmsy10.ttf', name='cmsy10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymBol.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymReg.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,687 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif-Italic.ttf', name='DejaVu Serif', style='italic', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymBol.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneral.ttf', name='STIXGeneral', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUniBol.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansDisplay.ttf', name='DejaVu Sans Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymBol.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBol.ttf', name='STIXGeneral', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerifDisplay.ttf', name='DejaVu Serif Display', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,688 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Oblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 1.05
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Oblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=400, stretch='normal', size='scalable')) = 11.05
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmb10.ttf', name='cmb10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXNonUni.ttf', name='STIXNonUnicode', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizTwoSymReg.ttf', name='STIXSizeTwoSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans-BoldOblique.ttf', name='DejaVu Sans', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 1.335
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSansMono-BoldOblique.ttf', name='DejaVu Sans Mono', style='oblique', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,689 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizThreeSymBol.ttf', name='STIXSizeThreeSym', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizOneSymReg.ttf', name='STIXSizeOneSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmex10.ttf', name='cmex10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXGeneralBolIta.ttf', name='STIXGeneral', style='italic', variant='normal', weight=700, stretch='normal', size='scalable')) = 11.335
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/cmr10.ttf', name='cmr10', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/STIXSizFourSymReg.ttf', name='STIXSizeFourSym', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,690 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,691 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 0.05
+2024-02-05 16:35:08,691 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSansMono-Bold.ttf', name='DejaVu Sans Mono', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 10.335
+2024-02-05 16:35:08,691 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf', name='DejaVu Serif', style='normal', variant='normal', weight=400, stretch='normal', size='scalable')) = 10.05
+2024-02-05 16:35:08,691 [DEBUG]: findfont: score(FontEntry(fname='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', name='DejaVu Sans', style='normal', variant='normal', weight=700, stretch='normal', size='scalable')) = 0.33499999999999996
+2024-02-05 16:35:08,691 [DEBUG]: findfont: Matching sans\-serif:style=normal:variant=normal:weight=normal:stretch=normal:size=12.0 to DejaVu Sans ('/home/adrian/anaconda3/envs/bgsola/lib/python3.11/site-packages/matplotlib/mpl-data/fonts/ttf/DejaVuSans.ttf') with score of 0.050000.
+2024-02-05 16:36:18,252 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 16:36:18,550 [INFO]: Created data space: Done. Time taken: 0.30 seconds
+2024-02-05 16:36:18,551 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:36:18,556 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:36:18,629 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 16:36:18,630 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-05 16:42:41,689 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 16:42:41,968 [INFO]: Created data space: Done. Time taken: 0.28 seconds
+2024-02-05 16:42:41,968 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:42:41,973 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 16:42:42,041 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 16:42:42,042 [INFO]: Compute fake model and data: Done. Time taken: 0.00 seconds
+2024-02-05 17:13:07,931 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 17:13:08,177 [INFO]: Created data space: Done. Time taken: 0.25 seconds
+2024-02-05 17:13:08,178 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:13:08,182 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:13:08,249 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 17:13:08,250 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 17:15:01,863 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 17:15:02,188 [INFO]: Created data space: Done. Time taken: 0.32 seconds
+2024-02-05 17:15:02,188 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:15:02,193 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:15:02,261 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 17:15:02,262 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 17:15:13,756 [INFO]: Solve problem: Done. Time taken: 11.49 seconds
+2024-02-05 17:15:25,237 [INFO]: Solve: Done. Time taken: 7.76 seconds
+2024-02-05 17:50:16,058 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 17:50:16,337 [INFO]: Created data space: Done. Time taken: 0.28 seconds
+2024-02-05 17:50:16,337 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:50:16,342 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:50:16,408 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 17:50:16,409 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 17:50:27,966 [INFO]: Solve problem: Done. Time taken: 11.56 seconds
+2024-02-05 17:50:37,509 [INFO]: Solve: Done. Time taken: 7.87 seconds
+2024-02-05 17:52:36,040 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 17:52:36,275 [INFO]: Created data space: Done. Time taken: 0.24 seconds
+2024-02-05 17:52:36,275 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:52:36,280 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:52:36,346 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 17:52:36,347 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 17:52:47,920 [INFO]: Solve problem: Done. Time taken: 11.57 seconds
+2024-02-05 17:53:01,843 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 17:53:02,080 [INFO]: Created data space: Done. Time taken: 0.24 seconds
+2024-02-05 17:53:02,081 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:53:02,085 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 17:53:02,151 [INFO]: Compute fake model and data: Done. Time taken: 0.07 seconds
+2024-02-05 17:53:02,152 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 17:53:13,547 [INFO]: Solve problem: Done. Time taken: 11.39 seconds
+2024-02-05 17:53:23,562 [INFO]: Solve: Done. Time taken: 7.74 seconds
+2024-02-05 18:09:50,553 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 18:09:50,735 [INFO]: Created data space: Done. Time taken: 0.18 seconds
+2024-02-05 18:09:50,736 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:09:50,740 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:09:50,786 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 18:09:50,786 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 18:09:58,491 [INFO]: Solve problem: Done. Time taken: 7.70 seconds
+2024-02-05 18:30:59,242 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 18:30:59,400 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 18:30:59,401 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:30:59,405 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:30:59,452 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 18:30:59,453 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 18:31:07,253 [INFO]: Solve problem: Done. Time taken: 7.80 seconds
+2024-02-05 18:34:11,446 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 18:34:11,610 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 18:34:11,611 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:34:11,615 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:34:11,662 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 18:34:11,662 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 18:34:19,496 [INFO]: Solve problem: Done. Time taken: 7.83 seconds
+2024-02-05 18:36:36,936 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 18:36:37,098 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 18:36:37,099 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:36:37,103 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:36:37,150 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 18:36:37,151 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 18:36:45,115 [INFO]: Solve problem: Done. Time taken: 7.96 seconds
+2024-02-05 18:37:01,872 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 18:37:02,031 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 18:37:02,031 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:37:02,035 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:37:02,082 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 18:37:02,083 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 18:37:10,055 [INFO]: Solve problem: Done. Time taken: 7.97 seconds
+2024-02-05 18:38:36,825 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 18:38:36,994 [INFO]: Created data space: Done. Time taken: 0.17 seconds
+2024-02-05 18:38:36,995 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:38:36,999 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:38:37,047 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 18:38:37,048 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 18:38:44,886 [INFO]: Solve problem: Done. Time taken: 7.84 seconds
+2024-02-05 18:40:51,100 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 18:40:51,261 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 18:40:51,262 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:40:51,266 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 18:40:51,313 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 18:40:51,314 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 18:40:59,173 [INFO]: Solve problem: Done. Time taken: 7.86 seconds
+2024-02-05 21:21:46,664 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 21:21:46,863 [INFO]: Created data space: Done. Time taken: 0.20 seconds
+2024-02-05 21:21:46,863 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:21:46,868 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:21:46,921 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 21:21:46,922 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 21:21:54,800 [INFO]: Solve problem: Done. Time taken: 7.88 seconds
+2024-02-05 21:22:22,763 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 21:22:22,916 [INFO]: Created data space: Done. Time taken: 0.15 seconds
+2024-02-05 21:22:22,917 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:22:22,921 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:22:22,966 [INFO]: Compute fake model and data: Done. Time taken: 0.04 seconds
+2024-02-05 21:22:22,966 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 21:22:30,620 [INFO]: Solve problem: Done. Time taken: 7.65 seconds
+2024-02-05 21:23:42,233 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 21:23:42,388 [INFO]: Created data space: Done. Time taken: 0.15 seconds
+2024-02-05 21:23:42,388 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:23:42,393 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:23:42,439 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 21:23:42,440 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 21:23:50,264 [INFO]: Solve problem: Done. Time taken: 7.82 seconds
+2024-02-05 21:23:59,325 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 21:23:59,482 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 21:23:59,483 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:23:59,487 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:23:59,533 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 21:23:59,534 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 21:24:07,464 [INFO]: Solve problem: Done. Time taken: 7.93 seconds
+2024-02-05 21:24:38,684 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 21:24:38,859 [INFO]: Created data space: Done. Time taken: 0.17 seconds
+2024-02-05 21:24:38,860 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:24:38,864 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:24:38,914 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 21:24:38,914 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 21:24:46,994 [INFO]: Solve problem: Done. Time taken: 8.08 seconds
+2024-02-05 21:26:16,483 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 21:26:16,636 [INFO]: Created data space: Done. Time taken: 0.15 seconds
+2024-02-05 21:26:16,636 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:26:16,641 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:26:16,687 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 21:26:16,688 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 21:26:24,514 [INFO]: Solve problem: Done. Time taken: 7.83 seconds
+2024-02-05 21:27:36,262 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 21:27:36,418 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 21:27:36,418 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:27:36,423 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 21:27:36,468 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 21:27:36,469 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 21:27:44,202 [INFO]: Solve problem: Done. Time taken: 7.73 seconds
+2024-02-05 22:14:48,381 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 22:14:48,551 [INFO]: Created data space: Done. Time taken: 0.17 seconds
+2024-02-05 22:14:48,551 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 22:14:48,555 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 22:14:48,601 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 22:14:48,602 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 22:14:56,572 [INFO]: Solve problem: Done. Time taken: 7.97 seconds
+2024-02-05 22:17:44,969 [INFO]: Create model space: Done. Time taken: 0.00 seconds
+2024-02-05 22:17:45,125 [INFO]: Created data space: Done. Time taken: 0.16 seconds
+2024-02-05 22:17:45,126 [INFO]: Created model-data mapping: Done. Time taken: 0.00 seconds
+2024-02-05 22:17:45,130 [INFO]: Created property space and data-property mapping: Done. Time taken: 0.00 seconds
+2024-02-05 22:17:45,176 [INFO]: Compute fake model and data: Done. Time taken: 0.05 seconds
+2024-02-05 22:17:45,177 [INFO]: Compute norm bound: Done. Time taken: 0.00 seconds
+2024-02-05 22:17:52,970 [INFO]: Solve problem: Done. Time taken: 7.79 seconds
