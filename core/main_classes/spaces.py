@@ -114,9 +114,12 @@ class RN(Space):
         elif isinstance(member, np.ndarray):
             if member.ndim == 1 or (member.ndim == 2 and member.shape[0] == 1):
                 if self.dimension == 1:
-                    return False
+                    if member.shape[1] == 1:
+                        return True
+                    else:
+                        return False
                 else:
-                    return False
+                    return True
             else:
                 if np.issubdtype(member.dtype, np.integer) or np.issubdtype(member.dtype, np.floating):
                     return True
