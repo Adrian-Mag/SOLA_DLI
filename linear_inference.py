@@ -43,7 +43,7 @@ log_and_time('Create model space', start_time)
 # Create Data space
 ###################
 # Edit region -------------
-data_directory = '/home/adrian/PhD/BGSOLA/SOLA_DLI/kernels_modeplotaat_Adrian'
+data_directory = '/disks/data/PhD/BGSOLA/SOLA_DLI/kernels_modeplotaat_Adrian'
 which_data = list(np.arange(0, 100))
 # Edit region -------------
 
@@ -144,8 +144,18 @@ problem.solve()
 problem._compute_resolving_kernels()
 log_and_time('Solve problem', start_time)
 
-problem.plot_solution(enquiry_points=enquiry_points)
-""" true_property = T.map(true_model)
+
+###################
+# Plot the solution
+###################
+
+plt.figure('Solution', figsize=(12,10))
+plt.plot(problem.solution['upper bound'])
+plt.plot(problem.solution['lower bound'])
+plt.show()
+
+""" problem.plot_solution(enquiry_points=enquiry_points)
+true_property = T.map(true_model)
 evaluated_resolving_kernels = []
 evaluated_targets = []
 for kernel, target in zip(problem.A.mappings[0].kernels, T.mappings[0].kernels):
