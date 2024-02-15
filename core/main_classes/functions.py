@@ -437,17 +437,18 @@ class Random_1D(Function):
                 # Random position of the x-shift in the function
                 x_shift = random.uniform(partition[0], partition[1])
                 # Random coefficients
-                a0 = random.uniform(-1,5)
-                a1 = random.uniform(-1,5)
-                a2 = random.uniform(-1,5)
-                a3 = random.uniform(-1,5)
+                a0 = random.uniform(-1,1)
+                a1 = random.uniform(-1,1)
+                a2 = random.uniform(-1,1)
+                a3 = random.uniform(-1,1)
                 stretch = np.max(self.domain.mesh)
                 model = a0 + a1*(self.domain.mesh + x_shift)/stretch + a2*((self.domain.mesh + x_shift)/stretch)**2 + a3*((self.domain.mesh + x_shift)/stretch)**3
                 model[self.domain.mesh<partition[0]] = 0
                 model[self.domain.mesh>partition[1]] = 0
 
                 values += model
-            return interp1d(self.domain.mesh, values, 
+                scaling = 0.1
+            return interp1d(self.domain.mesh, values*scaling, 
                             kind='linear', fill_value='extrapolate')
     
     def evaluate(self, r, check_if_in_domain=True):
