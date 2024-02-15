@@ -592,7 +592,7 @@ class Problem():
         combinations = list(product(enquiry_points, spreads))
         domain_min = domain.bounds[0][0]
         domain_max = domain.bounds[0][1]
-        exclusion_zones = np.array([(((center + spread) > domain_max) or ((center - spread) < domain_min)) for center, spread in combinations])
+        exclusion_zones = np.array([(((center + spread/2) > domain_max) or ((center - spread/2) < domain_min)) for center, spread in combinations])
 
         plt.figure('errrors', figsize=(12, 10))
         # Plotting initial image with adjustments
@@ -623,22 +623,28 @@ class Problem():
         plt.xticks(np.arange(0, len(enquiry_points), n_locations), 
                    [int(point) for i, point in enumerate(enquiry_points) if i % n_locations == 0], 
                    rotation=20, fontsize=16)
-        plt.xlabel('Radius [km]', fontsize=14)
-        plt.title('Relative Error Bounds', fontsize=16)
+        plt.xlabel('Radius [km]', fontsize=20)
+        plt.ylabel('Widht', fontsize=20)
+        plt.title('Relative Error Bounds', fontsize=26)
+        plt.axvline(x=3.83, color='black', linestyle='--')
+        plt.axvline(x=10.43, color='black', linestyle='dashdot')
+        plt.tight_layout()
         name = 'test'#f"{target_type}_{kernel_type}_Norm:{true_norm}_K:{N}_S:{N_spreads}.{f'{min_spread*100:.2f}'}_E:{N_enquiry_points}.pdf"
+        plt.savefig(name, format='pdf', bbox_inches='tight')
 
         # Creating the second figure
         plt.figure(figsize=(10, 8))
         img = plt.imshow(bound_map, norm=LogNorm(vmin=1, vmax=100))
-        plt.colorbar().set_label('Relative Error bound as %', fontsize=14)
-        plt.title('Relative Error Bounds', fontsize=16)
-        plt.yticks(np.arange(0, len(spreads), n_spreads), [f'{spread:.1e}%' for spread in normalized_spreads[::n_spreads]], fontsize=12)
-        plt.xticks(np.arange(0, len(enquiry_points), n_locations), [f'{point:.1e}' for point in enquiry_points[::n_locations]], rotation=20, fontsize=12)
-        plt.xlabel('Radius [km]', fontsize=14)
+        plt.colorbar().set_label('Relative Error bound as %', fontsize=24)
+        plt.title('Relative Error Bounds', fontsize=26)
+        plt.yticks(np.arange(0, len(spreads), n_spreads), 
+                   ['{:.0%}'.format(spread) for i, spread in enumerate(normalized_spreads) if i % n_spreads == 0], 
+                   rotation = 40, fontsize=16)
+        plt.xticks(np.arange(0, len(enquiry_points), n_locations), 
+                   [int(point) for point in enquiry_points[::n_locations]], 
+                   rotation=20, fontsize=16)
+        plt.xlabel('Radius [km]', fontsize=20)
         plt.grid(False)
-
-        # Saving the plot
-        plt.savefig(name, format='pdf')
 
         # Defining the rectangle for highlighting
         highlight_rect = plt.Rectangle((0, 0), 1, 1, linewidth=2, edgecolor='red', facecolor='none')
