@@ -486,14 +486,14 @@ class Problem():
             self._compute_epsilon()
         if self.least_norm_property is None:
             self._compute_least_norm_property()
-        self.relative_errors = self.epsilon / self.least_norm_property
+        self.relative_errors = 100 * self.epsilon / self.least_norm_property
     
     def _compute_relative_errros2(self):
         if self.epsilon is None:
             self._compute_epsilon()
         if self.least_norm_property is None:
             self._compute_least_norm_property()
-        self.relative_errors2 = self.epsilon / (np.max(self.least_norm_property) - np.min(self.least_norm_property))
+        self.relative_errors2 = 100 * self.epsilon / (np.max(self.least_norm_property) - np.min(self.least_norm_property))
 
     def plot_solution(self, enquiry_points):
         # Will plot the property bounds, the least norm property, the resolving
