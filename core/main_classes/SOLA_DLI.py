@@ -6,6 +6,10 @@ import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
 from core.aux.other import round_to_sf
 import plotly.graph_objects as go
+from itertools import product
+from matplotlib.colors import LogNorm  # Import LogNorm from colors module
+import seaborn as sns
+from matplotlib.ticker import LogFormatter 
 
 
 class DependencyTree:
@@ -31,12 +35,12 @@ class DependencyTree:
                  '$\Lambda$', '$\Lambda^{-1}$', '$\Gamma$', '$\Lambda^{-1}d$',
                  '|$\widetilde{m}$|', '$\widetilde{m}$', 'M', '$\mathcal{H}_{ii}$',
                  '$\chi_{ii}$', 'X', 'npf', '$\epsilon_i$', '$\widetilde{p}$', 'sol',
-                 'A']
+                 'A', '$\epsilon_r$', '$\epsilon_{r2}$']
 
         aliases = ['M', 'D', 'P', 'G', 'T', 'd',
                    'Lambda', 'Lambda_inv', 'Gamma', 'sdata', 'least_norm',
                    'least_norm_solution', 'norm_bound', 'H_diag', 'chi_diag', 'X', 'npf', 'epsilon',
-                   'least_norm_property', 'solution', 'A']
+                   'least_norm_property', 'solution', 'A', 'relative_errors', 'relative_errors2']
     
         self.item_aliases = dict(zip(items, aliases))
         self.aliases_item = dict(zip(aliases, items))
@@ -51,19 +55,9 @@ class DependencyTree:
                         ('D', 'd'), ('P', 'T'), ('G', 'D'),
                         ('T', 'P'), ('Gamma', 'H_diag'), ('X', 'least_norm_property'),
                         ('d', 'least_norm_property'), ('H_diag', 'epsilon'), ('epsilon', 'solution'),
-                        ('least_norm_property', 'solution'), ('X', 'A'), ('G', 'A')]
-
-        """ dependencies = [('G', '$\Lambda$'), ('$\Lambda$', '$\Lambda^{-1}$'),
-                        ('$\Lambda^{-1}$', 'X'), ('T', '$\Gamma$'), ('G', '$\Gamma$'),
-                        ('$\Gamma$', 'X'), ('d', '$\Lambda^{-1}d$'), ('$\Lambda^{-1}$', '$\Lambda^{-1}d$'),
-                        ('$\Lambda^{-1}d$', '|$\widetilde{m}$|'), ('$\Lambda^{-1}d$', '$\widetilde{m}$'),
-                        ('$\mathcal{M}$', 'G'), ('T', '$\chi_{ii}$'), ('$\chi_{ii}$', '$\mathcal{H}_{ii}$'),
-                        ('$\mathcal{M}$', 'T'), ('|$\widetilde{m}$|', 'npf'), ('M', 'npf'),
-                        ('$\mathcal{D}$', 'G'), ('npf', '$\epsilon_i$'), ('X', '$\mathcal{H}_{ii}$'),
-                        ('$\mathcal{D}$', 'd'), ('$\mathcal{P}$', 'T'), ('G', '$\mathcal{D}$'),
-                        ('T', '$\mathcal{P}$'), ('$\Gamma$', '$\mathcal{H}_{ii}$'), ('X', '$\widetilde{p}$'),
-                        ('d', '$\widetilde{p}$'), ('$\mathcal{H}_{ii}$', '$\epsilon_i$'), ('$\epsilon_i$', 'sol'),
-                        ('$\widetilde{p}$', 'sol'), ('X', 'A'), ('G', 'A')] """
+                        ('least_norm_property', 'solution'), ('X', 'A'), ('G', 'A'), 
+                        ('least_norm_property', 'relative_errors'), ('epsilon', 'relative_errors'),
+                        ('least_norm_property', 'relative_errors2'), ('epsilon', 'relative_errors2')]
 
         
         self.G = nx.DiGraph()
@@ -86,7 +80,8 @@ class DependencyTree:
                                             'G', 'T', 'P', 'd']):
                 node_colors.append('red')
             elif node in self._alias_to_item(['least_norm_property', 'least_norm_solution',
-                                            'solution', 'A', 'epsilon']):
+                                            'solution', 'A', 'epsilon', 'relative_errors',
+                                            'relative_errors2']):
                 node_colors.append('green')
             else:
                 node_colors.append('skyblue')
@@ -137,8 +132,9 @@ class DependencyTree:
                 elif node in self._alias_to_item(['norm_bound', 'M', 'D',
                                                 'G', 'T', 'P', 'd']):
                     reachable_node_colors.append('red')
-                elif node in self._alias_to_item(['P', 'M',
-                                                'solution', 'A', 'epsilon']):
+                elif node in self._alias_to_item(['P', 'M', 'relative_errors',
+                                                'solution', 'A', 'epsilon',
+                                                'relative_errors2']):
                     reachable_node_colors.append('green')
                 else:
                     reachable_node_colors.append('skyblue')
@@ -200,8 +196,9 @@ class DependencyTree:
                 elif node in self._alias_to_item(['norm_bound', 'M', 'D',
                                                 'G', 'T', 'P', 'd']):
                     dependent_node_colors.append('red')
-                elif node in self._alias_to_item(['P', 'M',
-                                                'solution', 'A', 'epsilon']):
+                elif node in self._alias_to_item(['P', 'M','relative_errors',
+                                                'solution', 'A', 'epsilon',
+                                                'relative_errors2']):
                     dependent_node_colors.append('green')
                 else:
                     dependent_node_colors.append('skyblue')
@@ -262,6 +259,8 @@ class Problem():
         self.solution = None
         self.A = None
         self.H_diag = None
+        self.relative_errors = None
+        self.relative_errors2 = None
 
         self.fixed_items = ['M', 'D', 'P', 'G', 'T', 'd','norm_bound']
         self.dependencies = DependencyTree()
@@ -383,6 +382,18 @@ class Problem():
         for alias in dependent_nodes:
             setattr(self, alias, None)
 
+    def change_bound(self, new_bound: float):
+        """Change the Norm Bound
+
+        Args:
+            new_bound (float): New norm bound
+        """        
+        self.norm_bound = new_bound
+
+        dependent_nodes = self.dependencies.find_reachable_nodes(['norm_bound']) - set(self.fixed_items)
+        for alias in dependent_nodes:
+            setattr(self, alias, None)
+
     def _compute_Lambda(self):
         self.Lambda = self.G._compute_GramMatrix()
 
@@ -441,8 +452,10 @@ class Problem():
             self._compute_norm_prefactor()
         if self.H_diag is None:
             self._compute_H_diag()
-        self.epsilon = self.npf * np.sqrt(self.H_diag)
-    
+        try:
+            self.epsilon = self.npf * np.sqrt(self.H_diag)
+        except RuntimeWarning as rw:
+            print('A')
     def _compute_least_norm_model_solution(self):
         if self.sdata is None:
             self._compute_sdata()
@@ -467,6 +480,20 @@ class Problem():
         if self.X is None:
             self._compute_X()
         self.A = self.X*self.G
+
+    def _compute_relative_errors(self):
+        if self.epsilon is None:
+            self._compute_epsilon()
+        if self.least_norm_property is None:
+            self._compute_least_norm_property()
+        self.relative_errors = self.epsilon / self.least_norm_property
+    
+    def _compute_relative_errros2(self):
+        if self.epsilon is None:
+            self._compute_epsilon()
+        if self.least_norm_property is None:
+            self._compute_least_norm_property()
+        self.relative_errors2 = self.epsilon / (np.max(self.least_norm_property) - np.min(self.least_norm_property))
 
     def plot_solution(self, enquiry_points):
         # Will plot the property bounds, the least norm property, the resolving
@@ -537,3 +564,109 @@ class Problem():
         )
 
         fig.show()
+
+    def plot_multi_widths_errors(self, domain: Domain, 
+                                 enquiry_points, spreads, type):
+        
+        # Make sure we have everyhting computed well
+        if self.A is None:
+            self._compute_resolving_kernels()
+        if type == 'absolute':
+            if self.epsilon is None:
+                self._compute_epsilon()
+            errors = self.epsilon
+        elif type == 'relative':
+            if self.relative_errors is None:
+                self._compute_relative_errors()
+            errors = self.relative_errors
+        elif type == 'relative2':
+            if self.relative_errors2 is None:
+                self._compute_relative_errros2()
+            errors = self.relative_errors2
+        else:
+            raise ValueError('Error type must be absolute, relative, or relative2')
+    
+        # Compute exclusion zone
+        N_enquiry_points = len(enquiry_points)
+        N_spreads = len(spreads)
+        combinations = list(product(enquiry_points, spreads))
+        domain_min = domain.bounds[0][0]
+        domain_max = domain.bounds[0][1]
+        exclusion_zones = np.array([(((center + spread) > domain_max) or ((center - spread) < domain_min)) for center, spread in combinations])
+
+        plt.figure('errrors', figsize=(12, 10))
+        # Plotting initial image with adjustments
+        bound_map = (errors.reshape(N_enquiry_points, N_spreads)).T
+        exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_spreads)).T
+        bound_map[exclusion_map] = 0
+
+        plt.imshow(bound_map, norm=LogNorm(vmin=1, vmax=100))
+        sns.set_theme()
+        plt.set_cmap('Blues_r')
+        plt.rc('font', size=14)  # Set font size
+
+        # Setting colorbar and ticks
+        formatter = LogFormatter(10, labelOnlyBase=False)
+        ticks = [1, 5, 10, 100, 500, 1000]
+        cb = plt.colorbar(ticks=ticks, format=formatter)
+        cb.set_label('Relative Error bound as %', fontsize=14)
+
+        # Setting y and x ticks with labels and rotation
+        n_spreads = int(len(spreads) / 10) + 1
+        n_locations = int(len(enquiry_points) / 10) + 1
+        normalized_spreads = 100 * spreads / (domain_max - domain_min)
+        plt.yticks(np.arange(0, len(spreads), n_spreads), [f'{spread:.1e}%' for i, spread in enumerate(normalized_spreads) if i % n_spreads == 0], fontsize=12)
+        plt.xticks(np.arange(0, len(enquiry_points), n_locations), [f'{point:.1e}' for i, point in enumerate(enquiry_points) if i % n_locations == 0], rotation=20, fontsize=12)
+        plt.xlabel('Radius [km]', fontsize=14)
+        plt.title('Relative Error Bounds', fontsize=16)
+        name = 'test'#f"{target_type}_{kernel_type}_Norm:{true_norm}_K:{N}_S:{N_spreads}.{f'{min_spread*100:.2f}'}_E:{N_enquiry_points}.pdf"
+
+        # Creating the second figure
+        plt.figure(figsize=(10, 8))
+        img = plt.imshow(bound_map, norm=LogNorm(vmin=1, vmax=100))
+        plt.colorbar().set_label('Relative Error bound as %', fontsize=14)
+        plt.title('Relative Error Bounds', fontsize=16)
+        plt.yticks(np.arange(0, len(spreads), n_spreads), [f'{spread:.1e}%' for spread in normalized_spreads[::n_spreads]], fontsize=12)
+        plt.xticks(np.arange(0, len(enquiry_points), n_locations), [f'{point:.1e}' for point in enquiry_points[::n_locations]], rotation=20, fontsize=12)
+        plt.xlabel('Radius [km]', fontsize=14)
+        plt.grid(False)
+
+        # Saving the plot
+        plt.savefig(name, format='pdf')
+
+        # Defining the rectangle for highlighting
+        highlight_rect = plt.Rectangle((0, 0), 1, 1, linewidth=2, edgecolor='red', facecolor='none')
+        plt.gca().add_patch(highlight_rect)
+
+        # Function to round to the nearest pixel
+        def snap_to_pixel(x, step):
+            return int(round(x / step))
+
+        # Function to highlight a pixel
+        def highlight_pixel(i, j):
+            highlight_rect.set_xy((i - 0.5, j - 0.5))
+
+        # Function for mouse click event
+        def onclick(event):
+            if event.xdata is not None and event.ydata is not None:
+                i = snap_to_pixel(event.xdata, 1)
+                j = snap_to_pixel(event.ydata, 1)
+
+                plt.figure(10)
+                sns.set_theme(style='white')
+                sns.set_palette('YlGnBu')
+                blues = plt.get_cmap('YlGnBu')
+                plt.title('Target vs Averaging kernels', fontsize=16)
+                for target_mapping, resolving_mapping in zip(self.T.mappings, self.A.mappings):
+                    plt.plot(domain.mesh, target_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1],
+                              label='Target', linewidth=3, color='red')
+                    plt.plot(domain.mesh, resolving_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1],
+                              label='Resolving', linewidth=2, color=blues(0.6))
+                plt.xlabel('Radius [km]', fontsize=15)
+                plt.show()
+
+                highlight_pixel(i, j)
+                plt.draw()
+
+        plt.gcf().canvas.mpl_connect('button_press_event', onclick)
+        plt.show()
