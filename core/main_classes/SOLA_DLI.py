@@ -486,14 +486,14 @@ class Problem():
             self._compute_epsilon()
         if self.least_norm_property is None:
             self._compute_least_norm_property()
-        self.relative_errors = self.epsilon / self.least_norm_property
+        self.relative_errors = 100 * self.epsilon / self.least_norm_property
     
     def _compute_relative_errros2(self):
         if self.epsilon is None:
             self._compute_epsilon()
         if self.least_norm_property is None:
             self._compute_least_norm_property()
-        self.relative_errors2 = self.epsilon / (np.max(self.least_norm_property) - np.min(self.least_norm_property))
+        self.relative_errors2 = 100 * self.epsilon / (np.max(self.least_norm_property) - np.min(self.least_norm_property))
 
     def plot_solution(self, enquiry_points):
         # Will plot the property bounds, the least norm property, the resolving
@@ -610,13 +610,19 @@ class Problem():
         ticks = [1, 5, 10, 100, 500, 1000]
         cb = plt.colorbar(ticks=ticks, format=formatter)
         cb.set_label('Relative Error bound as %', fontsize=14)
+        cb.ax.yaxis.set_tick_params(labelsize=16)
 
         # Setting y and x ticks with labels and rotation
         n_spreads = int(len(spreads) / 10) + 1
         n_locations = int(len(enquiry_points) / 10) + 1
         normalized_spreads = 100 * spreads / (domain_max - domain_min)
-        plt.yticks(np.arange(0, len(spreads), n_spreads), [f'{spread:.1e}%' for i, spread in enumerate(normalized_spreads) if i % n_spreads == 0], fontsize=12)
-        plt.xticks(np.arange(0, len(enquiry_points), n_locations), [f'{point:.1e}' for i, point in enumerate(enquiry_points) if i % n_locations == 0], rotation=20, fontsize=12)
+        plt.yticks(np.arange(0, len(spreads), n_spreads), 
+                   ['{:.0%}'.format(spread) for i, spread in enumerate(normalized_spreads) if i % n_spreads == 0], 
+                   rotation=40,
+                   fontsize=12)
+        plt.xticks(np.arange(0, len(enquiry_points), n_locations), 
+                   [int(point) for i, point in enumerate(enquiry_points) if i % n_locations == 0], 
+                   rotation=20, fontsize=16)
         plt.xlabel('Radius [km]', fontsize=14)
         plt.title('Relative Error Bounds', fontsize=16)
         name = 'test'#f"{target_type}_{kernel_type}_Norm:{true_norm}_K:{N}_S:{N_spreads}.{f'{min_spread*100:.2f}'}_E:{N_enquiry_points}.pdf"
