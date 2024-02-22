@@ -648,14 +648,16 @@ class SinusoidalGaussianPolynomial_1D(Function):
             return r, poly_with_sinusoidal(r) * gaussian_function
 
 class NormalModes_1D(Function):
-    def __init__(self, domain: HyperParalelipiped, order, spread, max_freq, seed=None):
+    def __init__(self, domain: HyperParalelipiped, order, spread, max_freq, 
+                 no_sensitivity_regions: np.array=None, seed=None):
         super().__init__(domain)
         self.order = order
         self.seed = seed
         self.spread = spread
         self.max_freq = max_freq
+        self.no_sensitivity_regions = no_sensitivity_regions
         self.coefficients, self.shifts = self.generate_random_parameters()
-        self.mean, self.std_dev, self.frequency = self.generate_function_parameters()
+        self.mean, self.std_dev, self.frequency, self.shift = self.generate_function_parameters()
 
     def plot(self):
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
@@ -673,7 +675,7 @@ class NormalModes_1D(Function):
 
         # Generate random shifts
         shifts = np.random.uniform(0, 1, self.order)
-        
+
         # Set some coefficients to zero to introduce more variation
         num_zero_coefficients = np.random.randint(1, self.order)  # Random number of coefficients to set to zero
         zero_indices = np.random.choice(range(self.order), num_zero_coefficients, replace=False)
@@ -684,21 +686,26 @@ class NormalModes_1D(Function):
     def generate_function_parameters(self):
         # Generate sinusoidal part
         frequency = np.sqrt(np.random.uniform(0, self.max_freq, 1))
+        shift = np.random.uniform(0, np.pi)
 
         # Generate Gaussian function parameters
         mean = np.random.uniform(self.domain.bounds[0][0], self.domain.bounds[0][-1])
         std_dev = np.random.uniform(self.spread / 2, self.spread * 2)
 
-        return mean, std_dev, frequency
+        return mean, std_dev, frequency, shift
 
     def evaluate(self, r, check_if_in_domain=True):
         shifted_poly = np.zeros_like(r)
         for i in range(self.order):
-            shifted_domain = r - self.shifts[i]
+            shifted_domain = r - self.shifts[i]*(np.max(r) - np.min(r))
             shifted_poly += np.power(shifted_domain, i + 1)
         try: r[0] 
         except: r=np.array([r])
-        sin_poly = np.sin(r * self.frequency) * shifted_poly
+        sin_poly = np.sin(r * self.frequency + self.shift/(np.max(r) - np.min(r))) * shifted_poly
+
+        if self.no_sensitivity_regions is not None:
+            for region in self.no_sensitivity_regions:
+                sin_poly[(r >= region[0]) & (r <= region[1])] = 0
 
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
@@ -726,16 +733,10 @@ class Gaussian_1D(Function):
         self.width = width
         self.unimodularity_precision = unimodularity_precision
         self.spread = self.width / (5 * np.sqrt(2 * np.log(2)))
-        self.normalization = self._compute_normalization()
         
     def plot(self):
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
         plt.show()
-
-    def _compute_normalization(self):
-        precise_mesh = self.domain.dynamic_mesh(self.unimodularity_precision)
-        gaussian_vector_full = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((precise_mesh - self.center) / self.spread) ** 2)
-        return np.trapz(gaussian_vector_full, precise_mesh)
 
     def evaluate(self, r, check_if_in_domain=True):
         try: r[0] 
@@ -743,10 +744,10 @@ class Gaussian_1D(Function):
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             gaussian_vector = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r[in_domain] - self.center) / self.spread) ** 2)
-            return r[in_domain], gaussian_vector / self.normalization
+            return r[in_domain], gaussian_vector
         else:
             gaussian_vector = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
-            return r, gaussian_vector / self.normalization
+            return r, gaussian_vector
 
 class Moorlet_1D(Function):
     """
