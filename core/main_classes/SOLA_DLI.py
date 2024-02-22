@@ -615,7 +615,7 @@ class Problem():
         # Setting y and x ticks with labels and rotation
         n_spreads = int(len(spreads) / 10) + 1
         n_locations = int(len(enquiry_points) / 10) + 1
-        normalized_spreads = 100 * spreads / (domain_max - domain_min)
+        normalized_spreads = spreads / (domain_max - domain_min)
         plt.yticks(np.arange(0, len(spreads), n_spreads), 
                    ['{:.0%}'.format(spread) for i, spread in enumerate(normalized_spreads) if i % n_spreads == 0], 
                    rotation=40,
@@ -629,7 +629,7 @@ class Problem():
         plt.axvline(x=3.83, color='black', linestyle='--')
         plt.axvline(x=10.43, color='black', linestyle='dashdot')
         plt.tight_layout()
-        name = 'test'#f"{target_type}_{kernel_type}_Norm:{true_norm}_K:{N}_S:{N_spreads}.{f'{min_spread*100:.2f}'}_E:{N_enquiry_points}.pdf"
+        name = 'test.pdf'#f"{target_type}_{kernel_type}_Norm:{true_norm}_K:{N}_S:{N_spreads}.{f'{min_spread*100:.2f}'}_E:{N_enquiry_points}.pdf"
         plt.savefig(name, format='pdf', bbox_inches='tight')
 
         # Creating the second figure
