@@ -67,7 +67,7 @@ G = DirectSumMapping(domain=M, codomain=D, mappings=tuple(constituent_mappings))
 ###################################
 # Edit region -------------
 target_types = {'m_1': Null_1D,
-                'm_2': Boxcar_1D,
+                'm_2': Gaussian_1D,
                 'm_3': Null_1D}
 max_spread = 1
 min_spread = 1e-2
@@ -89,7 +89,7 @@ targets_dict = {}
 for param, target_type in target_types.items():
     targets_dict[param] = []
     for i in range(how_many_targets):
-        if target_type == Boxcar_1D: # MODIFY HERE THE SPECIAL TARGET AS WELL!!!!
+        if target_type == Gaussian_1D: # MODIFY HERE THE SPECIAL TARGET AS WELL!!!!
             targets_dict[param].append(target_type(domain=domain,
                                                    center=enquiry_points_list[i],
                                                    width=widths_list[i]))
@@ -132,5 +132,8 @@ problem._compute_least_norm_property()
 # Compute True property
 true_property = T.map(true_model)
 
-problem.plot_multi_widths_errors(domain=domain, enquiry_points=enquiry_points,
-                                 spreads=widths, error_type='relative2')
+""" problem.plot_multi_widths_errors(domain=domain, enquiry_points=enquiry_points,
+                                 widths=widths, error_type='relative2') """
+
+problem.plot_necessary_norm_bounds(relative_error=0.01, domain=domain,
+                                   enquiry_points=enquiry_points, widths=widths)

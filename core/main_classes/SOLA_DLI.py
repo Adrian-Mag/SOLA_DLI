@@ -10,6 +10,7 @@ from itertools import product
 from matplotlib.colors import LogNorm  # Import LogNorm from colors module
 import seaborn as sns
 from matplotlib.ticker import LogFormatter 
+import matplotlib.colors as mcolors
 
 
 class DependencyTree:
@@ -220,7 +221,7 @@ class DependencyTree:
 
 class Problem():
     def __init__(self, M: Space, D: Space, P: Space, G: Mapping,
-                 T: Mapping, norm_bound: float, data: np.ndarray=None) -> None:
+                 T: Mapping, norm_bound: float=None, data: np.ndarray=None) -> None:
         """
         Class representing the SOLA problem.
 
@@ -417,7 +418,8 @@ class Problem():
     def _compute_norm_prefactor(self):
         if self.least_norm is None:
             self._compute_least_norm()
-        
+        if self.norm_bound is None:
+            raise ValueError('Norm bouns is None. Add a norm bound using change_bound() method.')
         self.npf = np.sqrt(self.norm_bound**2 - self.least_norm**2)
 
     def _compute_least_norm_solution(self):
@@ -565,61 +567,65 @@ class Problem():
 
         fig.show()
 
-    def plot_multi_widths_errors(self, domain: Domain, enquiry_points, spreads, error_type):
-        # Ensure necessary computations are done
-        if self.A is None:
-            self._compute_resolving_kernels()
-        if error_type == 'absolute':
-            if self.epsilon is None:
-                self._compute_epsilon()
-            errors = self.epsilon
-        elif error_type == 'relative':
-            if self.relative_errors is None:
-                self._compute_relative_errors()
-            errors = self.relative_errors
-        elif error_type == 'relative2':
-            if self.relative_errors2 is None:
-                self._compute_relative_errors2()
-            errors = self.relative_errors2
-        else:
-            raise ValueError('Error type must be absolute, relative, or relative2')
-        
-        # Compute exclusion zone
-        domain_min, domain_max = domain.bounds[0]
-        N_enquiry_points = len(enquiry_points)
-        N_spreads = len(spreads)
-        combinations = list(product(enquiry_points, spreads))
-        exclusion_zones = np.array([((center + spread/2) > domain_max) or ((center - spread/2) < domain_min) for center, spread in combinations])
+    def _plot_on_enquirypts_x_widths(self, target_parameter_1: np.ndarray, 
+                                    target_parameter_2: np.ndarray, quantity: np.ndarray,
+                                    uninterpretable_region: np.ndarray,
+                                    ticks: list, colorbar_label: str, xticks, yticks, 
+                                    xlabel, ylabel, title, plot_colors,
+                                    cmap: str=None, norm=None, colorbar_format=None,
+                                    fill_betweenx_calls=None, args_list=None):
+        """Method for plotting some quantity that was evaluated at a uniform grid
+        of 2 target parameters. For each point in the parameter 1 vs parameter 2
+        grid the plot will also provide a graph of the target kernels and their
+        resolving kernels. 
+
+        Args:
+            target_parameter_1 (np.ndarray): target parameter on x axis
+            target_parameter_2 (np.ndarray): target parameter on y axis
+            quantity (np.ndarray): what gets plotted
+            uninterpretable_region (np.ndarray): locations of uninterpretable targets
+            ticks (list): tick values for colorbar
+            colorbar_label (str): label for colorbar
+            cmap (str): colormap
+            norm (matplotlib.colors.Normalize, optional): normalization object for the colormap
+            colorbar_format (str, optional): format string for colorbar tick labels
+            xticks (list, optional): x ticks for the main plot
+            yticks (list, optional): y ticks for the main plot
+            xlabel (str): x label
+            ylabel (str): y label
+            title (str): main plot title
+            plot_colors (list): list of colors for the target/resolving kernels
+
+        Returns:
+            plot: interactive plot
+        """       
+
+        N_target_parameter_1 = len(target_parameter_1)
+        N_target_parameter_2 = len(target_parameter_2)
 
         # Plotting
         matplotlib.rcParams['hatch.linewidth'] = 5.0
         fig = plt.figure(figsize=(9, 8))
-        bound_map = (errors.reshape(N_enquiry_points, N_spreads)).T
-        exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_spreads)).T
-        bound_map[exclusion_map] = np.nan  # Set excluded areas to NaN to make them transparent
-        plt.imshow(bound_map, norm=LogNorm(vmin=1, vmax=100), cmap='Blues_r')
-        plt.colorbar(ticks=[1, 5, 10, 100, 500, 1000], 
-                     format=LogFormatter(10, labelOnlyBase=False), shrink=0.7).set_label('Relative Error bound as %', fontsize=20)
+        quantity[uninterpretable_region] = np.nan  # Set excluded areas to NaN to make them transparent
+        plt.imshow(quantity, norm=norm, cmap=cmap)
+        plt.colorbar(ticks=ticks, format=colorbar_format, shrink=0.7).set_label(colorbar_label, fontsize=20)
 
         # Overlay exclusion zones with diagonal stripes in gray
-        for i in range(N_spreads):
-            for j in range(N_enquiry_points):
-                if exclusion_map[i, j]:
+        for i in range(N_target_parameter_2):
+            for j in range(N_target_parameter_1):
+                if uninterpretable_region[i, j]:
                     plt.fill_betweenx([i - 0.5, i + 0.5], j - 0.5, j + 0.5, 
                                       color='gray', edgecolor='gray', hatch='/', alpha=0.3)
 
         # Adjust other plot settings
-        plt.yticks(np.arange(0, len(spreads), int(len(spreads) / 10) + 1), 
-                   ['{:.0%}'.format(spread / (domain_max - domain_min)) for spread in spreads[::int(len(spreads) / 10) + 1]], 
-                   rotation=40, fontsize=12)
-        plt.xticks(np.arange(0, len(enquiry_points), int(len(enquiry_points) / 10) + 1), 
-                   ['{:.2}'.format(point) for point in enquiry_points[::int(len(enquiry_points) / 10) + 1]], 
-                   rotation=20, fontsize=16)
-        plt.xlabel('Enquiry Points', fontsize=20)
-        plt.ylabel('Width', fontsize=20)
-        plt.title('Relative Error Bounds', fontsize=26)
+        plt.yticks(np.arange(0, len(target_parameter_1), int(len(target_parameter_1) / 10) + 1), 
+                   yticks, rotation=40, fontsize=12)
+        plt.xticks(np.arange(0, len(target_parameter_2), int(len(target_parameter_2) / 10) + 1), 
+                   xticks, rotation=20, fontsize=16)
+        plt.xlabel(xlabel, fontsize=20)
+        plt.ylabel(ylabel, fontsize=20)
+        plt.title(title, fontsize=26)
         plt.grid(False)
-        plt.savefig('test.pdf', format='pdf', bbox_inches='tight')
 
         # Functions
         highlight_colors = ['#ee9617', '#f2ef0c', '#ee1717', 'black', '#f20cd6']
@@ -652,8 +658,6 @@ class Problem():
                         del highlighted_pixels[fig_id]
 
         def onclick(event):
-            colors = sns.color_palette('YlGnBu', n_colors=100)
-            plot_colors = ['#5ee22d', colors[99], '#fccd1a']
             if event.xdata is not None and event.ydata is not None:
                 i = snap_to_pixel(event.xdata, 1)
                 j = snap_to_pixel(event.ydata, 1)
@@ -665,23 +669,27 @@ class Problem():
                 plt.title('Target vs Resolving kernels', fontsize=25)
                 all_y_values = []
                 for index, (target_mapping, resolving_mapping) in enumerate(zip(self.T.mappings, self.A.mappings)):
-                    resolving_kernel_y_values = resolving_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1]
-                    plt.plot(domain.mesh, resolving_kernel_y_values, label='Resolving: m_' + str(index), 
+                    resolving_kernel = resolving_mapping.kernels[j + N_target_parameter_1 * i]
+                    resolving_kernel_y_values = resolving_kernel.evaluate(resolving_kernel.domain.mesh)[1]
+                    plt.plot(resolving_kernel.domain.mesh, resolving_kernel_y_values, label='Resolving: m_' + str(index), 
                              linewidth=2, color=plot_colors[index])
                     all_y_values.extend(resolving_kernel_y_values)
-                    target_kernel_y_values = target_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1]
-                    plt.plot(domain.mesh, target_kernel_y_values, label='Target: m_' + str(index), 
+                    target_kernel = target_mapping.kernels[j + N_target_parameter_1 * i]
+                    target_kernel_y_values = target_kernel.evaluate(target_kernel.domain.mesh)[1]
+                    plt.plot(target_kernel.domain.mesh, target_kernel_y_values, label='Target: m_' + str(index), 
                              linewidth=2, color=plot_colors[index], linestyle='dashed')
-
+                    """ plt.fill_betweenx([y_min, y_max], 0.5, 0.75, color='gray', alpha=0.3, label='No sensitivity')
+                    plt.fill_betweenx([y_min, y_max], 0, widths[j]/2, color='gray', hatch='/', 
+                                        alpha=0.3, label='Uninterpretable \n region')
+                    plt.fill_betweenx([y_min, y_max], domain.bounds[0][1] - widths[j]/2, domain.bounds[0][1], 
+                                        color='gray', hatch='/', alpha=0.3) """
                     all_y_values.extend(target_kernel_y_values)
                 y_min = min(all_y_values) * 1.2
                 y_max = max(all_y_values) * 1.2
-                plt.fill_betweenx([y_min, y_max], 0.5, 0.75, color='gray', alpha=0.3, label='No sensitivity')
-                plt.fill_betweenx([y_min, y_max], 0, spreads[j]/2, color='gray', hatch='/', 
-                                    alpha=0.3, label='Uninterpretable \n region')
-                plt.fill_betweenx([y_min, y_max], domain.bounds[0][1] - spreads[j]/2, domain.bounds[0][1], 
-                                    color='gray', hatch='/', alpha=0.3)
-                plt.xlim([domain.bounds[0][0], domain.bounds[0][1]])
+                if fill_betweenx_calls is not None:
+                    for fill_betweenx_call, args in zip(fill_betweenx_calls, args_list):
+                        fill_betweenx_call(*args)
+                plt.xlim([target_kernel.domain.bounds[0][0], target_kernel.domain.bounds[0][1]])
                 plt.ylim([y_min, y_max])
                 plt.xticks(fontsize=20)
                 plt.yticks(fontsize=20)
@@ -696,3 +704,86 @@ class Problem():
         plt.gcf().canvas.mpl_connect('button_press_event', onclick)
         fig.tight_layout()
         plt.show()
+
+
+    def plot_multi_widths_errors(self, enquiry_points, widths, error_type, domain: Domain):
+        # Ensure necessary computations are done
+        if self.A is None:
+            self._compute_resolving_kernels()
+        if error_type == 'absolute':
+            if self.epsilon is None:
+                self._compute_epsilon()
+            errors = self.epsilon
+        elif error_type == 'relative':
+            if self.relative_errors is None:
+                self._compute_relative_errors()
+            errors = self.relative_errors
+        elif error_type == 'relative2':
+            if self.relative_errors2 is None:
+                self._compute_relative_errors2()
+            errors = self.relative_errors2
+        else:
+            raise ValueError('Error type must be absolute, relative, or relative2')
+        
+        # Compute exclusion zone
+        domain_min, domain_max = domain.bounds[0]
+        N_enquiry_points = len(enquiry_points)
+        N_widths = len(widths)
+        combinations = list(product(enquiry_points, widths))
+        exclusion_zones = np.array([((center + spread/2) > domain_max) or ((center - spread/2) < domain_min) for center, spread in combinations])
+        exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
+        bound_map = (errors.reshape(N_enquiry_points, N_widths)).T
+
+        ticks=[1, 5, 10, 100, 500, 1000]
+        colorbar_label = 'Relative Error bound as %'
+        xticks = ['{:.2}'.format(point) for point in enquiry_points[::int(len(enquiry_points) / 10) + 1]]
+        yticks = ['{:.0%}'.format(spread / (domain_max - domain_min)) for spread in widths[::int(len(widths) / 10) + 1]]
+        colors = sns.color_palette('YlGnBu', n_colors=100)
+
+        self._plot_on_enquirypts_x_widths(target_parameter_1=enquiry_points, target_parameter_2=widths,
+                                          quantity=bound_map, uninterpretable_region=exclusion_map,
+                                          ticks=ticks, colorbar_label=colorbar_label, xticks=xticks,
+                                          yticks=yticks, xlabel='Enquiry Points', ylabel='Width',
+                                          title='Relative Error Bounds', plot_colors=['#5ee22d', colors[99], '#fccd1a'], 
+                                          cmap='Blues_r', norm=LogNorm(vmin=1, vmax=100), 
+                                          colorbar_format=LogFormatter(10, labelOnlyBase=False))
+
+
+    def plot_necessary_norm_bounds(self, relative_error: float, domain: Domain, 
+                                   enquiry_points, widths):
+        """Plots the necessary norm bound necesary to acieve the 
+        desired relative error as a multiple of the least norm.
+
+        Args:
+            relative_error (float): desired relative error
+        """        
+        if self.least_norm_property is None:
+            self._compute_least_norm_property()
+        if self.least_norm is None:
+            self._compute_least_norm()
+        if self.H_diag is None:
+            self._compute_H_diag()
+        if self.A is None:
+            self._compute_resolving_kernels()
+
+        # Compute exclusion zone
+        domain_min, domain_max = domain.bounds[0]
+        N_enquiry_points = len(enquiry_points)
+        N_widths = len(widths)
+        combinations = list(product(enquiry_points, widths))
+        exclusion_zones = np.array([((center + spread/2) > domain_max) or ((center - spread/2) < domain_min) for center, spread in combinations])
+        exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
+
+        alpha = np.sqrt((relative_error * np.ptp(self.least_norm_property) / self.least_norm)**2 / self.H_diag + 1)
+        alpha = (alpha.reshape(N_enquiry_points, N_widths)).T
+
+        xticks = ['{:.2}'.format(point) for point in enquiry_points[::int(len(enquiry_points) / 10) + 1]]
+        yticks = ['{:.0%}'.format(spread / (domain_max - domain_min)) for spread in widths[::int(len(widths) / 10) + 1]]
+        colors = sns.color_palette('YlGnBu', n_colors=100)
+
+        self._plot_on_enquirypts_x_widths(target_parameter_1=enquiry_points, target_parameter_2=widths,
+                                          quantity=alpha, uninterpretable_region=exclusion_map,
+                                          ticks=[1,2,3,4,5], colorbar_label='Alpha', xticks=xticks,
+                                          yticks=yticks, xlabel='Enquiry Points', ylabel='Widths', title='Alpha',
+                                          plot_colors=['#5ee22d', colors[99], '#fccd1a'], cmap='Blues_r',
+                                          norm=mcolors.Normalize(vmin=1, vmax=5), colorbar_format=None)
