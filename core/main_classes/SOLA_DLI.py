@@ -488,7 +488,7 @@ class Problem():
             self._compute_least_norm_property()
         self.relative_errors = 100 * self.epsilon / self.least_norm_property
     
-    def _compute_relative_errros2(self):
+    def _compute_relative_errors2(self):
         if self.epsilon is None:
             self._compute_epsilon()
         if self.least_norm_property is None:
@@ -565,120 +565,134 @@ class Problem():
 
         fig.show()
 
-    def plot_multi_widths_errors(self, domain: Domain, 
-                                 enquiry_points, spreads, type):
-        
-        # Make sure we have everyhting computed well
+    def plot_multi_widths_errors(self, domain: Domain, enquiry_points, spreads, error_type):
+        # Ensure necessary computations are done
         if self.A is None:
             self._compute_resolving_kernels()
-        if type == 'absolute':
+        if error_type == 'absolute':
             if self.epsilon is None:
                 self._compute_epsilon()
             errors = self.epsilon
-        elif type == 'relative':
+        elif error_type == 'relative':
             if self.relative_errors is None:
                 self._compute_relative_errors()
             errors = self.relative_errors
-        elif type == 'relative2':
+        elif error_type == 'relative2':
             if self.relative_errors2 is None:
-                self._compute_relative_errros2()
+                self._compute_relative_errors2()
             errors = self.relative_errors2
         else:
             raise ValueError('Error type must be absolute, relative, or relative2')
-    
+        
         # Compute exclusion zone
+        domain_min, domain_max = domain.bounds[0]
         N_enquiry_points = len(enquiry_points)
         N_spreads = len(spreads)
         combinations = list(product(enquiry_points, spreads))
-        domain_min = domain.bounds[0][0]
-        domain_max = domain.bounds[0][1]
-        exclusion_zones = np.array([(((center + spread/2) > domain_max) or ((center - spread/2) < domain_min)) for center, spread in combinations])
+        exclusion_zones = np.array([((center + spread/2) > domain_max) or ((center - spread/2) < domain_min) for center, spread in combinations])
 
-        plt.figure('errrors', figsize=(12, 10))
-        # Plotting initial image with adjustments
+        # Plotting
+        matplotlib.rcParams['hatch.linewidth'] = 5.0
+        fig = plt.figure(figsize=(9, 8))
         bound_map = (errors.reshape(N_enquiry_points, N_spreads)).T
         exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_spreads)).T
-        bound_map[exclusion_map] = 0
+        bound_map[exclusion_map] = np.nan  # Set excluded areas to NaN to make them transparent
+        plt.imshow(bound_map, norm=LogNorm(vmin=1, vmax=100), cmap='Blues_r')
+        plt.colorbar(ticks=[1, 5, 10, 100, 500, 1000], 
+                     format=LogFormatter(10, labelOnlyBase=False), shrink=0.7).set_label('Relative Error bound as %', fontsize=20)
 
-        plt.imshow(bound_map, norm=LogNorm(vmin=1, vmax=100))
-        sns.set_theme()
-        plt.set_cmap('Blues_r')
-        plt.rc('font', size=14)  # Set font size
+        # Overlay exclusion zones with diagonal stripes in gray
+        for i in range(N_spreads):
+            for j in range(N_enquiry_points):
+                if exclusion_map[i, j]:
+                    plt.fill_betweenx([i - 0.5, i + 0.5], j - 0.5, j + 0.5, 
+                                      color='gray', edgecolor='gray', hatch='/', alpha=0.3)
 
-        # Setting colorbar and ticks
-        formatter = LogFormatter(10, labelOnlyBase=False)
-        ticks = [1, 5, 10, 100, 500, 1000]
-        cb = plt.colorbar(ticks=ticks, format=formatter)
-        cb.set_label('Relative Error bound as %', fontsize=14)
-        cb.ax.yaxis.set_tick_params(labelsize=16)
-
-        # Setting y and x ticks with labels and rotation
-        n_spreads = int(len(spreads) / 10) + 1
-        n_locations = int(len(enquiry_points) / 10) + 1
-        normalized_spreads = spreads / (domain_max - domain_min)
-        plt.yticks(np.arange(0, len(spreads), n_spreads), 
-                   ['{:.0%}'.format(spread) for i, spread in enumerate(normalized_spreads) if i % n_spreads == 0], 
-                   rotation=40,
-                   fontsize=12)
-        plt.xticks(np.arange(0, len(enquiry_points), n_locations), 
-                   [int(point) for i, point in enumerate(enquiry_points) if i % n_locations == 0], 
+        # Adjust other plot settings
+        plt.yticks(np.arange(0, len(spreads), int(len(spreads) / 10) + 1), 
+                   ['{:.0%}'.format(spread / (domain_max - domain_min)) for spread in spreads[::int(len(spreads) / 10) + 1]], 
+                   rotation=40, fontsize=12)
+        plt.xticks(np.arange(0, len(enquiry_points), int(len(enquiry_points) / 10) + 1), 
+                   ['{:.2}'.format(point) for point in enquiry_points[::int(len(enquiry_points) / 10) + 1]], 
                    rotation=20, fontsize=16)
-        plt.xlabel('Radius [km]', fontsize=20)
-        plt.ylabel('Widht', fontsize=20)
+        plt.xlabel('Enquiry Points', fontsize=20)
+        plt.ylabel('Width', fontsize=20)
         plt.title('Relative Error Bounds', fontsize=26)
-        plt.axvline(x=3.83, color='black', linestyle='--')
-        plt.axvline(x=10.43, color='black', linestyle='dashdot')
-        plt.tight_layout()
-        name = 'test.pdf'#f"{target_type}_{kernel_type}_Norm:{true_norm}_K:{N}_S:{N_spreads}.{f'{min_spread*100:.2f}'}_E:{N_enquiry_points}.pdf"
-        plt.savefig(name, format='pdf', bbox_inches='tight')
-
-        # Creating the second figure
-        plt.figure(figsize=(10, 8))
-        img = plt.imshow(bound_map, norm=LogNorm(vmin=1, vmax=100))
-        plt.colorbar().set_label('Relative Error bound as %', fontsize=24)
-        plt.title('Relative Error Bounds', fontsize=26)
-        plt.yticks(np.arange(0, len(spreads), n_spreads), 
-                   ['{:.0%}'.format(spread) for i, spread in enumerate(normalized_spreads) if i % n_spreads == 0], 
-                   rotation = 40, fontsize=16)
-        plt.xticks(np.arange(0, len(enquiry_points), n_locations), 
-                   [int(point) for point in enquiry_points[::n_locations]], 
-                   rotation=20, fontsize=16)
-        plt.xlabel('Radius [km]', fontsize=20)
         plt.grid(False)
+        plt.savefig('test.pdf', format='pdf', bbox_inches='tight')
 
-        # Defining the rectangle for highlighting
-        highlight_rect = plt.Rectangle((0, 0), 1, 1, linewidth=2, edgecolor='red', facecolor='none')
-        plt.gca().add_patch(highlight_rect)
-
-        # Function to round to the nearest pixel
+        # Functions
+        highlight_colors = ['#ee9617', '#f2ef0c', '#ee1717', 'black', '#f20cd6']
+        highlighted_pixels = {}  # Store highlighted pixel coordinates globally
+        highlighted_rects = {}
+        figures = {}
         def snap_to_pixel(x, step):
             return int(round(x / step))
 
-        # Function to highlight a pixel
-        def highlight_pixel(i, j):
-            highlight_rect.set_xy((i - 0.5, j - 0.5))
+        def highlight_pixel(fig_id, i, j):
+            if fig_id in highlighted_pixels:
+                highlighted_rects[fig_id].remove()
+            rect = plt.Rectangle((i-.5,j-.5),1,1,linewidth=2, 
+                                edgecolor=highlight_colors[fig_id%len(highlight_colors)], 
+                                facecolor='none')
+            fig.gca().add_patch(rect)
+            highlighted_rects[fig_id] = rect
+            highlighted_pixels[fig_id] = (i,j)
+            plt.draw()
 
-        # Function for mouse click event
+        def onclose(event):
+            fig_ids = list(figures.keys())  # Create a copy of dictionary keys
+            for fig_id in fig_ids:
+                fig = figures[fig_id]
+                if event.canvas == fig.canvas:
+                    del figures[fig_id]
+                    if fig_id in highlighted_rects:
+                        highlighted_rects[fig_id].remove()
+                        del highlighted_rects[fig_id]
+                        del highlighted_pixels[fig_id]
+
         def onclick(event):
+            colors = sns.color_palette('YlGnBu', n_colors=100)
+            plot_colors = ['#5ee22d', colors[99], '#fccd1a']
             if event.xdata is not None and event.ydata is not None:
                 i = snap_to_pixel(event.xdata, 1)
                 j = snap_to_pixel(event.ydata, 1)
-
-                plt.figure(10)
+                figure = plt.figure(figsize=(10, 8))
+                figure.canvas.mpl_connect('close_event', onclose)
+                figures[figure.number] = figure
                 sns.set_theme(style='white')
                 sns.set_palette('YlGnBu')
-                blues = plt.get_cmap('YlGnBu')
-                plt.title('Target vs Averaging kernels', fontsize=16)
-                for target_mapping, resolving_mapping in zip(self.T.mappings, self.A.mappings):
-                    plt.plot(domain.mesh, target_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1],
-                              label='Target', linewidth=3, color='red')
-                    plt.plot(domain.mesh, resolving_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1],
-                              label='Resolving', linewidth=2, color=blues(0.6))
-                plt.xlabel('Radius [km]', fontsize=15)
+                plt.title('Target vs Resolving kernels', fontsize=25)
+                all_y_values = []
+                for index, (target_mapping, resolving_mapping) in enumerate(zip(self.T.mappings, self.A.mappings)):
+                    resolving_kernel_y_values = resolving_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1]
+                    plt.plot(domain.mesh, resolving_kernel_y_values, label='Resolving: m_' + str(index), 
+                             linewidth=2, color=plot_colors[index])
+                    all_y_values.extend(resolving_kernel_y_values)
+                    target_kernel_y_values = target_mapping.kernels[j + N_spreads * i].evaluate(domain.mesh)[1]
+                    plt.plot(domain.mesh, target_kernel_y_values, label='Target: m_' + str(index), 
+                             linewidth=2, color=plot_colors[index], linestyle='dashed')
+
+                    all_y_values.extend(target_kernel_y_values)
+                y_min = min(all_y_values) * 1.2
+                y_max = max(all_y_values) * 1.2
+                plt.fill_betweenx([y_min, y_max], 0.5, 0.75, color='gray', alpha=0.3, label='No sensitivity')
+                plt.fill_betweenx([y_min, y_max], 0, spreads[j]/2, color='gray', hatch='/', 
+                                    alpha=0.3, label='Uninterpretable \n region')
+                plt.fill_betweenx([y_min, y_max], domain.bounds[0][1] - spreads[j]/2, domain.bounds[0][1], 
+                                    color='gray', hatch='/', alpha=0.3)
+                plt.xlim([domain.bounds[0][0], domain.bounds[0][1]])
+                plt.ylim([y_min, y_max])
+                plt.xticks(fontsize=20)
+                plt.yticks(fontsize=20)
+                plt.xlabel('Enquiry Points', fontsize=20)
+                plt.ylabel('Property Value', fontsize=20)  # Add Y-axis label with fontsize
+                plt.legend(fontsize=15)
+                plt.tight_layout()
                 plt.show()
+                highlight_pixel(figure.number, i, j)
 
-                highlight_pixel(i, j)
-                plt.draw()
-
+        # Plot the first figure
         plt.gcf().canvas.mpl_connect('button_press_event', onclick)
+        fig.tight_layout()
         plt.show()

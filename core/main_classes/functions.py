@@ -911,7 +911,8 @@ class Boxcar_1D(Function):
     Returns:
     - numpy.ndarray: Computed Boxcar function values over the domain.
     """
-    def __init__(self, domain: HyperParalelipiped, center, width, unimodularity_precision=1000):
+    def __init__(self, domain: HyperParalelipiped, center, width, 
+                 unimodularity_precision=1000):
         super().__init__(domain)
         self.center = center
         self.width = width
@@ -1080,3 +1081,34 @@ class Triangular_1D(Function):
             triangular_vector = np.zeros_like(r)
             triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[mask] - self.center) / self.width**2
             return r, triangular_vector
+        
+class Fourier(Function):
+    """ 
+    Compute Furier basis functions on a domain of type [0, P] 
+    """
+    def __init__(self, domain: HyperParalelipiped, type: str, order: int) -> None:
+        super().__init__(domain)
+        self.type = type
+        self.order = order
+        self.period = self.domain.bounds[0][1] - self.domain.bounds[0][0] 
+
+    def evaluate(self, r, check_if_in_domain=True):
+        try: r[0]
+        except: r=np.array([r])
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            if self.order == 0:
+                return r[in_domain], np.ones_like(r[in_domain]) / np.sqrt(self.period)
+            else:
+                if self.type == 'sin':
+                    return r[in_domain], np.sin(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period)
+                else:
+                    return r[in_domain], np.cos(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period)
+        else:
+            if self.order == 0:
+                return r, np.ones_like(r) / np.sqrt(self.period)
+            else:
+                if self.type == 'sin':
+                    return r, np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)
+                else:
+                    return r, np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)

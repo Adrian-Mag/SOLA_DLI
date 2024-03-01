@@ -1,149 +1,136 @@
-import networkx as nx
-from networkx.drawing.nx_agraph import graphviz_layout
-import matplotlib 
-matplotlib.use('tkagg')
+from core.main_classes.domains import HyperParalelipiped
+from core.main_classes.spaces import PCb, DirectSumSpace, RN
+from core.aux.normal_data import load_normal_data
+from core.main_classes.functions import *
+from core.main_classes.mappings import *
+from core.main_classes.SOLA_DLI import Problem
+import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
+from itertools import product
 
-class DependencyTree:
-    def __init__(self):
-        items = ['$\mathcal{M}$', '$\mathcal{D}$', '$\mathcal{P}$', 'G', 'T', 'd',
-             '$\Lambda$', '$\Lambda^{-1}$', '$\Gamma$', '$\Lambda^{-1}d$',
-             '|$\widetilde{m}$|', '$\widetilde{m}$', 'M', '$\mathcal{H}_{ii}$',
-             '$\chi_{ii}$', 'X', 'npf', '$\epsilon_i$', '$\widetilde{p}$', 'sol',
-             'A']
+# Set global parameters for matplotlib
+plt.rcParams.update({'font.size': 15})  # Set default font size
+plt.rcParams['axes.linewidth'] = 1.5  # Set the thickness of the axes lines
 
-        self.aliases = ['model_space', 'data_space', 'property_space', 'G', 'T', 'd', 
-                'Lambda', 'Lambda_inv', 'Gamma', 'sdata', 'least_norm',
-                'least_norm_solution', 'M', 'H', 'chi', 'X', 'npf', 'epsilon',
-                'least_norm_property', 'solution', 'resolving_kernel']
-        self.item_aliases = dict(zip(self.aliases, items))
-        self.aliases_item = dict(zip(items, self.aliases))
+# Create color Palette
+colors = sns.color_palette('YlGnBu', n_colors=100)
 
-        dependencies = [('G', '$\Lambda$'), ('$\Lambda$', '$\Lambda^{-1}$'),
-                        ('$\Lambda^{-1}$', 'X'), ('T', '$\Gamma$'), ('G', '$\Gamma$'),
-                        ('$\Gamma$', 'X'), ('d', '$\Lambda^{-1}d$'), ('$\Lambda^{-1}$', '$\Lambda^{-1}d$'),
-                        ('$\Lambda^{-1}d$', '|$\widetilde{m}$|'), ('$\Lambda^{-1}d$', '$\widetilde{m}$'),
-                        ('$\mathcal{M}$', 'G'), ('T', '$\chi_{ii}$'), ('$\chi_{ii}$', '$\mathcal{H}_{ii}$'),
-                        ('$\mathcal{M}$', 'T'), ('|$\widetilde{m}$|', 'npf'), ('M', 'npf'),
-                        ('$\mathcal{D}$', 'G'), ('npf', '$\epsilon_i$'), ('X', '$\mathcal{H}_{ii}$'),
-                        ('$\mathcal{D}$', 'd'), ('$\mathcal{P}$', 'T'), ('G', '$\mathcal{D}$'),
-                        ('T', '$\mathcal{P}$'), ('$\Gamma$', '$\mathcal{H}_{ii}$'), ('X', '$\widetilde{p}$'),
-                        ('d', '$\widetilde{p}$'), ('$\mathcal{H}_{ii}$', '$\epsilon_i$'), ('$\epsilon_i$', 'sol'),
-                        ('$\widetilde{p}$', 'sol'), ('X', 'A'), ('G', 'A')]
-        self.G = nx.DiGraph()
-        self.G.add_nodes_from(items)
-        self.G.add_edges_from(dependencies)
-        self.start_node = None
+####################
+# Create model space
+####################
+# Edit region -------------
+physical_parameters = ['m_1', 'm_2', 'm_3']
 
-    def print_node_names(self):
-        print(self.aliases)
+# Edit region -------------
 
-    def plot_dependency_tree(self, save_filename='tree.png'):
-        pos = graphviz_layout(self.G, prog='dot')
+physical_parameters_symbols = {'m_1': '$m_1$', 'm_2': '$m_2$', 'm_3': '$m_3$'}
+no_of_params = len(physical_parameters)
+domain = HyperParalelipiped(bounds=[[0, 1]], fineness=1000)
+constituent_models_spaces = [PCb(domain=domain) for _ in physical_parameters]
+# Create a dictionary with physical_parameters as keys
+models_dict = {param: model_space for param, model_space in zip(physical_parameters, constituent_models_spaces)}
+M = DirectSumSpace(tuple(constituent_models_spaces))
 
-        # Set node colors and edge colors
-        node_colors = []
-        edge_colors = []
-        for node in self.G.nodes:
-            if node == self.start_node:
-                node_colors.append('gold')  # Color for the starting node
-            elif node in ['M', '$\mathcal{M}$', '$\mathcal{D}$',
-                        'G', 'T', '$\mathcal{P}$', 'd']:
-                node_colors.append('red')
-            elif node in ['$\widetilde{p}$', '$\widetilde{m}$',
-                          'sol', 'A', '$\epsilon_i$']:
-                node_colors.append('green')
-            else:
-                node_colors.append('skyblue')
+###################
+# Create Data space
+###################
+# Edit region -------------
+how_many_data = 150
+# Edit region -------------
 
-        # Draw nodes with different colors
-        plt.figure(figsize=(12, 8))
-        nx.draw_networkx_nodes(self.G, pos, node_size=700, node_color=node_colors, edgecolors='black', linewidths=1, alpha=0.8)
+D = RN(dimension=how_many_data)
 
-        # Draw edges and labels
-        nx.draw_networkx_edges(self.G, pos, edge_color='gray', arrowsize=20, connectionstyle='arc3,rad=0.1', width=1.0)
-        nx.draw_networkx_labels(self.G, pos, font_weight='bold', font_color='black', font_size=10)
+###########################
+# Create model-data mapping 
+###########################
+# Make them into functions via interpolation
+sensitivity_dict = {}
+for i, param in enumerate(physical_parameters):
+    sensitivity_dict[param] = []
+    for index in range(how_many_data):
+        if i in [0, 2]:
+            sensitivity_dict[param].append(NormalModes_1D(domain=domain, order=3, spread=0.05,
+                                                        max_freq=10, seed=index + i*how_many_data))
+        else:
+            sensitivity_dict[param].append(NormalModes_1D(domain=domain, order=3, spread=0.05,
+                                                        max_freq=10, seed=index + i*how_many_data, 
+                                                        no_sensitivity_regions=[[0.5, 0.75]]))
 
-        plt.show()
+constituent_mappings = [IntegralMapping(domain=models_dict[param], codomain=D, 
+                                        kernels=sensitivity_dict[param]) for param in physical_parameters]
+mappings_dict = {param: mapping for param, mapping in zip(physical_parameters, constituent_mappings)}
+G = DirectSumMapping(domain=M, codomain=D, mappings=tuple(constituent_mappings))
 
-    def find_reachable_nodes(self, start_node):
-        self.start_node = self.item_aliases[start_node]
-        reachable_nodes = set()
+###################################
+# Create property mapping and space
+###################################
+# Edit region -------------
+target_types = {'m_1': Null_1D,
+                'm_2': Boxcar_1D,
+                'm_3': Null_1D}
+max_spread = 1
+min_spread = 1e-2
+N_enquiry_points = 20
+N_widths = 20
+# Edit region -------------
+how_many_targets = N_enquiry_points * N_widths
+enquiry_points = np.linspace(domain.bounds[0][0], 
+                             domain.bounds[0][1], 
+                             N_enquiry_points)
+widths = np.logspace(np.log10(min_spread), np.log10(max_spread), N_widths) # same units as domain (km here)
+combinations = list(product(enquiry_points, widths))
+enquiry_points_list, widths_list = zip(*combinations)
+enquiry_points_list = list(enquiry_points_list)
+widths_list = list(widths_list)
 
-        def dfs(node):
-            reachable_nodes.add(node)
-            for neighbor in self.G.neighbors(node):
-                if neighbor not in reachable_nodes:
-                    dfs(neighbor)
+P = RN(dimension=how_many_targets)
+targets_dict = {}
+for param, target_type in target_types.items():
+    targets_dict[param] = []
+    for i in range(how_many_targets):
+        if target_type == Boxcar_1D: # MODIFY HERE THE SPECIAL TARGET AS WELL!!!!
+            targets_dict[param].append(target_type(domain=domain,
+                                                   center=enquiry_points_list[i],
+                                                   width=widths_list[i]))
+        else: 
+            targets_dict[param].append(target_type(domain=domain))
+constituent_mappings = [IntegralMapping(domain=models_dict[param], codomain=P, 
+                                        kernels=targets_dict[param]) for param in physical_parameters]
+T = DirectSumMapping(domain=M, codomain=P, mappings=tuple(constituent_mappings))
 
-        dfs(self.item_aliases[start_node])
-        return reachable_nodes
 
-    def find_dependent_nodes(self, start_node, plot_dependent_tree=False, save_filename='dependent_tree.png'):
-        self.start_node = self.item_aliases[start_node]
-        dependent_nodes = set()
+#################################
+# Create fake true model and data
+#################################
+true_model = M.random_member(args_list=[(4,), (3,), (13,)])
+data = G.map(true_model)
 
-        def dfs(node):
-            dependent_nodes.add(node)
-            for predecessor in self.G.predecessors(node):
-                if predecessor not in dependent_nodes:
-                    dfs(predecessor)
 
-        dfs(self.item_aliases[start_node])
+####################
+# Compute norm bound
+####################
+# Edit region -------------
+# Places where the true model will be evaluated
+intervals = np.array([0,0.1, 0.25, 0.7, domain.bounds[0][1]])
+# Edit region -------------
+upper_bounds = []
+for model in true_model:
+    values = np.abs(model.evaluate(intervals[1:])[1])*1.5
+    upper_bound = Piecewise_1D(domain=model.domain,
+                               intervals=intervals,
+                               values=values)
+    upper_bounds.append(upper_bound)
+norm_bound = M.norm(tuple(upper_bounds))
 
-        if plot_dependent_tree:
-            dependent_tree = self.G.subgraph(dependent_nodes)
-            pos = graphviz_layout(dependent_tree, prog='dot')
+problem = Problem(M=M, D=D, P=P, G=G, T=T, norm_bound=norm_bound, data=data)
 
-            # Set node colors and edge colors
-            dependent_node_colors = []
-            dependent_edge_colors = []
-            for node in dependent_tree.nodes:
-                if node == self.start_node:
-                    dependent_node_colors.append('gold')  # Color for the starting node
-                elif node in ['M', '$\mathcal{M}$', '$\mathcal{D}$',
-                              'G', 'T', '$\mathcal{P}$', 'd']:
-                    dependent_node_colors.append('red')
-                elif node in ['$\widetilde{p}$', '$\widetilde{m}$',
-                              'sol', 'A', '$\epsilon_i$']:
-                    dependent_node_colors.append('green')
-                else:
-                    dependent_node_colors.append('skyblue')
+problem.solve()
 
-            # Draw nodes with different colors
-            plt.figure(figsize=(12, 8))
-            nx.draw_networkx_nodes(dependent_tree, pos, node_size=700, node_color=dependent_node_colors, edgecolors='black',
-                                linewidths=1, alpha=0.8)
+problem._compute_least_norm_property()
 
-            # Draw edges and labels
-            nx.draw_networkx_edges(dependent_tree, pos, edge_color='gray', arrowsize=20, connectionstyle='arc3,rad=0.1',
-                                width=1.0)
-            nx.draw_networkx_labels(dependent_tree, pos, font_weight='bold', font_color='black', font_size=10)
+# Compute True property
+true_property = T.map(true_model)
 
-            plt.show()
-
-        return dependent_nodes
-
-def main():
-    # Specify items and dependencies
-    
-
-    # Create the DependencyTree instance
-    dependency_tree = DependencyTree()
-
-    # Plot the dependency tree
-    dependency_tree.plot_dependency_tree()
-
-    # Specify the starting node
-    start_node = 'solution'  # Choose your starting node
-
-    # Find reachable nodes
-    reachable_nodes = dependency_tree.find_reachable_nodes(start_node)
-    print(f"Nodes reachable from {start_node}: {reachable_nodes}")
-
-    # Find dependent nodes and optionally plot the dependent tree
-    dependent_nodes = dependency_tree.find_dependent_nodes(start_node, plot_dependent_tree=True)
-    print(f"Nodes on which {start_node} depends: {dependent_nodes}")
-
-if __name__ == "__main__":
-    main()
+problem.plot_multi_widths_errors(domain=domain, enquiry_points=enquiry_points,
+                                 spreads=widths, error_type='relative2')
