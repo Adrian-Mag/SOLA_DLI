@@ -73,10 +73,11 @@ class PCb(Space):
             function.save_function(name=name)
         return function.interpolated_values
 
-    def random_member(self, seed=None, continuous=False) -> np.ndarray:
-        return Random_1D(domain=self.domain, seed=seed, continuous=continuous)
+    def random_member(self, seed=None, continuous=False, boundaries=None) -> np.ndarray:
+        return Random_1D(domain=self.domain, seed=seed, 
+                         continuous=continuous, boundaries=boundaries)
 
-    def add_member(self, member_name, member: Function, domain=None):
+    def add_member(self, member_name, member: Function):
         if isinstance(member, Function):
             if self.domain == member.domain:
                 self.members[member_name] = member
@@ -114,7 +115,7 @@ class RN(Space):
         elif isinstance(member, np.ndarray):
             if member.ndim == 1 or (member.ndim == 2 and member.shape[0] == 1):
                 if self.dimension == 1:
-                    if member.shape[1] == 1:
+                    if member.shape[0] == 1 and (np.issubdtype(member.dtype, np.integer) or np.issubdtype(member.dtype, np.floating)):
                         return True
                     else:
                         return False

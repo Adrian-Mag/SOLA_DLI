@@ -47,7 +47,6 @@ class Mapping(ABC):
         """
         pass
 
-
 class DirectSumMapping(Mapping):
     """
     Mapping representing the direct sum of multiple mappings.
@@ -69,7 +68,17 @@ class DirectSumMapping(Mapping):
         """
         super().__init__(domain, codomain)
         self.mappings = mappings
+        self.kernels = self._obtain_kernels()
 
+        self._adjoint_stored = None
+        self._gram_matrix_stored = None
+
+    def _obtain_kernels(self):
+        kernels = []
+        for index in range(self.codomain.dimension):
+            kernels.append(tuple([mapping.kernels[index] for mapping in self.mappings]))
+        return kernels
+    
     def map(self, member: tuple):
         """
         Map a tuple member from the domain to the codomain using direct sum.
@@ -86,6 +95,7 @@ class DirectSumMapping(Mapping):
 
         return ans
 
+    @property
     def adjoint(self):
         """
         Compute the adjoint of the DirectSumMapping.
@@ -93,13 +103,28 @@ class DirectSumMapping(Mapping):
         Returns:
         - The adjoint DirectSumMapping.
         """
-        adjoint_mappings = []
-        for mapping in self.mappings:
-            adjoint_mappings.append(mapping.adjoint())
-        
-        return DirectSumMappingAdj(domain=self.codomain,
-                                   codomain=self.domain,
-                                   mappings=tuple(adjoint_mappings))    
+        if self._adjoint_stored is not None:
+            return self._adjoint_stored
+        else:
+            adjoint_mappings = []
+            for mapping in self.mappings:
+                adjoint_mappings.append(mapping.adjoint)
+            self._adjoint_stored = DirectSumMappingAdj(domain=self.codomain,
+                                                    codomain=self.domain,
+                                                    mappings=tuple(adjoint_mappings)) 
+            return self._adjoint_stored
+
+    def pseudoinverse_map(self, member: RN):
+        intermediate = self.gram_matrix.invert().map(member)
+        return self.adjoint.map(intermediate)
+
+    @property
+    def gram_matrix(self):
+        if self._gram_matrix_stored is not None:
+            return self._gram_matrix_stored
+        else:
+            self._gram_matrix_stored = self._compute_GramMatrix()
+            return self._gram_matrix_stored
 
     def _compute_GramMatrix(self, return_matrix_only=False):
         """
@@ -151,7 +176,31 @@ class DirectSumMapping(Mapping):
             return FiniteLinearMapping(domain=other.domain,
                                        codomain=self.codomain,
                                        matrix=matrix)
+    def project_on_ImG_adj(self, member: tuple):
+        """Takes a member of the integra mappings' domain and
+            projects it to Im(G*) where G is this mapping.
 
+        Args:
+            member (PCb): domain member to be projects 
+
+        Returns:
+            Function: projection on Im(A*)
+        """        
+        d = self.map(member)
+        return self.pseudoinverse_map(d)
+
+    def project_on_kernel(self, member: tuple):
+        """Takes a member of the integral mappings' domain and
+        projects it to Ker|G where G is this mapping
+
+        Args:
+            member (PCb): domain member to be projected
+
+        Returns:
+            Function: projection on Ker|G
+        """   
+        member_projected_on_ImG_adj = self.project_on_ImG_adj(member)
+        return tuple([f1 - f2 for f1, f2 in zip(member, member_projected_on_ImG_adj)])     
 
 class DirectSumMappingAdj(Mapping):
     """
@@ -231,6 +280,9 @@ class IntegralMapping(Mapping):
         self.kernels = kernels
         self.pseudo_inverse = None
 
+        self._adjoint_stored = None
+        self._gram_matrix_stored = None
+    
     def pseudoinverse_map(self, member: RN):
         """
         Map a member using the pseudoinverse of the Gram matrix.
@@ -267,6 +319,7 @@ class IntegralMapping(Mapping):
             result[index, 0] = scipy.integrate.simpson((kernel * member).evaluate(mesh)[1], mesh)
         return result
     
+    @property
     def adjoint(self):
         """
         Compute the adjoint of the IntegralMapping.
@@ -274,9 +327,21 @@ class IntegralMapping(Mapping):
         Returns:
         - The adjoint FunctionMapping.
         """
-        return FunctionMapping(domain=self.codomain, 
-                               codomain=self.domain,
-                               kernels=self.kernels)
+        if self._adjoint_stored is not None:
+            return self._adjoint_stored
+        else:
+            self._adjoint_stored = FunctionMapping(domain=self.codomain, 
+                                                    codomain=self.domain,
+                                                    kernels=self.kernels)
+            return self._adjoint_stored
+
+    @property
+    def gram_matrix(self):
+        if self._gram_matrix_stored is not None:
+            return self._gram_matrix_stored
+        else:
+            self._gram_matrix_stored = self._compute_GramMatrix()
+            return self._gram_matrix_stored
 
     def _compute_GramMatrix(self, return_matrix_only=False):
         """
@@ -335,6 +400,31 @@ class IntegralMapping(Mapping):
             return FiniteLinearMapping(domain=other.domain, codomain=self.codomain, matrix=matrix)
         else:
             raise Exception('Other mapping must be a FunctionMapping')
+
+    def project_on_ImG_adj(self, member:PCb):
+        """Takes a member of the integra mappings' domain and
+            projects it to Im(G*) where G is this mapping.
+
+        Args:
+            member (PCb): domain member to be projects 
+
+        Returns:
+            Function: projection on Im(A*)
+        """        
+        d = self.map(member)
+        return self.pseudoinverse_map(d)
+
+    def project_on_kernel(self, member:PCb):
+        """Takes a member of the integral mappings' domain and
+        projects it to Ker|G where G is this mapping
+
+        Args:
+            member (PCb): domain member to be projected
+
+        Returns:
+            Function: projection on Ker|G
+        """        
+        return member - self.project_on_ImG_adj(member)
 
 
 class FunctionMapping(Mapping):
@@ -410,6 +500,8 @@ class FiniteLinearMapping(Mapping):
         """
         super().__init__(domain, codomain)
         self.matrix = matrix
+
+        self._adjoint_stored = None
     
     def map(self, member: RN):
         """
@@ -488,6 +580,7 @@ class FiniteLinearMapping(Mapping):
         """
         return np.linalg.det(self.matrix)
 
+    @property
     def adjoint(self):
         """
         Compute the adjoint of the FiniteLinearMapping.
@@ -495,9 +588,13 @@ class FiniteLinearMapping(Mapping):
         Returns:
         - The adjoint FiniteLinearMapping.
         """
-        return FiniteLinearMapping(domain=self.codomain, 
-                                   codomain=self.domain,
-                                   matrix=self.matrix.T)
+        if self._adjoint_stored is not None:
+            return self._adjoint_stored
+        else:
+            self._adjoint_stored = FiniteLinearMapping(domain=self.codomain, 
+                                                        codomain=self.domain,
+                                                        matrix=self.matrix.T)
+        return self._adjoint_stored
 
     def __mul__(self, other: Mapping):
         """

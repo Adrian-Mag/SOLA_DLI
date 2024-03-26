@@ -63,6 +63,10 @@ class Function(ABC):
         else:
             raise Exception('The other function is not of type Function')
 
+    @abstractmethod
+    def __str__(self) -> str:
+        pass
+
     def __rmul__(self, other):
         return self.__mul__(other)
 
@@ -157,6 +161,10 @@ class _ScaledFunction(Function):
         """
         eval_function = self.function.evaluate(r, check_if_in_domain)
         return eval_function[0], eval_function[1] * self.scalar
+    
+    def __str__(self) -> str:
+        return '_ScaledFunction'
+
 class _DivideFunction(Function):
     """
     Represents the division of two functions.
@@ -194,6 +202,9 @@ class _DivideFunction(Function):
         eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] / eval2[1]
+    
+    def __str__(self) -> str:
+        return '_DivideFunction'
 
 class _SubtractFunction(Function):
     """
@@ -232,6 +243,9 @@ class _SubtractFunction(Function):
         eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] - eval2[1]
+    
+    def __str__(self) -> str:
+        return '_SubtractFunction'
 
 class _SumFunction(Function):
     """
@@ -270,6 +284,9 @@ class _SumFunction(Function):
         eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] + eval2[1]
+    
+    def __str__(self) -> str:
+        return '_SumFunction'
 
 class _ProductFunction(Function):
     """
@@ -308,6 +325,9 @@ class _ProductFunction(Function):
         eval1 = self.function1.evaluate(r, check_if_in_domain)
         eval2 = self.function2.evaluate(r, check_if_in_domain)
         return eval1[0], eval1[1] * eval2[1]
+    
+    def __str__(self) -> str:
+        return '_ProductFunction'
 
 
 class Piecewise_1D(Function):
@@ -352,6 +372,9 @@ class Piecewise_1D(Function):
     def plot(self):
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
         plt.show()
+    
+    def __str__(self) -> str:
+        return 'Piecewise_1D'
 
 class Null_1D(Function):
     """
@@ -378,6 +401,9 @@ class Null_1D(Function):
             return r[in_domain], np.zeros_like(r[in_domain])
         else:
             return r, np.zeros_like(r)
+    
+    def __str__(self) -> str:
+        return 'Null_1D'
 
 class Constant_1D(Function):
     """
@@ -404,12 +430,17 @@ class Constant_1D(Function):
             return r[in_domain], np.ones_like(r[in_domain])
         else:
             return r, np.ones_like(r)
+    
+    def __str__(self) -> str:
+        return 'constant'
 
 class Random_1D(Function):
-    def __init__(self, domain: Domain, seed: float, continuous: bool=False) -> None:
+    def __init__(self, domain: Domain, seed: float=None, continuous: bool=False,
+                 boundaries: list=None) -> None:
         super().__init__(domain)
         self.seed = seed
         self.continuous = continuous
+        self.boundaries = boundaries
         self.function = self._create_function()
 
     def plot(self):
@@ -423,12 +454,20 @@ class Random_1D(Function):
         
         if self.domain.dimension == 1:
             # Random number of partitions
+            values = np.zeros_like(self.domain.mesh)
             if self.continuous is True:
                 segments = 1
+            elif self.boundaries is not None:
+                segments = len(self.boundaries) + 1
             else:
                 segments = random.randint(1,10)
-            values = np.zeros_like(self.domain.mesh)
-            inpoints = [random.uniform(self.domain.bounds[0][0], self.domain.bounds[0][1]) for _ in range(segments-1)]
+            # Create the partitions
+            if (self.boundaries is not None) and (self.continuous is False):
+                # If both boundaries and contiunous are not None, the continuous
+                # case will win
+                inpoints = self.boundaries
+            else:
+                inpoints = [random.uniform(self.domain.bounds[0][0], self.domain.bounds[0][1]) for _ in range(segments-1)]
             allpoints = sorted(list(self.domain.bounds[0]) + inpoints)
             partitions = [(allpoints[i], allpoints[i+1]) for i in range(len(allpoints)-1)]
 
@@ -459,6 +498,9 @@ class Random_1D(Function):
             return r[in_domain], self.function(r[in_domain])
         else:
             return r, self.function(r)
+        
+    def __str__(self) -> str:
+        return 'random1d'
 
 class Interpolation_1D(Function):
     def __init__(self, values, raw_domain, domain: Domain) -> None:
@@ -480,6 +522,8 @@ class Interpolation_1D(Function):
         else:
             return r, interp1d(self.raw_domain, self.values, 
                                 kind='linear', fill_value='extrapolate')(r)
+    def __str__(self) -> str:
+        return 'interpolation_1d'
 
 class ComplexExponential_1D(Function):
     """
@@ -506,6 +550,9 @@ class ComplexExponential_1D(Function):
         else:
             fourier_vector = np.exp(-2 * np.pi * self.frequency * 1j * r / self.domain.total_measure) / self.domain.total_measure
             return r, fourier_vector
+    
+    def __str__(self) -> str:
+        return 'ComplExponential_1D'
 
 class Polynomial_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, min_val, max_val):
@@ -543,6 +590,9 @@ class Polynomial_1D(Function):
         else:
             poly_function = np.poly1d(self.coefficients)
             return r, poly_function(r)
+    
+    def __str__(self) -> str:
+        return 'Polynomial_1D'
 
 class SinusoidalPolynomial_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, min_val, max_val, min_f, max_f, seed):
@@ -589,6 +639,9 @@ class SinusoidalPolynomial_1D(Function):
             return r[in_domain], self.poly_with_sinusoidal(r[in_domain])
         else:
             return r, self.poly_with_sinusoidal(r)
+    
+    def __str__(self) -> str:
+        return 'SinusoidalPolynomiall_1D'
 
 class SinusoidalGaussianPolynomial_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, min_val, max_val, min_f, max_f, spread, seed=None):
@@ -646,6 +699,9 @@ class SinusoidalGaussianPolynomial_1D(Function):
         else:
             gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.mean) / self.std_dev) ** 2)
             return r, poly_with_sinusoidal(r) * gaussian_function
+    
+    def __str__(self) -> str:
+        return 'SinusoidalGaussianPolynomial_1D'
 
 class NormalModes_1D(Function):
     def __init__(self, domain: HyperParalelipiped, order, spread, max_freq, 
@@ -714,6 +770,128 @@ class NormalModes_1D(Function):
         else:
             gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.mean) / self.std_dev) ** 2)
             return r, sin_poly * gaussian_function
+    
+    def __str__(self) -> str:
+        return 'NormalModes_1D'
+
+class Gaussian_Bump_1D(Function):
+    """
+    Compute the a Gaussian lookinf bump function over a given domain.
+
+    Args:
+    - center (float): Center of the compact domain.
+    - width (float): Width of the compact domain.
+    - domain (HyperParalelipiped): Array representing the domain for computation.
+
+    Returns:
+    - numpy.ndarray: Computed function values over the domain.
+    """
+    def __init__(self, domain:HyperParalelipiped, center, width, pointiness=2,
+                 unimodularity_precision=1000) -> None:
+        super().__init__(domain=domain)
+        self.center = center
+        self.width = width
+        self.pointiness = pointiness
+        self.unimodularity_precision = unimodularity_precision
+        self._normalization_stored = None
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
+    @property
+    def normalization(self):
+        if self._normalization_stored is None:
+            r = np.linspace(-1,1,self.unimodularity_precision)
+            bump = np.exp(1/(r**2 - 1) - self.pointiness * r**2)
+            bump = np.where(np.isinf(bump),0,bump)
+            return (self.width / 2) * np.trapz(bump, r)
+        else:
+            return self._normalization_stored
+
+    def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            where_compact = np.where((r>(self.center - self.width/2)) & (r<(self.center + self.width/2)))
+            r_compact = r[in_domain][where_compact]
+            r_compact_centered = r_compact - self.center
+            bump = np.zeros_like(r[in_domain])
+            bump[where_compact] = np.exp(((self.width/2)**4 - self.pointiness * r_compact_centered**2 * (r_compact_centered**2 - (self.width/2)**2))/ \
+                          ((self.width/2)**2 * r_compact_centered**2 - (self.width/2)**4))
+            bump = np.where(np.isinf(bump),0,bump)
+            bump /= self.normalization
+            return r[in_domain], bump
+        else:
+            where_compact = np.where((r>(self.center - self.width/2)) & (r<(self.center + self.width/2)))
+            r_compact = r[where_compact]
+            r_compact_centered = r_compact - self.center
+            bump = np.zeros_like(r)
+            bump[where_compact] = np.exp(((self.width/2)**4 - self.pointiness * r_compact_centered**2 * (r_compact_centered**2 - (self.width/2)**2))/ \
+                          ((self.width/2)**2 * r_compact_centered**2 - (self.width/2)**4))
+            bump = np.where(np.isinf(bump),0,bump)
+            bump /= self.normalization
+            return r, bump
+    
+    def __str__(self) -> str:
+        return 'Gaussian_Bump_1D'
+
+class Dgaussian_Bump_1D(Function):
+    """
+    Compute the derivative of Gaussian bump function over a given domain.
+
+    Args:
+    - center (float): Center of the Gaussian function.
+    - width (float): Width of the Gaussian function.
+    - domain (HyperParalelipiped): Array representing the domain for computation.
+
+    Returns:
+    - numpy.ndarray: Computed Gaussian function values over the domain.
+    """
+    def __init__(self, domain:HyperParalelipiped, center, width, pointiness=2,
+                 unimodularity_precision=1000) -> None:
+        super().__init__(domain=domain)
+        self.center = center
+        self.width = width
+        self.pointiness = pointiness
+        self.unimodularity_precision = unimodularity_precision
+        self._normalziation_stored = None
+
+    def plot(self):
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.show()
+
+    def evaluate(self, r, check_if_in_domain=True):
+        try: r[0] 
+        except: r=np.array([r])
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            where_compact = np.where((r[in_domain]>(self.center - self.width/2)) & (r[in_domain]<(self.center + self.width/2)))
+            r_compact = r[in_domain][where_compact]
+            dbump = np.zeros_like(r[in_domain])
+            r_compact_centered = r_compact - self.center
+            multiplier = (-(2 * self.pointiness * r_compact_centered)/(self.width/2)**2 - \
+                        (2 * (self.width/2)**2 * r_compact_centered)/((r_compact_centered**2 - (self.width/2)**2)**2))
+            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center, 
+                                    width=self.width, pointiness=self.pointiness)
+            dbump[where_compact] = -multiplier * bump.evaluate(r_compact)[1] 
+                                            
+            return r[in_domain], dbump
+        else:
+            where_compact = np.where((r>(self.center - self.width/2)) & (r<(self.center + self.width/2)))
+            r_compact = r[where_compact]
+            r_compact_centered = r_compact - self.center
+            dbump = np.zeros_like(r)
+            multiplier =  (-(2 * self.pointiness * (r_compact_centered))/(self.width/2)**2 - \
+                                     (2 * (self.width/2)**2 * (r_compact_centered))/(((r_compact_centered)**2 - (self.width/2)**2)**2))
+            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center, 
+                                    width=self.width, pointiness=self.pointiness)
+            dbump[where_compact] = -multiplier * bump.evaluate(r_compact, check_if_in_domain=False)[1]
+            return r, dbump
+    
+    def __str__(self) -> str:
+        return 'Dgaussian_Bump_1D'
 
 class Gaussian_1D(Function):
     """
@@ -748,6 +926,9 @@ class Gaussian_1D(Function):
         else:
             gaussian_vector = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
             return r, gaussian_vector
+    
+    def __str__(self) -> str:
+        return 'Gaussian_1D'
 
 class Moorlet_1D(Function):
     """
@@ -794,6 +975,9 @@ class Moorlet_1D(Function):
                 * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
             return r, moorlet_vector / self.normalization
     
+    def __str__(self) -> str:
+        return 'Moorlet_1D'
+    
 class Haar_1D(Function):
     """
     Compute the Haar wavelet function over a given domain.
@@ -827,6 +1011,9 @@ class Haar_1D(Function):
             scaled_domain = (r - self.center) / self.width
             haar_vector = 4 * np.where((scaled_domain >= -0.5) & (scaled_domain < 0.5), np.sign(scaled_domain), 0) / self.width**2
             return r, haar_vector
+    
+    def __str__(self) -> str:
+        return 'Haar_1D'
 
 class Ricker_1D(Function):
     """
@@ -863,6 +1050,9 @@ class Ricker_1D(Function):
             vector = A * (1 - ((r - self.center) / ricker_specific_width) ** 2) * np.exp(
                 -0.5 * ((r - self.center) / ricker_specific_width) ** 2)
             return r, vector
+    
+    def __str__(self) -> str:
+        return 'Ricker_1D'
 
 class Dgaussian_1D(Function):
     """
@@ -898,6 +1088,9 @@ class Dgaussian_1D(Function):
             Dgaussian_vector = ((r - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp(
                 -0.5 * ((r - self.center) / self.spread) ** 2)
             return r, Dgaussian_vector
+    
+    def __str__(self) -> str:
+        return 'Dgaussian_1D'
 
 class Boxcar_1D(Function):
     """
@@ -935,6 +1128,9 @@ class Boxcar_1D(Function):
             scaled_domain = (r - self.center) / self.width
             boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0)
             return r, boxcar_vector
+    
+    def __str__(self) -> str:
+        return 'Boxcar_1D'
 
 class Bump_1D(Function):
     """
@@ -988,6 +1184,9 @@ class Bump_1D(Function):
             bump_vector[mask] = np.exp(
                 1 / ((2 * (r[mask] - self.center) / self.width) ** 2 - 1))
             return r, bump_vector / self.normalization
+    
+    def __str__(self) -> str:
+        return 'Bump_1D'
 
 class Dbump_1D(Function):
     """
@@ -1045,6 +1244,9 @@ class Dbump_1D(Function):
                     (2 * (r[mask] - self.center))**2 - self.width**2)**2
             return r, bump_vector / self.area
     
+    def __str__(self) -> str:
+        return 'Dbump_1D'
+    
 class Triangular_1D(Function):
     """
     Compute the Triangular function over a given domain.
@@ -1081,6 +1283,9 @@ class Triangular_1D(Function):
             triangular_vector = np.zeros_like(r)
             triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[mask] - self.center) / self.width**2
             return r, triangular_vector
+    
+    def __str__(self) -> str:
+        return 'Triangular_1D'
         
 class Fourier(Function):
     """ 
@@ -1112,3 +1317,6 @@ class Fourier(Function):
                     return r, np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)
                 else:
                     return r, np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)
+                
+    def __str__(self) -> str:
+        return 'Fourier'

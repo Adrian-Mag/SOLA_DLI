@@ -242,8 +242,8 @@ class Problem():
         self.data = data # data
         self.norm_bound = norm_bound # model norm bound
 
-        self.G_adjoint = G.adjoint()
-        self.T_adjoint = T.adjoint()
+        self.G_adjoint = G.adjoint
+        self.T_adjoint = T.adjoint
 
         self.Lambda = None 
         self.Lambda_inv = None
@@ -282,8 +282,8 @@ class Problem():
         self.G = new_G
         self.T = new_T
         self.norm_bound = new_norm_bound
-        self.G_adjoint = new_G.adjoint()
-        self.T_adjoint = new_T.adjoint()
+        self.G_adjoint = new_G.adjoint
+        self.T_adjoint = new_T.adjoint
 
         dependent_nodes = self.dependencies.find_reachable_nodes(['M', 'G', 'T']) - set(self.fixed_items)
         for alias in dependent_nodes:
@@ -572,6 +572,7 @@ class Problem():
                                     uninterpretable_region: np.ndarray,
                                     ticks: list, colorbar_label: str, xticks, yticks, 
                                     xlabel, ylabel, title, plot_colors,
+                                    physical_parameters_symbols: list,
                                     cmap: str=None, norm=None, colorbar_format=None,
                                     fill_betweenx_calls=None, args_list=None):
         """Method for plotting some quantity that was evaluated at a uniform grid
@@ -595,6 +596,7 @@ class Problem():
             ylabel (str): y label
             title (str): main plot title
             plot_colors (list): list of colors for the target/resolving kernels
+            physical_parameters_symbols (list): List of math symbols for the legend 
 
         Returns:
             plot: interactive plot
@@ -671,12 +673,12 @@ class Problem():
                 for index, (target_mapping, resolving_mapping) in enumerate(zip(self.T.mappings, self.A.mappings)):
                     resolving_kernel = resolving_mapping.kernels[j + N_target_parameter_1 * i]
                     resolving_kernel_y_values = resolving_kernel.evaluate(resolving_kernel.domain.mesh)[1]
-                    plt.plot(resolving_kernel.domain.mesh, resolving_kernel_y_values, label='Resolving: m_' + str(index), 
+                    plt.plot(resolving_kernel.domain.mesh, resolving_kernel_y_values, label='Resolving: ' + physical_parameters_symbols[index], 
                              linewidth=2, color=plot_colors[index])
                     all_y_values.extend(resolving_kernel_y_values)
                     target_kernel = target_mapping.kernels[j + N_target_parameter_1 * i]
                     target_kernel_y_values = target_kernel.evaluate(target_kernel.domain.mesh)[1]
-                    plt.plot(target_kernel.domain.mesh, target_kernel_y_values, label='Target: m_' + str(index), 
+                    plt.plot(target_kernel.domain.mesh, target_kernel_y_values, label='Target: ' + physical_parameters_symbols[index], 
                              linewidth=2, color=plot_colors[index], linestyle='dashed')
                     """ plt.fill_betweenx([y_min, y_max], 0.5, 0.75, color='gray', alpha=0.3, label='No sensitivity')
                     plt.fill_betweenx([y_min, y_max], 0, widths[j]/2, color='gray', hatch='/', 
@@ -694,7 +696,7 @@ class Problem():
                 plt.xticks(fontsize=20)
                 plt.yticks(fontsize=20)
                 plt.xlabel('Enquiry Points', fontsize=20)
-                plt.ylabel('Property Value', fontsize=20)  # Add Y-axis label with fontsize
+                plt.ylabel('Kernel Value', fontsize=20)  # Add Y-axis label with fontsize
                 plt.legend(fontsize=15)
                 plt.tight_layout()
                 plt.show()
@@ -705,8 +707,45 @@ class Problem():
         fig.tight_layout()
         plt.show()
 
+    def plot_multi_widths_resolving_error(self, enquiry_points, widths, domain: Domain,
+                            physical_parameters_symbols):
+        if self.H_diag is None:
+            self._compute_H_diag()
+        if self.A is None:
+            self._compute_resolving_kernels()
+        # Compute norms of the target kernels
+        norms = np.array([])
+        for target_kernel in self.T.kernels:
+            norms = np.append(norms, [self.M.norm(target_kernel)])
+        norms = norms[:, np.newaxis] # just for the self.H_diag/norms division
 
-    def plot_multi_widths_errors(self, enquiry_points, widths, error_type, domain: Domain):
+        # Compute exclusion zone
+        domain_min, domain_max = domain.bounds[0]
+        N_enquiry_points = len(enquiry_points)
+        N_widths = len(widths)
+        combinations = list(product(enquiry_points, widths))
+        exclusion_zones = np.array([((center + spread/2) > domain_max) or ((center - spread/2) < domain_min) for center, spread in combinations])
+        exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
+        H_map = ((np.sqrt(self.H_diag) / norms).reshape(N_enquiry_points, N_widths)).T
+
+        ticks=[1e-3, 1e-2, 1e-1, 1]
+        colorbar_label = 'Resolving Error'
+        xticks = ['{:.2}'.format(point) for point in enquiry_points[::int(len(enquiry_points) / 10) + 1]]
+        yticks = ['{:.0%}'.format(spread / (domain_max - domain_min)) for spread in widths[::int(len(widths) / 10) + 1]]
+        colors = sns.color_palette('YlGnBu', n_colors=100)
+
+        self._plot_on_enquirypts_x_widths(target_parameter_1=enquiry_points, target_parameter_2=widths,
+                                          quantity=H_map, uninterpretable_region=exclusion_map,
+                                          ticks=ticks, colorbar_label=colorbar_label, xticks=xticks,
+                                          yticks=yticks, xlabel='Enquiry Points', ylabel='Width',
+                                          title='Resolving Error', plot_colors=['#5ee22d', colors[99], '#fccd1a'], 
+                                          cmap='Blues_r', norm=LogNorm(vmin=1e-3, vmax=1), 
+                                          physical_parameters_symbols=physical_parameters_symbols,
+                                          colorbar_format=LogFormatter(10, labelOnlyBase=False))
+
+
+    def plot_multi_widths_errors(self, enquiry_points, widths, error_type, 
+                                 domain: Domain, physical_parameters_symbols):
         # Ensure necessary computations are done
         if self.A is None:
             self._compute_resolving_kernels()
@@ -745,12 +784,12 @@ class Problem():
                                           ticks=ticks, colorbar_label=colorbar_label, xticks=xticks,
                                           yticks=yticks, xlabel='Enquiry Points', ylabel='Width',
                                           title='Relative Error Bounds', plot_colors=['#5ee22d', colors[99], '#fccd1a'], 
-                                          cmap='Blues_r', norm=LogNorm(vmin=1, vmax=100), 
+                                          cmap='Blues_r', norm=LogNorm(vmin=1, vmax=100), physical_parameters_symbols=physical_parameters_symbols,
                                           colorbar_format=LogFormatter(10, labelOnlyBase=False))
 
 
     def plot_necessary_norm_bounds(self, relative_error: float, domain: Domain, 
-                                   enquiry_points, widths):
+                                   enquiry_points, widths, physical_parameters_symbols):
         """Plots the necessary norm bound necesary to acieve the 
         desired relative error as a multiple of the least norm.
 
@@ -783,7 +822,8 @@ class Problem():
 
         self._plot_on_enquirypts_x_widths(target_parameter_1=enquiry_points, target_parameter_2=widths,
                                           quantity=alpha, uninterpretable_region=exclusion_map,
-                                          ticks=[1,2,3,4,5], colorbar_label='Alpha', xticks=xticks,
+                                          ticks=[1,10,100,1e3], colorbar_label='Alpha', xticks=xticks,
                                           yticks=yticks, xlabel='Enquiry Points', ylabel='Widths', title='Alpha',
                                           plot_colors=['#5ee22d', colors[99], '#fccd1a'], cmap='Blues_r',
-                                          norm=mcolors.Normalize(vmin=1, vmax=5), colorbar_format=None)
+                                          norm=LogNorm(vmin=1, vmax=1e3), colorbar_format=None,
+                                          physical_parameters_symbols=physical_parameters_symbols)
