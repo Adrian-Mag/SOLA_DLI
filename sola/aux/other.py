@@ -1,5 +1,5 @@
 import numpy as np
-from core.main_classes.mappings import *
+from sola.main_classes.mappings import *
 
 def round_to_sf(number, sf):
     if number == 0:

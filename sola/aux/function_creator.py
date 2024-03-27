@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import interp1d
 
-from core.main_classes.domains import Domain, HyperParalelipiped
+from sola.main_classes.domains import Domain, HyperParalelipiped
 
 def as_function(values: np.ndarray, domain: np.ndarray) -> callable:
     if np.array_equal(values.shape, domain.shape):

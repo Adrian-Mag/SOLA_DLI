@@ -1,8 +1,7 @@
-from core.main_classes.domains import Domain, HyperParalelipiped
+from sola.main_classes.domains import Domain, HyperParalelipiped
 
 import numpy as np
 from abc import ABC, abstractmethod
-from typing import Union, Callable
 from scipy.interpolate import interp1d
 import random
 import matplotlib

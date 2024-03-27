@@ -1,7 +1,7 @@
 import numpy as np
 from abc import ABC, abstractmethod
 
-from core.main_classes.spaces import *
+from sola.main_classes.spaces import *
 
 class Mapping(ABC):
     """

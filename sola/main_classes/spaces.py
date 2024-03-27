@@ -1,9 +1,8 @@
 import numpy as np
 from abc import ABC, abstractclassmethod, abstractproperty
-from core.main_classes.domains import Domain, HyperParalelipiped
-from core.main_classes.functions import *
-from core.aux.function_creator import *
-import random
+from sola.main_classes.domains import HyperParalelipiped
+from sola.main_classes.functions import *
+from sola.aux.function_creator import *
 import scipy
 
 class Space(ABC):

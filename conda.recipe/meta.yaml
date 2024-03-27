@@ -1,0 +1,27 @@
+package:
+  name: sola
+  version: 0.1
+
+source:
+  path: ..
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - numpy >=1.17
+  run:
+    - python
+    - numpy >=1.17
+    - networkx
+    - matplotlib
+    - plotly
+  host:
+    - python =3.8
+    - pip
+    - setuptools
+
+about:
+  home: https://github.com/Adrian-Mag/SOLA_DLI.git
+  license: MIT
+  summary: A brief description of your package

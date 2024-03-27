@@ -1,16 +1,14 @@
-from core.main_classes.spaces import PCb, DirectSumSpace, RN
-from core.main_classes.mappings import *
+from sola.main_classes.mappings import *
 import networkx as nx
 from networkx.drawing.nx_agraph import graphviz_layout
 import matplotlib.pyplot as plt
 from plotly.subplots import make_subplots
-from core.aux.other import round_to_sf
+from sola.aux.other import round_to_sf
 import plotly.graph_objects as go
 from itertools import product
 from matplotlib.colors import LogNorm  # Import LogNorm from colors module
 import seaborn as sns
 from matplotlib.ticker import LogFormatter 
-import matplotlib.colors as mcolors
 
 
 class DependencyTree:

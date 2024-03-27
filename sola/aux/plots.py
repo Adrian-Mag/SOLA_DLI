@@ -1,6 +1,6 @@
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from core.aux.other import round_to_sf
+from sola.aux.other import round_to_sf
 
 def plot_solution(domain, least_norm_property, resolving_kernels, enquiry_points, targets, 
                   true_property: None, upper_bound: None, lower_bound: None):
