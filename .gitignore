@@ -9,3 +9,5 @@ kernels_modelotaat_Adrian
 *.egg-info/
 dist/
 build/
+.coverage
+test.py

@@ -14,7 +14,7 @@ class Domain(ABC):
         Returns:
         - np.ndarray: Sampled points within the domain.
         """
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def check_if_in_domain(self, values):
@@ -36,7 +36,7 @@ class Domain(ABC):
         boolean indicates whether the corresponding value in 'values' is within
         the domain.
         """
-        pass
+        pass  # pragma: no cover
 
     @property
     @abstractmethod
@@ -59,7 +59,7 @@ class Domain(ABC):
         domain, this would be the area. For a three-dimensional domain, this
         would be the volume, and so on.
         """
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def __eq__(self, other):
@@ -82,7 +82,7 @@ class Domain(ABC):
         - bool: True if this domain is equal to the 'other' domain, False
         otherwise.
         """
-        pass
+        pass  # pragma: no cover
 
 
 class HyperParalelipiped(Domain):
@@ -120,7 +120,10 @@ class HyperParalelipiped(Domain):
         """
         self.dimension = len(bounds)
         self.bounds = bounds
-        self.fineness = fineness
+        # Check the dimension of the domain. For 1D a 1000 fineness is ok, but
+        # for higher dimension we should take the 1/dimension power to keep
+        # memory manageable
+        self.fineness = int(np.power(fineness, 1 / self.dimension))
         self.axes, self.mesh = self._create_mesh()
 
     def __eq__(self, other):
@@ -171,6 +174,8 @@ class HyperParalelipiped(Domain):
         of points. For domains with two or more dimensions, a list of numpy
         arrays, where each array represents the points along one dimension.
         """
+        if fineness <= 0:
+            raise ValueError('The number of samples must be greater than 0.')
         axes = [
             np.linspace(bound[0], bound[1], fineness)
             for bound in self.bounds
@@ -251,7 +256,7 @@ class HyperParalelipiped(Domain):
             points = np.array([
                 np.random.uniform(bound[0], bound[1], 1)
                 for bound in self.bounds
-                ])
+                ]).T
         return points
 
     def check_if_in_domain(self, values):
@@ -292,15 +297,15 @@ class HyperParalelipiped(Domain):
                 return (values >= self.bounds[0][0] and
                         values <= self.bounds[0][1])
             elif isinstance(values, np.ndarray) and values.ndim == 1:
-                return ((values >= self.bounds[0][0]) and
+                return ((values >= self.bounds[0][0]) &
                         (values <= self.bounds[0][1]))
             else:
                 raise Exception('Wrong dimension or type')
         else:
             if values.ndim == 1:
                 if len(values) == self.dimension:
-                    if np.all((values >= self.bounds[:, 0]) and
-                              (values <= self.bounds[:, 1])):
+                    if (np.all(values >= np.array(self.bounds)[:, 0]) and
+                            np.all(values <= np.array(self.bounds)[:, 1])):
                         return True
                     else:
                         return False
@@ -310,8 +315,8 @@ class HyperParalelipiped(Domain):
                 values_in_domain = []
                 for value in values:
                     if len(value) == self.dimension:
-                        if np.all((value >= self.bounds[:, 0]) and
-                                  (value <= self.bounds[:, 1])):
+                        if (np.all(value >= np.array(self.bounds)[:, 0]) and
+                                np.all(value <= np.array(self.bounds)[:, 1])):
                             values_in_domain.append(True)
                         else:
                             values_in_domain.append(False)
@@ -341,4 +346,7 @@ class HyperParalelipiped(Domain):
         - float: The total measure (volume) of the domain. This is the product
         of the lengths of the domain along each dimension.
         """
-        return np.prod([bound[1] - bound[0] for bound in self.bounds])
+        print(self.bounds)
+        a = [bound[1] - bound[0] for bound in self.bounds]
+        print(a)
+        return np.prod(a)
