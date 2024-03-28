@@ -2,3 +2,10 @@ app.log
 *png
 kernels_modelotaat_Adrian
 **__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.pyc
+*.egg-info/
+dist/
+build/
