@@ -346,7 +346,4 @@ class HyperParalelipiped(Domain):
         - float: The total measure (volume) of the domain. This is the product
         of the lengths of the domain along each dimension.
         """
-        print(self.bounds)
-        a = [bound[1] - bound[0] for bound in self.bounds]
-        print(a)
-        return np.prod(a)
+        return np.prod([bound[1] - bound[0] for bound in self.bounds])
