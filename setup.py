@@ -7,13 +7,16 @@ with open('README.md', 'r') as f:
 setup(
     name='sola',
     version='0.1',
-    author='Your Name',
-    author_email='your_email@example.com',
+    author='Adrian Marin Mag',
+    author_email='marin.mag@stx.ox.ac.uk',
     description='A brief description of your package',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/Adrian-Mag/SOLA_DLI.git',
     packages=find_packages(),
+    package_data={
+        'sola': ['kernels_modeplotaat_Adrian/*'],
+    },
     install_requires=[
         'numpy>=1.17',
         'networkx',
@@ -25,4 +28,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
+    python_requires='>=3.6',  # add this line
 )
