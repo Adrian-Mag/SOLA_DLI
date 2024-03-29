@@ -2,7 +2,7 @@ import unittest
 import numpy as np
 from scipy.interpolate import interp1d
 
-from sola.main_classes.functions import Piecewise_1D, Null_1D, Constant_1D, Random_1D, Interpolation_1D, ComplexExponential_1D, Polynomial_1D, SinusoidalPolynomial_1D, SinusoidalGaussianPolynomial_1D, NormalModes_1D, Gaussian_Bump_1D, Dgaussian_Bump_1D # noqa
+from sola.main_classes.functions import Piecewise_1D, Null_1D, Constant_1D, Random_1D, Interpolation_1D, ComplexExponential_1D, Polynomial_1D, SinusoidalPolynomial_1D, SinusoidalGaussianPolynomial_1D, NormalModes_1D, Gaussian_Bump_1D, Dgaussian_Bump_1D, Gaussian_1D, Moorlet_1D, Boxcar_1D, Haar_1D, Ricker_1D, Dgaussian_1D, Bump_1D, Dbump_1D, Triangular_1D, Fourier # noqa
 
 from sola.main_classes.domains import HyperParalelipiped
 
@@ -420,6 +420,304 @@ class TestDgaussianBump1D(unittest.TestCase):
         expected_dbump = np.array([0.0, 0.0, 0.0])
         actual_dbump = self.dgaussian_bump_1d.evaluate(r, check_if_in_domain=False) # noqa
         np.testing.assert_almost_equal(actual_dbump, expected_dbump)
+
+
+class TestGaussian1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[0, 10]])
+        self.center = 5
+        self.width = 2
+        self.gaussian = Gaussian_1D(self.domain, self.center, self.width)
+
+    def test_initialization(self):
+        self.assertEqual(self.gaussian.center, self.center)
+        self.assertEqual(self.gaussian.width, self.width)
+        self.assertEqual(self.gaussian.spread, self.width /
+                         (5 * np.sqrt(2 * np.log(2))))
+
+    def test_evaluate(self):
+        points, values = self.gaussian.evaluate(np.array([1, 2, 3]),
+                                                return_points=True)
+        self.assertTrue(np.all(points == np.array([1, 2, 3])))
+        self.assertTrue(np.all(values == (1 / (self.gaussian.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((points - self.center) / self.gaussian.spread) ** 2))) # noqa
+
+    def test_str(self):
+        self.assertEqual(str(self.gaussian), 'Gaussian_1D')
+
+
+class TestMoorlet1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[0, 10]])
+        self.center = 5
+        self.spread = 2
+        self.frequency = 1
+        self.moorlet = Moorlet_1D(self.domain, self.center,
+                                  self.spread, self.frequency)
+
+    def test_initialization(self):
+        self.assertEqual(self.moorlet.center, self.center)
+        self.assertEqual(self.moorlet.spread, self.spread)
+        self.assertEqual(self.moorlet.frequency, self.frequency)
+
+    def test_compute_normalization(self):
+        moorlet_vector = np.cos(self.frequency * (self.domain.dynamic_mesh(self.moorlet.unimodularity_precision) - self.center)) \
+            * np.exp(-0.5 * ((self.domain.dynamic_mesh(self.moorlet.unimodularity_precision) - self.center) / self.spread) ** 2) # noqa
+        area = np.trapz(moorlet_vector, self.domain.dynamic_mesh(self.moorlet.unimodularity_precision)) # noqa
+        self.assertEqual(self.moorlet.normalization, area)
+
+    def test_evaluate(self):
+        points, values = self.moorlet.evaluate(np.array([1, 2, 3]),
+                                               return_points=True)
+        self.assertTrue(np.all(points == np.array([1, 2, 3])))
+        moorlet_vector = np.cos(self.frequency * (points - self.center)) \
+            * np.exp(-0.5 * ((points - self.center) / self.spread) ** 2)
+        self.assertTrue(np.all(values == moorlet_vector /
+                               self.moorlet.normalization))
+
+    def test_str(self):
+        self.assertEqual(str(self.moorlet), 'Moorlet_1D')
+
+
+class TestHaar1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[0, 2]])
+        self.center = 1.0
+        self.width = 1.0
+        self.haar = Haar_1D(self.domain, self.center, self.width)
+
+    def test_init(self):
+        self.assertEqual(self.haar.center, self.center)
+        self.assertEqual(self.haar.width, self.width)
+
+    def test_evaluate(self):
+        r = np.array([0.0, 0.75, 1.25, 1.75])
+        expected_values = np.array([0.0, -4.0, 4.0, 0.0])
+        np.testing.assert_array_equal(self.haar.evaluate(r), expected_values)
+
+    def test_evaluate_with_return_points(self):
+        r = np.array([0.0, 0.75, 1.25, 1.75])
+        expected_points = np.array([0.0, 0.75, 1.25, 1.75])
+        expected_values = np.array([0.0, -4.0, 4.0, 0.0])
+        points, values = self.haar.evaluate(r, check_if_in_domain=False,
+                                            return_points=True)
+        np.testing.assert_array_equal(points, expected_points)
+        np.testing.assert_array_equal(values, expected_values)
+
+    def test_str(self):
+        self.assertEqual(str(self.haar), 'Haar_1D')
+
+
+class TestRicker1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[0, 10]])
+        self.center = 5
+        self.width = 2
+        self.ricker = Ricker_1D(self.domain, self.center, self.width)
+
+    def test_init(self):
+        self.assertEqual(self.ricker.center, self.center)
+        self.assertEqual(self.ricker.width, self.width)
+
+    def test_evaluate(self):
+        r = np.array([1, 2, 3, 4, 5])
+        vector = self.ricker.evaluate(r)
+        self.assertEqual(vector.shape, r.shape)
+
+    def test_evaluate_outside_domain(self):
+        r = np.array([-1, 11])
+        vector = self.ricker.evaluate(r, check_if_in_domain=False)
+        self.assertEqual(vector.shape, r.shape)
+
+    def test_str(self):
+        self.assertEqual(str(self.ricker), 'Ricker_1D')
+
+
+class TestDgaussian_1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[0, 10]])
+        self.center = 5
+        self.width = 2
+        self.dgaussian = Dgaussian_1D(self.domain, self.center, self.width)
+
+    def test_init(self):
+        self.assertEqual(self.dgaussian.center, self.center)
+        self.assertEqual(self.dgaussian.width, self.width)
+        self.assertAlmostEqual(self.dgaussian.spread, self.width /
+                               (5 * np.sqrt(2 * np.log(2))), places=7)
+
+    def test_evaluate(self):
+        r = np.array([4, 5, 6])
+        result = self.dgaussian.evaluate(r)
+        self.assertIsInstance(result, np.ndarray)
+        self.assertEqual(result.shape, r.shape)
+
+    def test_evaluate_return_points(self):
+        r = np.array([4, 5, 6])
+        points, result = self.dgaussian.evaluate(r, return_points=True)
+        self.assertIsInstance(points, np.ndarray)
+        self.assertIsInstance(result, np.ndarray)
+        self.assertEqual(points.shape, r.shape)
+        self.assertEqual(result.shape, r.shape)
+
+    def test_str(self):
+        self.assertEqual(str(self.dgaussian), 'Dgaussian_1D')
+
+
+class TestBoxcar1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[-1, 1]])
+        self.center = 0
+        self.width = 1
+        self.boxcar = Boxcar_1D(self.domain, self.center, self.width)
+
+    def test_init(self):
+        self.assertEqual(self.boxcar.center, self.center)
+        self.assertEqual(self.boxcar.width, self.width)
+        self.assertEqual(self.boxcar.unimodularity_precision, 1000)
+
+    def test_evaluate(self):
+        points, values = self.boxcar.evaluate(np.array([-0.25, 0, 0.25]),
+                                              return_points=True)
+        np.testing.assert_array_equal(points, np.array([-0.25, 0, 0.25]))
+        np.testing.assert_array_equal(values, np.array([1, 1, 1]))
+
+        values = self.boxcar.evaluate(np.array([-0.25, 0, 0.25]))
+        np.testing.assert_array_equal(values, np.array([1, 1, 1]))
+
+    def test_evaluate_outside_domain(self):
+        points, values = self.boxcar.evaluate(np.array([-2, 2]),
+                                              return_points=True)
+        np.testing.assert_array_equal(points, np.array([]))
+        np.testing.assert_array_equal(values, np.array([]))
+
+        values = self.boxcar.evaluate(np.array([-2, 2]), return_points=False)
+        np.testing.assert_array_equal(values, np.array([]))
+
+    def test_evaluate_without_checking_domain(self):
+        points, values = self.boxcar.evaluate(np.array([-2, 2]),
+                                              check_if_in_domain=False,
+                                              return_points=True)
+        np.testing.assert_array_equal(points, np.array([-2, 2]))
+        np.testing.assert_array_equal(values, np.array([0, 0]))
+
+        values = self.boxcar.evaluate(np.array([-2, 2]),
+                                      check_if_in_domain=False,
+                                      return_points=False)
+        np.testing.assert_array_equal(values, np.array([0, 0]))
+
+    def test_str(self):
+        self.assertEqual(str(self.boxcar), 'Boxcar_1D')
+
+
+class TestBump1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[-1, 1]])
+        self.center = 0.0
+        self.width = 1.0
+        self.bump = Bump_1D(self.domain, self.center, self.width)
+
+    def test_init(self):
+        self.assertEqual(self.bump.center, self.center)
+        self.assertEqual(self.bump.width, self.width)
+        self.assertIsNotNone(self.bump.normalization)
+
+    def test_compute_normalization(self):
+        normalization = self.bump._compute_normalization()
+        self.assertIsNotNone(normalization)
+        self.assertEqual(self.bump.normalization, normalization)
+
+    def test_evaluate(self):
+        r = np.array([0.0, 0.5, 1.0])
+        values = self.bump.evaluate(r)
+        self.assertEqual(values.shape, r.shape)
+
+    def test_str(self):
+        self.assertEqual(str(self.bump), 'Bump_1D')
+
+
+class TestDbump_1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[-1, 1]])
+        self.center = 0.0
+        self.width = 1.0
+        self.unimodularity_precision = 1000
+        self.dbump = Dbump_1D(self.domain, self.center, self.width,
+                              self.unimodularity_precision)
+
+    def test_init(self):
+        self.assertEqual(self.dbump.center, self.center)
+        self.assertEqual(self.dbump.width, self.width)
+        self.assertEqual(self.dbump.unimodularity_precision,
+                         self.unimodularity_precision)
+
+    def test_compute_area(self):
+        # Compare with a known value
+        known_area = 0.2219969080840397
+        self.assertAlmostEqual(self.dbump._compute_area(), known_area)
+
+    def test_evaluate(self):
+        # Compare with known values
+        r = np.array([0.0, 0.5, 1.0])
+        known_values = np.array([0.0, 0, 0.0])
+        np.testing.assert_almost_equal(self.dbump.evaluate(r), known_values)
+
+    def test_str(self):
+        self.assertEqual(str(self.dbump), 'Dbump_1D')
+
+
+class TestTriangular1D(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[0, 10]])
+        self.center = 5
+        self.width = 2
+        self.triangular = Triangular_1D(self.domain, self.center, self.width)
+
+    def test_init(self):
+        self.assertEqual(self.triangular.center, self.center)
+        self.assertEqual(self.triangular.width, self.width)
+        self.assertEqual(self.triangular.domain, self.domain)
+
+    def test_evaluate(self):
+        points = np.array([4, 5, 6])
+        expected_values = np.array([0, 1, 0])
+        actual_values = self.triangular.evaluate(points,
+                                                 check_if_in_domain=False)
+        np.testing.assert_array_equal(actual_values, expected_values)
+
+    def test_evaluate_with_return_points(self):
+        points = np.array([4, 5, 6])
+        expected_values = (points, np.array([0, 1, 0]))
+        actual_values = self.triangular.evaluate(points, return_points=True)
+        np.testing.assert_array_equal(actual_values, expected_values)
+
+    def test_str(self):
+        self.assertEqual(str(self.triangular), 'Triangular_1D')
+
+
+class TestFourier(unittest.TestCase):
+    def setUp(self):
+        self.domain = HyperParalelipiped([[0, 1]])
+        self.fourier_sin = Fourier(self.domain, 'sin', 1)
+        self.fourier_cos = Fourier(self.domain, 'cos', 1)
+
+    def test_init(self):
+        self.assertEqual(self.fourier_sin.type, 'sin')
+        self.assertEqual(self.fourier_sin.order, 1)
+        self.assertEqual(self.fourier_sin.period, 1)
+
+    def test_evaluate_sin(self):
+        r = np.array([0, 0.25, 0.5, 0.75, 1])
+        expected = np.sin(2 * np.pi * r) * np.sqrt(2)
+        np.testing.assert_almost_equal(self.fourier_sin.evaluate(r), expected)
+
+    def test_evaluate_cos(self):
+        r = np.array([0, 0.25, 0.5, 0.75, 1])
+        expected = np.cos(2 * np.pi * r) * np.sqrt(2)
+        np.testing.assert_almost_equal(self.fourier_cos.evaluate(r), expected)
+
+    def test_str(self):
+        self.assertEqual(str(self.fourier_sin), 'Fourier')
+        self.assertEqual(str(self.fourier_cos), 'Fourier')
 
 
 if __name__ == '__main__':
