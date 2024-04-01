@@ -265,7 +265,8 @@ class _DivideFunction(Function):
         self.function2 = function2
 
     def evaluate(self, r: Union[float, int, list, tuple],
-                 check_if_in_domain: bool = True) -> Tuple:
+                 check_if_in_domain: bool = True,
+                 return_points: bool = False) -> Tuple:
         """
         Evaluates the division of the two functions at given points.
 
@@ -283,12 +284,22 @@ class _DivideFunction(Function):
         - ZeroDivisionError: If the denominator function evaluates to zero at
         any point.
         """
-        eval1 = self.function1.evaluate(r, check_if_in_domain)
-        eval2 = self.function2.evaluate(r, check_if_in_domain)
-        if 0 in eval2[1]:
-            raise ZeroDivisionError("Denominator function evaluates to zero at"
-                                    " some points.")
-        return eval1[0], eval1[1] / eval2[1]
+        if return_points:
+            eval1 = self.function1.evaluate(r, check_if_in_domain,
+                                            return_points)
+            eval2 = self.function2.evaluate(r, check_if_in_domain,
+                                            return_points)
+            if 0 in eval2[1]:
+                raise ZeroDivisionError("Denominator function evaluates to "
+                                        "zero at some points.")
+            return eval1[0], eval1[1] / eval2[1]
+        else:
+            eval1 = self.function1.evaluate(r, check_if_in_domain)
+            eval2 = self.function2.evaluate(r, check_if_in_domain)
+            if 0 in eval2:
+                raise ZeroDivisionError("Denominator function evaluates to "
+                                        "zero at some points.")
+            return eval1 / eval2
 
     def __str__(self) -> str:
         """
@@ -332,7 +343,8 @@ class _SubtractFunction(Function):
         self.function2 = function2
 
     def evaluate(self, r: Union[float, int, list, tuple],
-                 check_if_in_domain: bool = True) -> Tuple:
+                 check_if_in_domain: bool = True,
+                 return_points: bool = False) -> Tuple:
         """
         Evaluates the subtraction of the two functions at given points.
 
@@ -346,9 +358,16 @@ class _SubtractFunction(Function):
         - Tuple: A tuple containing the points and the evaluated values of the
         subtraction of the two functions.
         """
-        eval1 = self.function1.evaluate(r, check_if_in_domain)
-        eval2 = self.function2.evaluate(r, check_if_in_domain)
-        return eval1[0], eval1[1] - eval2[1]
+        if return_points:
+            eval1 = self.function1.evaluate(r, check_if_in_domain,
+                                            return_points)
+            eval2 = self.function2.evaluate(r, check_if_in_domain,
+                                            return_points)
+            return eval1[0], eval1[1] - eval2[1]
+        else:
+            eval1 = self.function1.evaluate(r, check_if_in_domain)
+            eval2 = self.function2.evaluate(r, check_if_in_domain)
+            return eval1 - eval2
 
     def __str__(self) -> str:
         """
@@ -391,7 +410,8 @@ class _SumFunction(Function):
         self.function2 = function2
 
     def evaluate(self, r: Union[float, int, list, tuple],
-                 check_if_in_domain: bool = True) -> Tuple:
+                 check_if_in_domain: bool = True,
+                 return_points: bool = False) -> Tuple:
         """
         Evaluates the sum of the two functions at given points.
 
@@ -405,9 +425,16 @@ class _SumFunction(Function):
         - Tuple: A tuple containing the points and the evaluated values of the
         sum of the two functions.
         """
-        eval1 = self.function1.evaluate(r, check_if_in_domain)
-        eval2 = self.function2.evaluate(r, check_if_in_domain)
-        return eval1[0], eval1[1] + eval2[1]
+        if return_points:
+            eval1 = self.function1.evaluate(r, check_if_in_domain,
+                                            return_points)
+            eval2 = self.function2.evaluate(r, check_if_in_domain,
+                                            return_points)
+            return eval1[0], eval1[1] + eval2[1]
+        else:
+            eval1 = self.function1.evaluate(r, check_if_in_domain)
+            eval2 = self.function2.evaluate(r, check_if_in_domain)
+            return eval1 + eval2
 
     def __str__(self) -> str:
         """
@@ -452,7 +479,8 @@ class _ProductFunction(Function):
         self.function2 = function2
 
     def evaluate(self, r: Union[float, int, list, tuple],
-                 check_if_in_domain: bool = True) -> Tuple:
+                 check_if_in_domain: bool = True,
+                 return_points: bool = False) -> Tuple:
         """
         Evaluates the product of the two functions at given points.
 
@@ -466,9 +494,16 @@ class _ProductFunction(Function):
         - Tuple: A tuple containing the points and the evaluated values of the
         product of the two functions.
         """
-        eval1 = self.function1.evaluate(r, check_if_in_domain)
-        eval2 = self.function2.evaluate(r, check_if_in_domain)
-        return eval1[0], eval1[1] * eval2[1]
+        if return_points:
+            eval1 = self.function1.evaluate(r, check_if_in_domain,
+                                            return_points)
+            eval2 = self.function2.evaluate(r, check_if_in_domain,
+                                            return_points)
+            return eval1[0], eval1[1] * eval2[1]
+        else:
+            eval1 = self.function1.evaluate(r, check_if_in_domain)
+            eval2 = self.function2.evaluate(r, check_if_in_domain)
+            return eval1 * eval2
 
     def __str__(self) -> str:
         """
@@ -632,6 +667,7 @@ class Null_1D(Function):
             tuple: A tuple containing the points at which the function was
             evaluated and the function values.
         """
+
         r = np.array(r, ndmin=1)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)

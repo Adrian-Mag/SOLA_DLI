@@ -86,7 +86,8 @@ class Domain(ABC):
 
 
 class HyperParalelipiped(Domain):
-    def __init__(self, bounds: list, fineness: int = 1000) -> None:
+    def __init__(self, bounds: list, open: bool = False,
+                 fineness: int = 1000) -> None:
         """
         Initializes a new instance of the HyperParalelipiped class.
 
@@ -108,6 +109,7 @@ class HyperParalelipiped(Domain):
         when creating a mesh for the domain. Higher values result in a more
         detailed mesh, but also require more memory and computational
         resources. Defaults to 1000.
+        - open (bool, optinal): If True, the bounds are considered open
 
         Attributes:
         - dimension (int): The number of dimensions of the domain. This is
@@ -120,6 +122,7 @@ class HyperParalelipiped(Domain):
         """
         self.dimension = len(bounds)
         self.bounds = bounds
+        self.open = open
         # Check the dimension of the domain. For 1D a 1000 fineness is ok, but
         # for higher dimension we should take the 1/dimension power to keep
         # memory manageable
@@ -131,9 +134,9 @@ class HyperParalelipiped(Domain):
         Checks if this HyperParalelipiped instance is equal to another.
 
         Two HyperParalelipiped instances are considered equal if they have the
-        same bounds along each dimension. The order of the bounds is also taken
-        into account, i.e., two instances with the same bounds but in a
-        different order are not considered equal.
+        same bounds along each dimension and are both closed or open. The order
+        of the bounds is also taken into account, i.e., two instances with the
+        same bounds but in a different order are not considered equal.
 
         This method overrides the default `__eq__` method to provide a custom
         equality check for HyperParalelipiped instances.
@@ -148,7 +151,7 @@ class HyperParalelipiped(Domain):
         """
         if isinstance(other, HyperParalelipiped):
             # Check if the bounds are identical, including order
-            if self.bounds == other.bounds:
+            if self.bounds == other.bounds and self.open == other.open:
                 return True
         return False
 
@@ -177,7 +180,8 @@ class HyperParalelipiped(Domain):
         if fineness <= 0:
             raise ValueError('The number of samples must be greater than 0.')
         axes = [
-            np.linspace(bound[0], bound[1], fineness)
+            np.linspace(bound[0], bound[1], fineness,
+                        endpoint=not self.open)
             for bound in self.bounds
         ]
         if self.dimension == 1:
@@ -214,7 +218,8 @@ class HyperParalelipiped(Domain):
             where each array represents the points along one dimension.
         """
         axes = [
-            np.linspace(bound[0], bound[1], self.fineness)
+            np.linspace(bound[0], bound[1], self.fineness,
+                        endpoint=not self.open)
             for bound in self.bounds
             ]
         if self.dimension == 1:
@@ -246,17 +251,22 @@ class HyperParalelipiped(Domain):
         1, the returned array is 2D (with points as rows). If 'N' is 1, the
         returned array is 1D.
         """
+        epsilon = 1e-10  # or any small value
+
         if N > 1:
             points = [
-                np.random.uniform(bound[0], bound[1], N)
+                np.random.uniform(bound[0] + epsilon if self.open else bound[0], # noqa
+                                  bound[1] - epsilon if self.open else bound[1], N) # noqa
                 for bound in self.bounds
-                ]
+            ]
             points = np.array(points).T  # Transpose to get points as rows
         else:
             points = np.array([
-                np.random.uniform(bound[0], bound[1], 1)
+                np.random.uniform(bound[0] + epsilon if self.open else bound[0], # noqa
+                                  bound[1] - epsilon if self.open else bound[1], 1) # noqa
                 for bound in self.bounds
-                ]).T
+            ]).T
+
         return points
 
     def check_if_in_domain(self, values):
@@ -294,18 +304,24 @@ class HyperParalelipiped(Domain):
 
         if self.dimension == 1:
             if isinstance(values, (int, float)):
-                return (values >= self.bounds[0][0] and
-                        values <= self.bounds[0][1])
+                return (values > self.bounds[0][0] if
+                        self.open else values >= self.bounds[0][0]) and \
+                    (values < self.bounds[0][1] if
+                        self.open else values <= self.bounds[0][1])
             elif isinstance(values, np.ndarray) and values.ndim == 1:
-                return ((values >= self.bounds[0][0]) &
-                        (values <= self.bounds[0][1]))
+                return ((values > self.bounds[0][0] if
+                         self.open else values >= self.bounds[0][0]) &
+                        (values < self.bounds[0][1] if
+                         self.open else values <= self.bounds[0][1]))
             else:
                 raise Exception('Wrong dimension or type')
         else:
             if values.ndim == 1:
                 if len(values) == self.dimension:
-                    if (np.all(values >= np.array(self.bounds)[:, 0]) and
-                            np.all(values <= np.array(self.bounds)[:, 1])):
+                    if (np.all(values > np.array(self.bounds)[:, 0] if
+                                self.open else values >= np.array(self.bounds)[:, 0]) and # noqa
+                            np.all(values < np.array(self.bounds)[:, 1] if
+                                    self.open else values <= np.array(self.bounds)[:, 1])): # noqa
                         return True
                     else:
                         return False
@@ -315,8 +331,10 @@ class HyperParalelipiped(Domain):
                 values_in_domain = []
                 for value in values:
                     if len(value) == self.dimension:
-                        if (np.all(value >= np.array(self.bounds)[:, 0]) and
-                                np.all(value <= np.array(self.bounds)[:, 1])):
+                        if (np.all(value > np.array(self.bounds)[:, 0] if
+                                    self.open else value >= np.array(self.bounds)[:, 0]) and # noqa
+                                np.all(value < np.array(self.bounds)[:, 1]
+                                        if self.open else value <= np.array(self.bounds)[:, 1])): # noqa
                             values_in_domain.append(True)
                         else:
                             values_in_domain.append(False)
