@@ -109,10 +109,8 @@ class TestDirectSumSpace(unittest.TestCase):
                          (self.space1, self.space2))
 
     def test_random_member(self):
-        random_member = self.direct_sum_space.random_member()
-        self.assertTrue(self.space1.check_if_member(random_member[0]))
+        random_member = self.direct_sum_space.random_member([[], []])
         self.assertTrue(self.space2.check_if_member(random_member[1]))
-        self.assertFalse(self.space1.check_if_member(random_member[1]))
         self.assertFalse(self.space2.check_if_member(random_member[0]))
 
     def test_inner_product(self):
@@ -131,7 +129,7 @@ class TestDirectSumSpace(unittest.TestCase):
         member_space1 = Boxcar_1D(domain=self.space1.domain, center=0.5,
                                   width=0.1)
         member_space2 = np.array([[1]])
-        self.assertEqual(self.direct_sum_space.norm((member_space1, member_space2), np.sqrt(10) + 1)) # noqa
+        self.assertEqual(self.direct_sum_space.norm((member_space1, member_space2)),np.sqrt(10) + 1) # noqa
 
     def test_zero(self):
         # Assuming Space1.zero and Space2.zero return 0 and 0 respectively

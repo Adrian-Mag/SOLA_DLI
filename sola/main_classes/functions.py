@@ -2077,7 +2077,6 @@ class Dgaussian_Bump_1D(Function):
                                      (r < (self.center + self.width/2))) # noqa
             r_compact = r[where_compact]
             r_compact_centered = r_compact - self.center
-            print(self.width/2, r_compact_centered[0], r_compact_centered[-1])
             multiplier = self._compute_multiplier(r_compact_centered)
             bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
                                     width=self.width,
