@@ -1,6 +1,8 @@
 # Sola
 
-Sola is a Python package for ...
+Sola is a Python package for solving Backus-Gilbert SOLA inference problems.
+
+As of right now, only 1D problems with no data errors are supported. Functionality for dealing with data errors and 2D/3D models will be implemented soon.
 
 ## Installation
 
@@ -26,3 +28,5 @@ python -m unittest
 ## Usage
 In examples/ there are multiple jupyter notebooks presenting the basic
 functionalities of the package.
+
+Within examples/Target_Paper_Examples you can find the codes used to produce the results of paper *insert paper link*
