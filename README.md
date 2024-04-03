@@ -14,7 +14,7 @@ git clone https://github.com/Adrian-Mag/SOLA_DLI.git
 cd SOLA_DLI
 conda env create -f environment.yml
 conda activate sola
-
+```
 ## Running the Tests
 
 After installing Sola, you can verify your installation by running the test suite. Here's how you can do it:
@@ -23,7 +23,7 @@ After installing Sola, you can verify your installation by running the test suit
 
 ```bash
 cd /path/to/sola
-
+```
 ## Usage
 
 Here's a simple example of how to use Sola:
