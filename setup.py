@@ -17,13 +17,6 @@ setup(
     package_data={
         'sola': ['kernels_modeplotaat_Adrian/*'],
     },
-    install_requires=[
-        'numpy>=1.17',
-        'networkx',
-        'matplotlib',
-        'plotly',
-        'scipy',
-    ],
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',

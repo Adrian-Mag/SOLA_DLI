@@ -6,6 +6,15 @@ Sola is a Python package for ...
 
 To install Sola, you can ...
 
+## Running the Tests
+
+After installing Sola, you can verify your installation by running the test suite. Here's how you can do it:
+
+1. Navigate to the directory containing the `sola` package:
+
+```bash
+cd /path/to/sola
+
 ## Usage
 
 Here's a simple example of how to use Sola:
