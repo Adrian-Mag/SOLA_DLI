@@ -1,7 +1,9 @@
 import numpy as np
 from abc import ABC, abstractmethod
+import scipy
 
-from sola.main_classes.spaces import *
+from sola.main_classes import spaces, functions
+
 
 class Mapping(ABC):
     """
@@ -12,7 +14,7 @@ class Mapping(ABC):
     - codomain (Space): The codomain space of the mapping.
     """
 
-    def __init__(self, domain: Space, codomain: Space) -> None:
+    def __init__(self, domain: spaces.Space, codomain: spaces.Space) -> None:
         """
         Initialize a Mapping object.
 
@@ -47,6 +49,7 @@ class Mapping(ABC):
         """
         pass
 
+
 class DirectSumMapping(Mapping):
     """
     Mapping representing the direct sum of multiple mappings.
@@ -54,17 +57,20 @@ class DirectSumMapping(Mapping):
     Attributes:
     - domain (Space): The domain space of the direct sum mapping.
     - codomain (Space): The codomain space of the direct sum mapping.
-    - mappings (tuple): Tuple of mappings representing the direct sum components.
+    - mappings (tuple): Tuple of mappings representing the direct sum
+    components.
     """
 
-    def __init__(self, domain: Space, codomain: Space, mappings: tuple) -> None:
+    def __init__(self, domain: spaces.Space, codomain: spaces.Space,
+                 mappings: tuple) -> None:
         """
         Initialize a DirectSumMapping object.
 
         Parameters:
         - domain (Space): The domain space of the direct sum mapping.
         - codomain (Space): The codomain space of the direct sum mapping.
-        - mappings (tuple): Tuple of mappings representing the direct sum components.
+        - mappings (tuple): Tuple of mappings representing the direct sum
+        components.
         """
         super().__init__(domain, codomain)
         self.mappings = mappings
@@ -76,9 +82,9 @@ class DirectSumMapping(Mapping):
     def _obtain_kernels(self):
         kernels = []
         for index in range(self.codomain.dimension):
-            kernels.append(tuple([mapping.kernels[index] for mapping in self.mappings]))
+            kernels.append(tuple([mapping.kernels[index] for mapping in self.mappings])) # noqa
         return kernels
-    
+
     def map(self, member: tuple):
         """
         Map a tuple member from the domain to the codomain using direct sum.
@@ -110,11 +116,11 @@ class DirectSumMapping(Mapping):
             for mapping in self.mappings:
                 adjoint_mappings.append(mapping.adjoint)
             self._adjoint_stored = DirectSumMappingAdj(domain=self.codomain,
-                                                    codomain=self.domain,
-                                                    mappings=tuple(adjoint_mappings)) 
+                                                       codomain=self.domain,
+                                                       mappings=tuple(adjoint_mappings)) # noqa
             return self._adjoint_stored
 
-    def pseudoinverse_map(self, member: RN):
+    def pseudoinverse_map(self, member: spaces.RN):
         intermediate = self.gram_matrix.invert().map(member)
         return self.adjoint.map(intermediate)
 
@@ -134,7 +140,8 @@ class DirectSumMapping(Mapping):
         - return_matrix_only (bool): If True, only the Gram matrix is returned.
 
         Returns:
-        - If return_matrix_only is True, the Gram matrix; else, a FiniteLinearMapping.
+        - If return_matrix_only is True, the Gram matrix; else, a
+        FiniteLinearMapping.
         """
         matrix = np.zeros((self.codomain.dimension, self.codomain.dimension))
         for mapping in self.mappings:
@@ -142,13 +149,14 @@ class DirectSumMapping(Mapping):
         if return_matrix_only:
             return matrix
         else:
-            return FiniteLinearMapping(domain=self.codomain, 
+            return FiniteLinearMapping(domain=self.codomain,
                                        codomain=self.codomain,
                                        matrix=matrix)
 
     def _compute_GramMatrix_diag(self):
         """
-        Compute the diagonal of the Gram matrix associated with the DirectSumMapping.
+        Compute the diagonal of the Gram matrix associated with the
+        DirectSumMapping.
 
         Returns:
         - The diagonal of the Gram matrix.
@@ -169,23 +177,25 @@ class DirectSumMapping(Mapping):
         - The result of the multiplication as a FiniteLinearMapping.
         """
         if isinstance(other, DirectSumMappingAdj):
-            matrix = np.zeros((self.codomain.dimension, other.domain.dimension))
-            for sub_mapping_1, sub_mapping_2 in zip(self.mappings, other.mappings):
+            matrix = np.zeros((self.codomain.dimension,
+                               other.domain.dimension))
+            for sub_mapping_1, sub_mapping_2 in zip(self.mappings, other.mappings): # noqa
                 matrix += (sub_mapping_1 * sub_mapping_2).matrix
-        
+
             return FiniteLinearMapping(domain=other.domain,
                                        codomain=self.codomain,
                                        matrix=matrix)
+
     def project_on_ImG_adj(self, member: tuple):
         """Takes a member of the integra mappings' domain and
             projects it to Im(G*) where G is this mapping.
 
         Args:
-            member (PCb): domain member to be projects 
+            member (PCb): domain member to be projects
 
         Returns:
             Function: projection on Im(A*)
-        """        
+        """
         d = self.map(member)
         return self.pseudoinverse_map(d)
 
@@ -198,9 +208,11 @@ class DirectSumMapping(Mapping):
 
         Returns:
             Function: projection on Ker|G
-        """   
+        """
         member_projected_on_ImG_adj = self.project_on_ImG_adj(member)
-        return tuple([f1 - f2 for f1, f2 in zip(member, member_projected_on_ImG_adj)])     
+        return tuple([f1 - f2 for f1, f2 in zip(member,
+                                                member_projected_on_ImG_adj)])
+
 
 class DirectSumMappingAdj(Mapping):
     """
@@ -209,24 +221,28 @@ class DirectSumMappingAdj(Mapping):
     Attributes:
     - domain (Space): The domain space of the adjoint mapping.
     - codomain (Space): The codomain space of the adjoint mapping.
-    - mappings (tuple): Tuple of mappings representing the direct sum components of the adjoint.
+    - mappings (tuple): Tuple of mappings representing the direct sum
+    components of the adjoint.
     """
 
-    def __init__(self, domain: Space, codomain: Space, mappings: tuple) -> None:
+    def __init__(self, domain: spaces.Space, codomain: spaces.Space,
+                 mappings: tuple) -> None:
         """
         Initialize a DirectSumMappingAdj object.
 
         Parameters:
         - domain (Space): The domain space of the adjoint mapping.
         - codomain (Space): The codomain space of the adjoint mapping.
-        - mappings (tuple): Tuple of mappings representing the direct sum components of the adjoint.
+        - mappings (tuple): Tuple of mappings representing the direct sum
+        components of the adjoint.
         """
         super().__init__(domain, codomain)
         self.mappings = mappings
 
     def map(self, member):
         """
-        Map a member from the domain to the codomain using the adjoint of the direct sum.
+        Map a member from the domain to the codomain using the adjoint of the
+        direct sum.
 
         Parameters:
         - member: The input member.
@@ -250,7 +266,7 @@ class DirectSumMappingAdj(Mapping):
         adjoint_mappings = []
         for mapping in self.mappings:
             adjoint_mappings.append(mapping.adjoint())
-        
+
         return DirectSumMappingAdj(domain=self.codomain,
                                    codomain=self.domain,
                                    mappings=tuple(adjoint_mappings))
@@ -264,10 +280,12 @@ class IntegralMapping(Mapping):
     - domain (PCb): The domain space of the integral.
     - codomain (RN): The codomain space of the integral.
     - kernels (list): List of kernels representing the integrand.
-    - pseudo_inverse: Placeholder for the pseudo-inverse, initially set to None.
+    - pseudo_inverse: Placeholder for the pseudo-inverse, initially set to
+    None.
     """
 
-    def __init__(self, domain: PCb, codomain: RN, kernels: list) -> None:
+    def __init__(self, domain: spaces.PCb, codomain: spaces.RN,
+                 kernels: list) -> None:
         """
         Initialize an IntegralMapping object.
 
@@ -282,8 +300,8 @@ class IntegralMapping(Mapping):
 
         self._adjoint_stored = None
         self._gram_matrix_stored = None
-    
-    def pseudoinverse_map(self, member: RN):
+
+    def pseudoinverse_map(self, member: spaces.RN):
         """
         Map a member using the pseudoinverse of the Gram matrix.
 
@@ -293,13 +311,13 @@ class IntegralMapping(Mapping):
         Returns:
         - The result of mapping the input member using the pseudoinverse.
         """
-        result = 0 * Constant_1D(domain=self.domain.domain)
+        result = 0 * functions.Constant_1D(domain=self.domain.domain)
         intermediary_result = self.GramMatrix.inverse_map(member)
         for index, kernel in enumerate(self.kernels):
             result = result + intermediary_result[index, 0] * kernel
         return result
 
-    def map(self, member: PCb, fineness=None):
+    def map(self, member: spaces.PCb, fineness=None):
         """
         Map a member from the domain to the codomain using integration.
 
@@ -316,9 +334,9 @@ class IntegralMapping(Mapping):
             mesh = self.domain.domain.dynamic_mesh(fineness)
         result = np.empty((self.codomain.dimension, 1))
         for index, kernel in enumerate(self.kernels):
-            result[index, 0] = scipy.integrate.simpson((kernel * member).evaluate(mesh)[1], mesh)
+            result[index, 0] = scipy.integrate.simpson((kernel * member).evaluate(mesh)[1], mesh) # noqa
         return result
-    
+
     @property
     def adjoint(self):
         """
@@ -330,9 +348,9 @@ class IntegralMapping(Mapping):
         if self._adjoint_stored is not None:
             return self._adjoint_stored
         else:
-            self._adjoint_stored = FunctionMapping(domain=self.codomain, 
-                                                    codomain=self.domain,
-                                                    kernels=self.kernels)
+            self._adjoint_stored = FunctionMapping(domain=self.codomain,
+                                                   codomain=self.domain,
+                                                   kernels=self.kernels)
             return self._adjoint_stored
 
     @property
@@ -351,25 +369,29 @@ class IntegralMapping(Mapping):
         - return_matrix_only (bool): If True, only the Gram matrix is returned.
 
         Returns:
-        - If return_matrix_only is True, the Gram matrix; else, a FiniteLinearMapping.
+        - If return_matrix_only is True, the Gram matrix; else, a
+        FiniteLinearMapping.
         """
-        GramMatrix = np.empty((self.codomain.dimension, self.codomain.dimension))
+        GramMatrix = np.empty((self.codomain.dimension,
+                               self.codomain.dimension))
         for i in range(self.codomain.dimension):
             for j in range(self.codomain.dimension):
-                entry = self.domain.inner_product(self.kernels[i], self.kernels[j])
+                entry = self.domain.inner_product(self.kernels[i],
+                                                  self.kernels[j])
                 GramMatrix[i, j] = entry
                 if i != j:
                     GramMatrix[j, i] = entry
         if return_matrix_only:
             return GramMatrix
         else:
-            return FiniteLinearMapping(domain=self.codomain, 
-                                    codomain=self.codomain, 
-                                    matrix=GramMatrix)
-    
+            return FiniteLinearMapping(domain=self.codomain,
+                                       codomain=self.codomain,
+                                       matrix=GramMatrix)
+
     def _compute_GramMatrix_diag(self):
         """
-        Compute the diagonal of the Gram matrix associated with the IntegralMapping.
+        Compute the diagonal of the Gram matrix associated with the
+        IntegralMapping.
 
         Returns:
         - The diagonal of the Gram matrix.
@@ -378,7 +400,7 @@ class IntegralMapping(Mapping):
         for i in range(self.codomain.dimension):
             entry = self.domain.inner_product(self.kernels[i], self.kernels[i])
             GramMatrix_diag[i] = entry
-        return GramMatrix_diag        
+        return GramMatrix_diag
 
     def __mul__(self, other: Mapping):
         """
@@ -395,26 +417,29 @@ class IntegralMapping(Mapping):
             matrix = np.empty((len(self.kernels), len(other.kernels)))
             for i, ker1 in enumerate(self.kernels):
                 for j, ker2 in enumerate(other.kernels):
-                    # The kernels of both must live in the same space on which an inner product is defined
+                    # The kernels of both must live in the same space on which
+                    # an inner product is defined
                     matrix[i, j] = self.domain.inner_product(ker1, ker2)
-            return FiniteLinearMapping(domain=other.domain, codomain=self.codomain, matrix=matrix)
+            return FiniteLinearMapping(domain=other.domain,
+                                       codomain=self.codomain,
+                                       matrix=matrix)
         else:
             raise Exception('Other mapping must be a FunctionMapping')
 
-    def project_on_ImG_adj(self, member:PCb):
+    def project_on_ImG_adj(self, member: spaces.PCb):
         """Takes a member of the integra mappings' domain and
             projects it to Im(G*) where G is this mapping.
 
         Args:
-            member (PCb): domain member to be projects 
+            member (PCb): domain member to be projects
 
         Returns:
             Function: projection on Im(A*)
-        """        
+        """
         d = self.map(member)
         return self.pseudoinverse_map(d)
 
-    def project_on_kernel(self, member:PCb):
+    def project_on_kernel(self, member: spaces.PCb):
         """Takes a member of the integral mappings' domain and
         projects it to Ker|G where G is this mapping
 
@@ -423,7 +448,7 @@ class IntegralMapping(Mapping):
 
         Returns:
             Function: projection on Ker|G
-        """        
+        """
         return member - self.project_on_ImG_adj(member)
 
 
@@ -437,7 +462,8 @@ class FunctionMapping(Mapping):
     - kernels (list): List of basis functions representing the mapping.
     """
 
-    def __init__(self, domain: RN, codomain: PCb, kernels: list) -> None:
+    def __init__(self, domain: spaces.RN, codomain: spaces.PCb,
+                 kernels: list) -> None:
         """
         Initialize a FunctionMapping object.
 
@@ -449,7 +475,7 @@ class FunctionMapping(Mapping):
         super().__init__(domain, codomain)
         self.kernels = kernels
 
-    def map(self, member: RN):
+    def map(self, member: spaces.RN):
         """
         Map a member from the domain to the codomain using the basis functions.
 
@@ -460,7 +486,7 @@ class FunctionMapping(Mapping):
         - The result of mapping the input member using the basis functions.
         """
         if self.domain.check_if_member(member):
-            result = 0 * Constant_1D(domain=self.kernels[0].domain)
+            result = 0 * functions.Constant_1D(domain=self.kernels[0].domain)
             for index, member_i in enumerate(member):
                 result = result + member_i[0] * self.kernels[index]
             return result
@@ -474,14 +500,15 @@ class FunctionMapping(Mapping):
         Returns:
         - The adjoint IntegralMapping.
         """
-        return IntegralMapping(domain=self.codomain, 
-                               codomain=self.domain, 
+        return IntegralMapping(domain=self.codomain,
+                               codomain=self.domain,
                                kernels=self.kernels)
 
 
 class FiniteLinearMapping(Mapping):
     """
-    Finite-dimensional linear mapping between two vector spaces.
+    Finite-dimensional linear mapping between two vector spaces (in simpler
+    terms, this is just a matrix).
 
     Attributes:
     - domain (RN): The domain space of the linear mapping.
@@ -489,23 +516,25 @@ class FiniteLinearMapping(Mapping):
     - matrix (np.ndarray): The matrix representing the linear transformation.
     """
 
-    def __init__(self, domain: RN, codomain: RN, matrix: np.ndarray) -> None:
+    def __init__(self, domain: spaces.RN, codomain: spaces.RN,
+                 matrix: np.ndarray) -> None:
         """
         Initialize a FiniteLinearMapping object.
 
         Parameters:
         - domain (RN): The domain space of the linear mapping.
         - codomain (RN): The codomain space of the linear mapping.
-        - matrix (np.ndarray): The matrix representing the linear transformation.
+        - matrix (np.ndarray): The matrix representing the linear
+        transformation.
         """
         super().__init__(domain, codomain)
         self.matrix = matrix
-
         self._adjoint_stored = None
-    
-    def map(self, member: RN):
+
+    def map(self, member: spaces.RN):
         """
-        Map a member from the domain to the codomain using the linear transformation.
+        Map a member from the domain to the codomain using the linear
+        transformation.
 
         Parameters:
         - member (RN): The input member.
@@ -513,6 +542,8 @@ class FiniteLinearMapping(Mapping):
         Returns:
         - The result of mapping the input member.
         """
+        if not self.domain.check_if_member(member):
+            raise ValueError('Not a member of RN')
         return np.dot(self.matrix, member)
 
     def invert(self, check_determinant=False):
@@ -520,37 +551,28 @@ class FiniteLinearMapping(Mapping):
         Compute the inverse of the linear mapping.
 
         Parameters:
-        - check_determinant (bool): If True, check if the determinant is nonzero.
+        - check_determinant (bool): If True, check if the determinant is
+        nonzero.
 
         Returns:
-        - The inverse linear mapping as a FiniteLinearMapping or ImplicitInvFiniteLinearMapping.
+        - The inverse linear mapping as a FiniteLinearMapping or
+        ImplicitInvFiniteLinearMapping.
         """
-        if self.domain.dimension == self.codomain.dimension:
-            if check_determinant:
-                if self.determinant != 0:
-                    condition_number = np.linalg.cond(self.matrix)
-                    if condition_number > 1e10:
-                        return ImplicitInvFiniteLinearMapping(domain=self.codomain,
-                                                        codomain=self.domain,
-                                                        inverse_matrix=self.matrix)
-                    else:
-                        return FiniteLinearMapping(domain=self.codomain, 
-                                                codomain=self.domain,
-                                                matrix=np.linalg.inv(self.matrix))
-                else:
-                    raise Exception('This linear map has 0 determinant.')
-            else:
-                condition_number = np.linalg.cond(self.matrix)
-                if condition_number > 1e10:
-                    return ImplicitInvFiniteLinearMapping(domain=self.codomain,
-                                                    codomain=self.domain,
-                                                    inverse_matrix=self.matrix)
-                else:
-                    return FiniteLinearMapping(domain=self.codomain, 
-                                            codomain=self.domain,
-                                            matrix=np.linalg.inv(self.matrix))
+        if self.domain.dimension != self.codomain.dimension:
+            raise ValueError('Only square matrices may have inverse.')
+
+        if check_determinant and self.determinant == 0:
+            raise ValueError('This linear map has 0 determinant.')
+
+        condition_number = np.linalg.cond(self.matrix)
+        if condition_number > 1e10:
+            return ImplicitInvFiniteLinearMapping(domain=self.codomain,
+                                                  codomain=self.domain,
+                                                  inverse_matrix=self.matrix)
         else:
-            raise Exception('Only square matrices may have inverse.')
+            return FiniteLinearMapping(domain=self.codomain,
+                                       codomain=self.domain,
+                                       matrix=np.linalg.inv(self.matrix))
 
     def _compute_GramMatrix(self, return_matrix_only=False):
         """
@@ -560,16 +582,17 @@ class FiniteLinearMapping(Mapping):
         - return_matrix_only (bool): If True, only the Gram matrix is returned.
 
         Returns:
-        - If return_matrix_only is True, the Gram matrix; else, a FiniteLinearMapping.
+        - If return_matrix_only is True, the Gram matrix; else, a
+        FiniteLinearMapping.
         """
         matrix = np.dot(self.matrix, self.matrix.T)
         if return_matrix_only:
             return matrix
         else:
-            return FiniteLinearMapping(domain=self.codomain, 
-                                   codomain=self.codomain,
-                                   matrix=matrix)
-    
+            return FiniteLinearMapping(domain=self.codomain,
+                                       codomain=self.codomain,
+                                       matrix=matrix)
+
     @property
     def determinant(self):
         """
@@ -591,9 +614,9 @@ class FiniteLinearMapping(Mapping):
         if self._adjoint_stored is not None:
             return self._adjoint_stored
         else:
-            self._adjoint_stored = FiniteLinearMapping(domain=self.codomain, 
-                                                        codomain=self.domain,
-                                                        matrix=self.matrix.T)
+            self._adjoint_stored = FiniteLinearMapping(domain=self.codomain,
+                                                       codomain=self.domain,
+                                                       matrix=self.matrix.T)
         return self._adjoint_stored
 
     def __mul__(self, other: Mapping):
@@ -609,12 +632,15 @@ class FiniteLinearMapping(Mapping):
         if isinstance(other, FiniteLinearMapping):
             return FiniteLinearMapping(domain=other.domain,
                                        codomain=self.codomain,
-                                       matrix=np.dot(self.matrix, other.matrix))
+                                       matrix=np.dot(self.matrix,
+                                                     other.matrix))
         elif isinstance(other, ImplicitInvFiniteLinearMapping):
             other_transposed = other.inverse_matrix.T
-            ans = np.ones((self.matrix.shape[0], other.inverse_matrix.shape[0]))
+            ans = np.ones((self.matrix.shape[0],
+                           other.inverse_matrix.shape[0]))
             for i, row in enumerate(self.matrix):
-                ans[i, :] = np.linalg.solve(other_transposed, row.reshape(row.shape[0], 1)).T
+                ans[i, :] = np.linalg.solve(other_transposed,
+                                            row.reshape(row.shape[0], 1)).T
             return FiniteLinearMapping(domain=other.domain,
                                        codomain=self.codomain,
                                        matrix=ans)
@@ -623,14 +649,17 @@ class FiniteLinearMapping(Mapping):
             return IntegralMapping(domain=other.domain, codomain=self.codomain,
                                    kernels=new_kernels)
         elif isinstance(other, DirectSumMapping):
-            # Only works when all the constituent mappings are integral mappings
+            # Only works when all the constituent mappings are integral
+            # mappings
             new_mappings = []
             for map in other.mappings:
                 new_kernels = np.dot(self.matrix, map.kernels)
-                new_map = IntegralMapping(domain=map.domain, codomain=self.codomain,
+                new_map = IntegralMapping(domain=map.domain,
+                                          codomain=self.codomain,
                                           kernels=new_kernels)
                 new_mappings.append(new_map)
-            return DirectSumMapping(domain=other.domain, codomain=self.codomain,
+            return DirectSumMapping(domain=other.domain,
+                                    codomain=self.codomain,
                                     mappings=tuple(new_mappings))
         else:
             raise Exception('Other mapping must also be a FiniteLinearMapping')
@@ -673,17 +702,20 @@ class ImplicitInvFiniteLinearMapping(Mapping):
     Attributes:
     - domain (RN): The domain space of the linear mapping.
     - codomain (RN): The codomain space of the linear mapping.
-    - inverse_matrix (np.ndarray): The inverse matrix of the linear transformation.
+    - inverse_matrix (np.ndarray): The inverse matrix of the linear
+    transformation.
     """
 
-    def __init__(self, domain: RN, codomain: RN, inverse_matrix: np.ndarray) -> None:
+    def __init__(self, domain: spaces.RN, codomain: spaces.RN,
+                 inverse_matrix: np.ndarray) -> None:
         """
         Initialize an ImplicitInvFiniteLinearMapping object.
 
         Parameters:
         - domain (RN): The domain space of the linear mapping.
         - codomain (RN): The codomain space of the linear mapping.
-        - inverse_matrix (np.ndarray): The inverse matrix of the linear transformation.
+        - inverse_matrix (np.ndarray): The inverse matrix of the linear
+        transformation.
         """
         super().__init__(domain, codomain)
         self.inverse_matrix = inverse_matrix
@@ -698,19 +730,21 @@ class ImplicitInvFiniteLinearMapping(Mapping):
         return FiniteLinearMapping(domain=self.codomain,
                                    codomain=self.domain,
                                    matrix=self.inverse_matrix)
-    
-    def map(self, member: RN):
+
+    def map(self, member: spaces.RN):
         """
-        Map a member from the domain to the codomain using the inverse linear transformation.
+        Map a member from the domain to the codomain using the inverse linear
+        transformation.
 
         Parameters:
         - member (RN): The input member.
 
         Returns:
-        - The result of mapping the input member using the inverse linear transformation.
+        - The result of mapping the input member using the inverse linear
+        transformation.
         """
         return np.linalg.solve(self.inverse_matrix, member)
-    
+
     def adjoint(self):
         """
         Compute the adjoint of the ImplicitInvFiniteLinearMapping.
@@ -720,7 +754,7 @@ class ImplicitInvFiniteLinearMapping(Mapping):
         """
         return ImplicitInvFiniteLinearMapping(domain=self.codomain,
                                               codomain=self.domain,
-                                              inverse_matrix=self.inverse_matrix.T)
+                                              inverse_matrix=self.inverse_matrix.T) # noqa
 
     def __mul__(self, other: Mapping):
         """
@@ -730,17 +764,20 @@ class ImplicitInvFiniteLinearMapping(Mapping):
         - other (Mapping): The mapping to multiply with.
 
         Returns:
-        - The result of the multiplication as a FiniteLinearMapping or ImplicitInvFiniteLinearMapping.
+        - The result of the multiplication as a FiniteLinearMapping or
+        ImplicitInvFiniteLinearMapping.
         """
         if isinstance(other, FiniteLinearMapping):
-            answer = np.ones((self.inverse_matrix.shape[0], other.matrix.shape[1]))
+            answer = np.ones((self.inverse_matrix.shape[0],
+                              other.matrix.shape[1]))
             for i, column in enumerate(other.matrix.T):
                 answer[:, i] = np.linalg.solve(self.inverse_matrix, column)
 
-            return FiniteLinearMapping(domain=other.domain, 
-                                    codomain=self.codomain, 
-                                    matrix=answer)
+            return FiniteLinearMapping(domain=other.domain,
+                                       codomain=self.codomain,
+                                       matrix=answer)
         elif isinstance(other, ImplicitInvFiniteLinearMapping):
             return ImplicitInvFiniteLinearMapping(domain=other.domain,
                                                   codomain=self.codomain,
-                                                  inverse_matrix=np.dot(other.inverse_matrix, self.inverse_matrix))
+                                                  inverse_matrix=np.dot(other.inverse_matrix, # noqa
+                                                                        self.inverse_matrix)) # noqa
