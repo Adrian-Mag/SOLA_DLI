@@ -15,15 +15,14 @@ cd SOLA_DLI
 conda env create -f environment.yml
 conda activate sola
 ```
-## Running the Tests
 
-After installing Sola, you can verify your installation by running the test suite. Here's how you can do it:
-
-1. Navigate to the directory containing the `sola` package:
+Creating the conda environment might take a few minutes. After the installation
+is done, you can run the provided tests (while still in SOLA_DLI) using:
 
 ```bash
-cd /path/to/sola
+python -m unittest
 ```
+
 ## Usage
 
 Here's a simple example of how to use Sola:
