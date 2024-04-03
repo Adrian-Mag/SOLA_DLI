@@ -13,7 +13,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/Adrian-Mag/SOLA_DLI.git',
-    packages=find_packages(),
+    packages=find_packages(exclude=['tests*']),
     package_data={
         'sola': ['kernels_modeplotaat_Adrian/*'],
     },
@@ -21,12 +21,13 @@ setup(
         'numpy>=1.17',
         'networkx',
         'matplotlib',
-        'plotly'
+        'plotly',
+        'scipy',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6',  # add this line
+    python_requires='>=3.6',
 )
