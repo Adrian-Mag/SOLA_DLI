@@ -1,4 +1,4 @@
-name: test
+name: sola
 channels:
   - defaults
 dependencies:
@@ -9,4 +9,4 @@ dependencies:
   - plotly
   - pip
   - pip:
-    - -e .
+    - .

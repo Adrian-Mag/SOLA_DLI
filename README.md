@@ -4,7 +4,16 @@ Sola is a Python package for ...
 
 ## Installation
 
-To install Sola, you can ...
+The easiest way to install sola is using conda. The following commands will
+create a new conda environment called "sola" (name can be changed from
+environment.yml before installation) with all the required dependancies and the
+sola package. Go the the directory in which you want to install sola and run:
+
+```bash
+git clone https://github.com/Adrian-Mag/SOLA_DLI.git
+cd SOLA_DLI
+conda env create -f environment.yml
+conda activate sola
 
 ## Running the Tests
 
