@@ -1,5 +1,6 @@
 from sola.main_classes.domains import Domain, HyperParalelipiped
 
+import scipy
 from typing import Tuple, Union
 import numpy as np
 from abc import ABC, abstractmethod
@@ -621,6 +622,14 @@ class Piecewise_1D(Function):
         return (f'Piecewise_1D (intervals={self.intervals}, '
                 'values={self.values})')
 
+    def __eq__(self, function: Function) -> bool:
+        if (str(function) == self.__str__() and
+                function.domain == self.domain and
+                function.intervals == self.intervals and
+                function.values == self.values):
+
+            return True
+
 
 class Null_1D(Function):
     """
@@ -689,6 +698,11 @@ class Null_1D(Function):
             str: The string representation of the function.
         """
         return 'Null_1D'
+
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain):
+            return True
 
 
 class Constant_1D(Function):
@@ -762,6 +776,12 @@ class Constant_1D(Function):
             str: The string representation of the function.
         """
         return 'Constant_1D'
+
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.value == self.value):
+            return True
 
 
 class Random_1D(Function):
@@ -930,6 +950,14 @@ class Random_1D(Function):
         """Returns the string representation of the function."""
         return 'random1d'
 
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.seed == self.seed and
+                function.continuous == self.continuous and
+                function.boundaries == self.boundaries):
+            return True
+
 
 class Interpolation_1D(Function):
     """
@@ -1020,6 +1048,13 @@ class Interpolation_1D(Function):
         """Returns the string representation of the Interpolation_1D object."""
         return 'interpolation_1d'
 
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                np.array_equal(function.values, self.values) and
+                np.array_equal(function.raw_domain, self.raw_domain)):
+            return True
+
 
 class ComplexExponential_1D(Function):
     """
@@ -1096,6 +1131,12 @@ class ComplexExponential_1D(Function):
         """Returns the string representation of the ComplexExponential_1D
         object."""
         return 'ComplExponential_1D'
+
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.frequency == self.frequency):
+            return True
 
 
 class Polynomial_1D(Function):
@@ -1376,6 +1417,20 @@ class SinusoidalPolynomial_1D(Function):
         object."""
         return 'SinusoidalPolynomial_1D'
 
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.order == self.order and
+                function.min_val == self.min_val and
+                function.max_val == self.max_val and
+                function.min_f == self.min_f and
+                function.max_f == self.max_f and
+                function.seed == self.seed and
+                np.array_equal(function.coefficients, self.coefficients) and
+                np.array_equal(function.frequencies, self.frequencies) and
+                np.array_equal(function.phases, self.phases)):
+            return True
+
 
 class SinusoidalGaussianPolynomial_1D(Function):
     """
@@ -1557,6 +1612,23 @@ class SinusoidalGaussianPolynomial_1D(Function):
     def __str__(self) -> str:
         return 'SinusoidalGaussianPolynomial_1D'
 
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.order == self.order and
+                function.min_val == self.min_val and
+                function.max_val == self.max_val and
+                function.min_f == self.min_f and
+                function.max_f == self.max_f and
+                function.spread == self.spread and
+                function.seed == self.seed and
+                np.array_equal(function.coefficients, self.coefficients) and
+                np.array_equal(function.frequencies, self.frequencies) and
+                np.array_equal(function.phases, self.phases) and
+                function.mean == self.mean and
+                function.std_dev == self.std_dev):
+            return True
+
 
 class NormalModes_1D(Function):
     """
@@ -1729,6 +1801,22 @@ class NormalModes_1D(Function):
     def __str__(self) -> str:
         return 'NormalModes_1D'
 
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.order == self.order and
+                function.spread == self.spread and
+                function.max_freq == self.max_freq and
+                function.no_sensitivity_regions == self.no_sensitivity_regions and # noqa
+                function.seed == self.seed and
+                np.array_equal(function.coefficients, self.coefficients) and
+                np.array_equal(function.shifts, self.shifts) and
+                function.mean == self.mean and
+                function.std_dev == self.std_dev and
+                function.frequency == self.frequency and
+                function.shift == self.shift):
+            return True
+
 
 class Gaussian_Bump_1D(Function):
     """
@@ -1804,10 +1892,9 @@ class Gaussian_Bump_1D(Function):
             The normalization of the function
         """
         if self._normalization_stored is None:
-            r = np.linspace(-1, 1, self.unimodularity_precision)
-            bump = np.exp(1/(r**2 - 1) - self.pointiness * r**2)
-            bump = np.where(np.isfinite(bump), bump, 0)
-            return (self.width / 2) * np.trapz(bump, r)
+            area = scipy.integrate.quad(
+                lambda x: np.exp(1 / (x**2 - 1) - self.pointiness * x**2), -1, 1)[0] # noqa
+            return (self.width / 2) * area
         else:
             return self._normalization_stored
 
@@ -1875,6 +1962,14 @@ class Gaussian_Bump_1D(Function):
         """Returns the string representation of the class."""
         return 'Gaussian_Bump_1D'
 
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width and
+                function.pointiness == self.pointiness):
+            return True
+
 
 class Dgaussian_Bump_1D(Function):
     """
@@ -1938,10 +2033,8 @@ class Dgaussian_Bump_1D(Function):
         Returns:
             numpy.ndarray: The multiplier values at the points.
         """
-        multiplier = (-(2 * self.pointiness * (r_compact_centered)) /
-                      (self.width / 2)**2 -
-                      (2 * (self.width/2)**2 * (r_compact_centered)) /
-                      (((r_compact_centered)**2 - (self.width/2)**2)**2))
+        multiplier = (-(2 * self.pointiness * r_compact_centered) / (self.width / 2)**2 # noqa
+                      -(2 * (self.width/2)**2 * r_compact_centered) / ((r_compact_centered**2 - (self.width/2)**2)**2)) # noqa
         multiplier[~np.isfinite(multiplier)] = 0
         return multiplier
 
@@ -1968,6 +2061,7 @@ class Dgaussian_Bump_1D(Function):
                                      (r[in_domain] < (self.center + self.width/2))) # noqa
             r_compact = r[in_domain][where_compact]
             r_compact_centered = r_compact - self.center
+
             multiplier = self._compute_multiplier(r_compact_centered)
             bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
                                     width=self.width,
@@ -1983,6 +2077,7 @@ class Dgaussian_Bump_1D(Function):
                                      (r < (self.center + self.width/2))) # noqa
             r_compact = r[where_compact]
             r_compact_centered = r_compact - self.center
+            print(self.width/2, r_compact_centered[0], r_compact_centered[-1])
             multiplier = self._compute_multiplier(r_compact_centered)
             bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
                                     width=self.width,
@@ -2001,6 +2096,23 @@ class Dgaussian_Bump_1D(Function):
             str: The string representation of the class.
         """
         return 'Dgaussian_Bump_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Dgaussian_Bump_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width and
+                function.pointiness == self.pointiness):
+            return True
 
 
 class Gaussian_1D(Function):
@@ -2083,6 +2195,22 @@ class Gaussian_1D(Function):
             str: The string representation of the class.
         """
         return 'Gaussian_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Gaussian_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
 
 
 class Moorlet_1D(Function):
@@ -2170,6 +2298,23 @@ class Moorlet_1D(Function):
         """
         return 'Moorlet_1D'
 
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Moorlet_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.spread == self.spread and
+                function.frequency == self.frequency):
+            return True
+
 
 class Haar_1D(Function):
     """
@@ -2241,6 +2386,22 @@ class Haar_1D(Function):
             str: String representation of the Haar_1D object.
         """
         return 'Haar_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Haar_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
 
 
 class Ricker_1D(Function):
@@ -2319,6 +2480,22 @@ class Ricker_1D(Function):
         """
         return 'Ricker_1D'
 
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Ricker_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
 
 class Dgaussian_1D(Function):
     """
@@ -2393,6 +2570,22 @@ class Dgaussian_1D(Function):
             str: String representation of the Dgaussian_1D object.
         """
         return 'Dgaussian_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Dgaussian_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
 
 
 class Boxcar_1D(Function):
@@ -2476,6 +2669,22 @@ class Boxcar_1D(Function):
         """
         return 'Boxcar_1D'
 
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Boxcar_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
 
 class Bump_1D(Function):
     """
@@ -2555,12 +2764,10 @@ class Bump_1D(Function):
             in_domain = self.domain.check_if_in_domain(r)
             limits = [-0.5 * self.width + self.center,
                       0.5 * self.width + self.center]
-            mask = (r[in_domain] >= limits[0]) & (r[in_domain] <= limits[1])
+            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
             bump_vector = np.zeros_like(r[in_domain])
             bump_vector[mask] = np.exp(
                 1 / ((2 * (r[in_domain][mask] - self.center) / self.width) ** 2 - 1)) # noqa
-            bump_vector[mask] = np.nan_to_num(bump_vector[mask], nan=0.0,
-                                              posinf=0.0, neginf=0.0)
             if return_points:
                 return r[in_domain], bump_vector / self.normalization
             else:
@@ -2568,7 +2775,7 @@ class Bump_1D(Function):
         else:
             limits = [-0.5 * self.width + self.center,
                       0.5 * self.width + self.center]
-            mask = (r >= limits[0]) & (r <= limits[1])
+            mask = (r > limits[0]) & (r < limits[1])
             bump_vector = np.zeros_like(r)
             bump_vector[mask] = np.exp(
                 1 / ((2 * (r[mask] - self.center) / self.width) ** 2 - 1))
@@ -2587,6 +2794,22 @@ class Bump_1D(Function):
             str: String representation of the Bump_1D object.
         """
         return 'Bump_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Bump_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
 
 
 class Dbump_1D(Function):
@@ -2624,8 +2847,8 @@ class Dbump_1D(Function):
         """Compute the area under the Bump function."""
         limits = [-0.5 * self.width + self.center,
                   0.5 * self.width + self.center]
-        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) >= limits[0]) & ( # noqa
-                    self.domain.dynamic_mesh(self.unimodularity_precision) <= limits[1]) # noqa
+        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) > limits[0]) & ( # noqa
+                    self.domain.dynamic_mesh(self.unimodularity_precision) < limits[1]) # noqa
         bump_vector = np.zeros_like(self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
         bump_vector[mask] = np.exp(
             1 / ((2 * (self.domain.dynamic_mesh(self.unimodularity_precision)[mask] - self.center) / self.width) ** 2 - 1)) # noqa
@@ -2652,7 +2875,7 @@ class Dbump_1D(Function):
             in_domain = self.domain.check_if_in_domain(r)
             limits = [-0.5 * self.width + self.center,
                       0.5 * self.width + self.center]
-            mask = (r[in_domain] >= limits[0]) & (r[in_domain] <= limits[1])
+            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
             bump_vector = np.zeros_like(r[in_domain])
             bump_vector = Bump_1D(domain=self.domain, center=self.center,
                                   width=self.width).evaluate(r[in_domain])
@@ -2665,7 +2888,7 @@ class Dbump_1D(Function):
         else:
             limits = [-0.5 * self.width + self.center,
                       0.5 * self.width + self.center]
-            mask = (r >= limits[0]) & (r <= limits[1])
+            mask = (r > limits[0]) & (r < limits[1])
             bump_vector = np.zeros_like(r)
             bump_vector = Bump_1D(domain=self.domain, center=self.center,
                                   width=self.width).evaluate(r)
@@ -2679,6 +2902,14 @@ class Dbump_1D(Function):
     def __str__(self) -> str:
         """Return a string representation of the object."""
         return 'Dbump_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """Check if two Dbump_1D objects are equal."""
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
 
 
 class Triangular_1D(Function):
@@ -2752,6 +2983,22 @@ class Triangular_1D(Function):
         """
         return 'Triangular_1D'
 
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Triangular_1D objects are equal.
+
+        Args:
+        - function (object): The function to compare.
+
+        Returns:
+        - bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
 
 class Fourier(Function):
     """
@@ -2823,3 +3070,19 @@ class Fourier(Function):
         - str: String representation of the object.
         """
         return 'Fourier'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Fourier objects are equal.
+
+        Args:
+        - function (object): The function to compare.
+
+        Returns:
+        - bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.type == self.type and
+                function.order == self.order):
+            return True

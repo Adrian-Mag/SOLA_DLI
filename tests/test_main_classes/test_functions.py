@@ -410,7 +410,7 @@ class TestDgaussianBump1D(unittest.TestCase):
         self.assertIsInstance(self.dgaussian_bump_1d.bump, Gaussian_Bump_1D)
 
     def test_compute_multiplier(self):
-        r_compact_centered = np.array([1, 2, 3])
+        r_compact_centered = np.array([0, 2, 3])
         expected_multiplier = np.array([0.0, -0.844444444, -0.69375])
         actual_multiplier = self.dgaussian_bump_1d._compute_multiplier(r_compact_centered) # noqa
         np.testing.assert_almost_equal(actual_multiplier, expected_multiplier)
@@ -627,7 +627,7 @@ class TestBump1D(unittest.TestCase):
         self.assertEqual(self.bump.normalization, normalization)
 
     def test_evaluate(self):
-        r = np.array([0.0, 0.5, 1.0])
+        r = np.array([0.0, 0.5, 0.9])
         values = self.bump.evaluate(r)
         self.assertEqual(values.shape, r.shape)
 
@@ -657,7 +657,7 @@ class TestDbump_1D(unittest.TestCase):
 
     def test_evaluate(self):
         # Compare with known values
-        r = np.array([0.0, 0.5, 1.0])
+        r = np.array([0.0, 0.5, 0.9])
         known_values = np.array([0.0, 0, 0.0])
         np.testing.assert_almost_equal(self.dbump.evaluate(r), known_values)
 

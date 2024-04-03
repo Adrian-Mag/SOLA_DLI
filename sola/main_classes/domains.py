@@ -180,10 +180,10 @@ class HyperParalelipiped(Domain):
         if fineness <= 0:
             raise ValueError('The number of samples must be greater than 0.')
         axes = [
-            np.linspace(bound[0], bound[1], fineness,
-                        endpoint=not self.open)
-            for bound in self.bounds
-        ]
+                np.linspace(bound[0], bound[1], fineness + 2)[1:-1]
+                if self.open else np.linspace(bound[0], bound[1], fineness) # noqa
+                for bound in self.bounds
+                ]
         if self.dimension == 1:
             mesh = axes[0]
         else:
@@ -218,10 +218,10 @@ class HyperParalelipiped(Domain):
             where each array represents the points along one dimension.
         """
         axes = [
-            np.linspace(bound[0], bound[1], self.fineness,
-                        endpoint=not self.open)
-            for bound in self.bounds
-            ]
+                np.linspace(bound[0], bound[1], self.fineness + 2)[1:-1]
+                if self.open else np.linspace(bound[0], bound[1], self.fineness) # noqa
+                for bound in self.bounds
+                ]
         if self.dimension == 1:
             mesh = axes[0]
         else:

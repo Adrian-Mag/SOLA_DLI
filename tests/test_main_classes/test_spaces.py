@@ -1,8 +1,9 @@
 import unittest
 import numpy as np
-from sola.main_classes.spaces import RN, PCb
+from sola.main_classes.spaces import RN, PCb, DirectSumSpace
 from sola.main_classes.domains import HyperParalelipiped
 from sola.main_classes import functions
+from sola.main_classes.functions import Boxcar_1D
 
 
 class TestRN(unittest.TestCase):
@@ -94,6 +95,48 @@ class TestPCb(unittest.TestCase):
         zero_function = self.pcb.zero
         self.assertIsInstance(zero_function, functions.Null_1D)
         self.assertEqual(zero_function.domain, self.domain)
+
+
+class TestDirectSumSpace(unittest.TestCase):
+    def setUp(self):
+        domain = HyperParalelipiped([[0, 1]])
+        self.space1 = PCb(domain)
+        self.space2 = RN(1)
+        self.direct_sum_space = DirectSumSpace((self.space1, self.space2))
+
+    def test_init(self):
+        self.assertEqual(self.direct_sum_space.spaces,
+                         (self.space1, self.space2))
+
+    def test_random_member(self):
+        random_member = self.direct_sum_space.random_member()
+        self.assertTrue(self.space1.check_if_member(random_member[0]))
+        self.assertTrue(self.space2.check_if_member(random_member[1]))
+        self.assertFalse(self.space1.check_if_member(random_member[1]))
+        self.assertFalse(self.space2.check_if_member(random_member[0]))
+
+    def test_inner_product(self):
+        member1_space1 = Boxcar_1D(domain=self.space1.domain, center=0.5,
+                                   width=0.1)
+        member2_space1 = Boxcar_1D(domain=self.space1.domain, center=0.6,
+                                   width=0.1)
+        member1_space2 = np.array([[1]])
+        member2_space2 = np.array([[2]])
+        self.assertEqual(self.direct_sum_space.inner_product((member1_space1,
+                                                             member1_space2),
+                                                             (member2_space1,
+                                                             member2_space2)), 2) # noqa
+
+    def test_norm(self):
+        member_space1 = Boxcar_1D(domain=self.space1.domain, center=0.5,
+                                  width=0.1)
+        member_space2 = np.array([[1]])
+        self.assertEqual(self.direct_sum_space.norm((member_space1, member_space2), np.sqrt(10) + 1)) # noqa
+
+    def test_zero(self):
+        # Assuming Space1.zero and Space2.zero return 0 and 0 respectively
+        self.assertEqual(self.direct_sum_space.zero, (self.space1.zero,
+                                                      self.space2.zero))
 
 
 if __name__ == '__main__':

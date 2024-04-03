@@ -26,11 +26,41 @@ class Space(ABC):
 
 
 class DirectSumSpace(Space):
+    """
+    A class representing the direct sum of several spaces.
+
+    This class inherits from the abstract base class `Space` and provides
+    concrete implementations for the abstract methods and property defined in
+    `Space`.
+
+    Attributes:
+        spaces (tuple): A tuple of spaces that form the direct sum space.
+    """
+
     def __init__(self, spaces: tuple) -> None:
+        """
+        Initializes a new instance of `DirectSumSpace`.
+
+        Args:
+            spaces (tuple): A tuple of spaces that form the direct sum space.
+        """
         super().__init__()
         self.spaces = spaces
 
     def random_member(self, args_list: list):
+        """
+        Generates a random member of each space in `self.spaces` using the
+        corresponding arguments in `args_list`, and returns a tuple of these
+        random members.
+
+        Args:
+            args_list (list): A list of arguments to be passed to the
+            `random_member` method of each space in `self.spaces`.
+
+        Returns:
+            tuple: A tuple of random members, one from each space in
+            `self.spaces`.
+        """
         list_of_random_members = []
         for space, space_args in zip(self.spaces, args_list):
             list_of_random_members.append(space.random_member(*space_args))
@@ -38,13 +68,39 @@ class DirectSumSpace(Space):
         return tuple(list_of_random_members)
 
     def inner_product(self, member1: tuple, member2: tuple):
+        """
+        Calculates the inner product of `member1` and `member2` by summing up
+        the inner products of their corresponding components in each space in
+        `self.spaces`.
+
+        Args:
+            member1 (tuple): The first member, a tuple of components from each
+            space in `self.spaces`.
+            member2 (tuple): The second member, a tuple of components from each
+            space in `self.spaces`.
+
+        Returns:
+            float: The inner product of `member1` and `member2`.
+        """
         inner_product = 0
-        for sub_member1, sub_member2, space in zip(member1, member2, self.spaces):
+        for sub_member1, sub_member2, space in zip(member1, member2,
+                                                   self.spaces):
             inner_product += space.inner_product(sub_member1, sub_member2)
 
         return inner_product
 
     def norm(self, member):
+        """
+        Calculates the norm of `member` by summing up the norms of its
+        components in each space in `self.spaces`.
+
+        Args:
+            member (tuple): The member, a tuple of components from each space
+            in `self.spaces`.
+
+        Returns:
+            float: The norm of `member`.
+        """
         norm = 0
         for sub_member, space in zip(member, self.spaces):
             norm += space.norm(sub_member)
@@ -53,6 +109,13 @@ class DirectSumSpace(Space):
 
     @property
     def zero(self):
+        """
+        Returns a tuple of the zero elements of each space in `self.spaces`.
+
+        Returns:
+            tuple: A tuple of zero elements, one from each space in
+            `self.spaces`.
+        """
         list_of_zeros = []
         for space in self.spaces:
             list_of_zeros.append(space.zero)
