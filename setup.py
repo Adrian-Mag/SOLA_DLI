@@ -15,7 +15,7 @@ setup(
     url='https://github.com/Adrian-Mag/SOLA_DLI.git',
     packages=find_packages(exclude=['tests*']),
     package_data={
-        'sola': ['kernels_modeplotaat_Adrian/*'],
+        'sola': ['examples/kernels_modeplotaat_Adrian/*'],
     },
     classifiers=[
         'Programming Language :: Python :: 3',
