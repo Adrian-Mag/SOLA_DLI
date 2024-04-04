@@ -409,8 +409,11 @@ class RN(Space):
             else:
                 return np.random.uniform(-100, 100, N)
         else:
-            return np.reshape(np.random.uniform(-100, 100, self.dimension),
-                              (self.dimension, 1))
+            if self.dimension == 1:
+                return np.random.uniform(-100, 100)
+            else:
+                return np.reshape(np.random.uniform(-100, 100, self.dimension),
+                                  (self.dimension, 1))
 
     def add_member(self, member_name, member):
         """
