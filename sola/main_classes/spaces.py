@@ -1,5 +1,5 @@
 import numpy as np
-from abc import ABC, abstractclassmethod, abstractproperty
+from abc import ABC, abstractmethod
 from sola.main_classes.domains import HyperParalelipiped
 from sola.main_classes import functions
 from sola.aux import function_creator
@@ -8,19 +8,19 @@ import scipy
 
 class Space(ABC):
 
-    @abstractclassmethod
+    @abstractmethod
     def random_member(self):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def inner_product(self, member1, member2):
         pass
 
-    @abstractclassmethod
+    @abstractmethod
     def norm(self, member):
         pass
 
-    @abstractproperty
+    @abstractmethod
     def zero(self):
         pass
 
@@ -367,6 +367,8 @@ class RN(Space):
         True
         """
         if np.isscalar(member):
+            if isinstance(member, complex) or isinstance(member, str):
+                return False
             return self.dimension == 1
         elif isinstance(member, np.ndarray):
             if member.shape != (self.dimension, 1):

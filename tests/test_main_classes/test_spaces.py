@@ -28,6 +28,8 @@ class TestRN(unittest.TestCase):
         self.assertTrue(self.space1.check_if_member(np.array([[1.0]])))
         self.assertFalse(self.space1.check_if_member(np.array([1])))
         self.assertFalse(self.space.check_if_member('not a member'))
+        self.assertFalse(self.space1.check_if_member(2j))
+        self.assertFalse(self.space1.check_if_member('1'))
 
     def test_random_member(self):
         member = self.space.random_member()

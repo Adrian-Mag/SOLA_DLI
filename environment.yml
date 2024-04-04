@@ -9,4 +9,4 @@ dependencies:
   - plotly
   - pip
   - pip:
-    - .
+    - -e .
