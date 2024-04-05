@@ -2,7 +2,7 @@ import numpy as np
 from abc import ABC, abstractmethod
 from sola.main_classes.domains import HyperParalelipiped
 from sola.main_classes import functions
-from sola.aux import function_creator
+from sola.aux import function_creator, integration
 import scipy
 
 
@@ -263,9 +263,11 @@ class PCb(Space):
             # input only one element to my function and if it is not in the
             # domain I will get an error for that and if it is in the domain
             # then all will workk fine.
-            return scipy.integrate.quad(
+            """ return scipy.integrate.quad(
                 lambda x: (member1.evaluate(x) * member2.evaluate(x))[0],
-                self.domain.bounds[0][0], self.domain.bounds[0][1])[0]
+                self.domain.bounds[0][0], self.domain.bounds[0][1])[0] """
+            function_to_integrate = member1 * member2
+            return integration.integrate(function_to_integrate)
         else:
             raise Exception('The inner product is not '
                             'implemented for this domain')
