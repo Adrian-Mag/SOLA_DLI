@@ -376,7 +376,6 @@ class IntegralMapping(Mapping):
                                self.codomain.dimension))
         for i in range(self.codomain.dimension):
             for j in range(self.codomain.dimension):
-                print(i, j)
                 entry = self.domain.inner_product(self.kernels[i],
                                                   self.kernels[j])
                 GramMatrix[i, j] = entry
