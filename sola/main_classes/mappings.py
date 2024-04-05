@@ -334,7 +334,7 @@ class IntegralMapping(Mapping):
             mesh = self.domain.domain.dynamic_mesh(fineness)
         result = np.empty((self.codomain.dimension, 1))
         for index, kernel in enumerate(self.kernels):
-            result[index, 0] = scipy.integrate.simpson((kernel * member).evaluate(mesh)[1], mesh) # noqa
+            result[index, 0] = scipy.integrate.simpson((kernel * member).evaluate(mesh), mesh) # noqa
         return result
 
     @property
