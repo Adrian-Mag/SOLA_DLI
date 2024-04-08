@@ -750,6 +750,7 @@ class Problem():
                     all_y_values.extend(target_kernel_y_values)
                 y_min = min(all_y_values) * 1.2
                 y_max = max(all_y_values) * 1.2
+                y_min = -(y_max - y_min) * 0.1
                 if fill_betweenx_calls is not None:
                     for fill_betweenx_call, args in zip(fill_betweenx_calls, args_list): # noqa
                         fill_betweenx_call(*args)

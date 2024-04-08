@@ -910,8 +910,7 @@ class Random_1D(Function):
         """
         x_shift = np.random.uniform(partition[0], partition[1])
         a0, a1, a2, a3 = np.random.uniform(-1, 1, 4)
-        stretch = np.max(self.domain.mesh)
-        shifted_mesh = (self.domain.mesh + x_shift) / stretch
+        shifted_mesh = (self.domain.mesh + x_shift) / self.domain.total_measure
         model = a0
         model += a1 * shifted_mesh
         model += a2 * shifted_mesh**2
