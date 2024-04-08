@@ -697,11 +697,11 @@ class Problem():
                 highlighted_rects[fig_id].remove()
             rect = plt.Rectangle((i - .5, j - .5), 1, 1, linewidth=2,
                                  edgecolor=highlight_colors[fig_id % len(highlight_colors)], # noqa
-                                 facecolor='none')
+                                 facecolor='None')
             fig.gca().add_patch(rect)
             highlighted_rects[fig_id] = rect
             highlighted_pixels[fig_id] = (i, j)
-            plt.draw()
+            fig.canvas.draw()
 
         def onclose(event):
             fig_ids = list(figures.keys())  # Create a copy of dictionary keys
