@@ -544,6 +544,15 @@ class Problem():
                           np.min(self.least_norm_property))
         self.relative_errors2 = 100 * self.epsilon / property_range
 
+    def _compute_resoltion_misfit(self):
+        resolution_misfit = np.zeros(self.P.dimension)
+        if self.H_diag is None:
+            self._compute_H_diag()
+        for index, target in enumerate(self.T.kernels):
+            resolution_misfit[index] = np.sqrt(self.H_diag[index]) / self.M.norm(target) # noqa
+
+        return resolution_misfit
+    
     def plot_solution(self, enquiry_points):
         # Will plot the property bounds, the least norm property, the resolving
         # kernels and the target kernels with a slider used to explore them. It
@@ -697,11 +706,11 @@ class Problem():
                 highlighted_rects[fig_id].remove()
             rect = plt.Rectangle((i - .5, j - .5), 1, 1, linewidth=2,
                                  edgecolor=highlight_colors[fig_id % len(highlight_colors)], # noqa
-                                 facecolor='none')
+                                 facecolor='None')
             fig.gca().add_patch(rect)
             highlighted_rects[fig_id] = rect
             highlighted_pixels[fig_id] = (i, j)
-            plt.draw()
+            fig.canvas.draw()
 
         def onclose(event):
             fig_ids = list(figures.keys())  # Create a copy of dictionary keys
@@ -750,6 +759,8 @@ class Problem():
                     all_y_values.extend(target_kernel_y_values)
                 y_min = min(all_y_values) * 1.2
                 y_max = max(all_y_values) * 1.2
+
+                y_min = min([-(y_max - y_min) * 0.1, y_min])
                 if fill_betweenx_calls is not None:
                     for fill_betweenx_call, args in zip(fill_betweenx_calls, args_list): # noqa
                         fill_betweenx_call(*args)
@@ -775,8 +786,6 @@ class Problem():
                                           physical_parameters_symbols):
         if self.H_diag is None:
             self._compute_H_diag()
-        if self.A is None:
-            self._compute_resolving_kernels()
         # Compute norms of the target kernels
         norms = np.array([])
         for target_kernel in self.T.kernels:
@@ -835,6 +844,8 @@ class Problem():
             if self.relative_errors2 is None:
                 self._compute_relative_errors2()
             errors = self.relative_errors2
+        elif error_type == 'resolution_misfit':
+            errors = self._compute_resoltion_misfit()
         else:
             raise ValueError('Error type must be absolute, '
                              'relative, or relative2')
