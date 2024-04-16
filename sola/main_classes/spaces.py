@@ -21,6 +21,31 @@ class Space(ABC):
         pass
 
     @abstractmethod
+    @property
+    def zero(self):
+        pass
+
+
+class Subspace(ABC):
+
+    def __init__(self, space: Space, basis: list) -> None:
+        self.space = space
+        self.basis = basis
+
+    @abstractmethod
+    def random_member(self):
+        pass
+
+    @abstractmethod
+    def inner_product(self, member1, member2):
+        pass
+
+    @abstractmethod
+    def norm(self, member):
+        pass
+
+    @abstractmethod
+    @property
     def zero(self):
         pass
 
@@ -528,17 +553,16 @@ class RN(Space):
         return np.zeros((self.dimension, 1))
 
 
-class Subspace(Space):
+class RNSubspace(Space):
     """
-    A class to represent a subspace of a given space.
+    A class to represent a subspace of a given RN space.
 
     Attributes
     ----------
     space : Space
         The space from which the subspace is derived.
     basis : np.ndarray
-        The basis of the subspace.
-
+        The basis functions that define the subspace.
     Methods
     -------
     check_if_member(member)
@@ -570,57 +594,37 @@ class Subspace(Space):
         >>> space = RN(3)
         >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
         """
-        self.space = space
-        self.basis = basis
+        super().__init__(space, basis)
 
-        self.basis_map = mappings.FiniteLinearMapping(domain=self.space,
-                                                      codomain=RN(len(self.basis)), # noqa
-                                                      matrix=np.array(self.basis)) # noqa
-        self.basis_map_adj = self.basis_map.adjoint()
-        self.gram_matrix = self._compute_gram_matrix()
-        self.gram_matrix_inv = self.gram_matrix.invert()
-
-    def _compute_gram_matrix(self):
+    @property
+    def zero(self):
         """
-        Computes the Gram matrix of the subspace.
-        """
-        for i in range(self.basis.shape[1]):
-            for j in range(self.basis.shape[1]):
-                if i <= j:
-                    self.gram_matrix[i, j] = self.space.inner_product(self.basis[i], self.basis[j]) # noqa
-                else:
-                    self.gam_matrix[i, j] = self.gram_matrix[j, i]
-        return mappings.FiniteLinearMapping(self.gram_matrix)
-
-    def Project(self, member: RN):
-        return self.basis_map_adj.map(self.gram_matrix_inv.map(self.basis_map.map(member))) # noqa
-
-    def check_if_member(self, member):
-        """
-        Checks if a given member is part of the subspace.
-
-        A member is considered part of the subspace if it is a linear
-        combination of the basis vectors of the subspace.
-
-        Parameters
-        ----------
-        member : np.ndarray
-            The member to check.
+        Returns the zero vector of the subspace.
 
         Returns
         -------
-        bool
-            True if the member is part of the subspace, False otherwise.
+        np.ndarray
+            The zero vector of the subspace.
 
         Examples
         --------
         >>> space = RN(3)
         >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
-        >>> subspace.check_if_member(np.array([[1], [2], [0]]))
-        True
+        >>> subspace.zero
+        array([[0.],
+               [0.]])
         """
-        if not self.space.check_if_member(member):
-            return False
-        if self.basis.shape[1] == 1:
-            return np.allclose(self.Project(member), member)
-        return np.allclose(np.dot(self.basis.T, member), member)
+        return self.space.zero
+
+    def inner_product(self, member1, member2):
+        return self.space.inner_product(member1, member2)
+
+    def norm(self, member):
+        return self.space.norm(member)
+
+    def random_member(self, N=1):
+        random_coeffcients = np.random.uniform(-100, 100, len(self.basis))
+        random_member = self.space.zero
+        for base, coefficient in zip(self.basis, random_coeffcients):
+            random_member += coefficient * base
+        return random_member
