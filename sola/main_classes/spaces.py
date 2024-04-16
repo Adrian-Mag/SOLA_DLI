@@ -2,8 +2,8 @@ import numpy as np
 from abc import ABC, abstractmethod
 from sola.main_classes.domains import HyperParalelipiped
 from sola.main_classes import functions
+from sola.main_classes import mappings
 from sola.aux import function_creator, integration
-import scipy
 
 
 class Space(ABC):
@@ -252,7 +252,7 @@ class PCb(Space):
         Exception
             If the inner product is not implemented for the domain.
         """
-        if (isinstance(self.domain, HyperParalelipiped) and
+        if (isinstance(self.domain, HyperParalelipiped) and # noqa
            self.domain.dimension == 1):
             # quad requires as input a function that returns only a scalar. My
             # functions always return numpy arrays because they also check
@@ -342,6 +342,7 @@ class RN(Space):
         """
         self.dimension = dimension
         self.members = {}
+        self.subspaces = {}
 
     def check_if_member(self, member):
         """
@@ -473,7 +474,7 @@ class RN(Space):
            self.check_if_member(member2)):
             raise Exception('Both elements must be members of the space.')
         if self.dimension == 1:
-            return member1*member2
+            return member1 * member2
         else:
             return np.dot(member1.T, member2)[0, 0]
 
@@ -525,3 +526,101 @@ class RN(Space):
                [0.]])
         """
         return np.zeros((self.dimension, 1))
+
+
+class Subspace(Space):
+    """
+    A class to represent a subspace of a given space.
+
+    Attributes
+    ----------
+    space : Space
+        The space from which the subspace is derived.
+    basis : np.ndarray
+        The basis of the subspace.
+
+    Methods
+    -------
+    check_if_member(member)
+        Checks if a given member is part of the subspace.
+    random_member(N=1)
+        Generates a random member of the subspace.
+    add_member(member_name, member)
+        Adds a member to the subspace.
+    inner_product(member1, member2)
+        Calculates the inner product of two members.
+    norm(member)
+        Calculates the norm of a member.
+    zero
+        Returns the zero vector of the subspace.
+    """
+    def __init__(self, space: Space, basis: list) -> None:
+        """
+        Constructs all the necessary attributes for the Subspace object.
+
+        Parameters
+        ----------
+        space : Space
+            The space from which the subspace is derived.
+        basis : np.ndarray
+            The basis of the subspace.
+
+        Examples
+        --------
+        >>> space = RN(3)
+        >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
+        """
+        self.space = space
+        self.basis = basis
+
+        self.basis_map = mappings.FiniteLinearMapping(domain=self.space,
+                                                      codomain=RN(len(self.basis)), # noqa
+                                                      matrix=np.array(self.basis)) # noqa
+        self.basis_map_adj = self.basis_map.adjoint()
+        self.gram_matrix = self._compute_gram_matrix()
+        self.gram_matrix_inv = self.gram_matrix.invert()
+
+    def _compute_gram_matrix(self):
+        """
+        Computes the Gram matrix of the subspace.
+        """
+        for i in range(self.basis.shape[1]):
+            for j in range(self.basis.shape[1]):
+                if i <= j:
+                    self.gram_matrix[i, j] = self.space.inner_product(self.basis[i], self.basis[j]) # noqa
+                else:
+                    self.gam_matrix[i, j] = self.gram_matrix[j, i]
+        return mappings.FiniteLinearMapping(self.gram_matrix)
+
+    def Project(self, member: RN):
+        return self.basis_map_adj.map(self.gram_matrix_inv.map(self.basis_map.map(member))) # noqa
+
+    def check_if_member(self, member):
+        """
+        Checks if a given member is part of the subspace.
+
+        A member is considered part of the subspace if it is a linear
+        combination of the basis vectors of the subspace.
+
+        Parameters
+        ----------
+        member : np.ndarray
+            The member to check.
+
+        Returns
+        -------
+        bool
+            True if the member is part of the subspace, False otherwise.
+
+        Examples
+        --------
+        >>> space = RN(3)
+        >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
+        >>> subspace.check_if_member(np.array([[1], [2], [0]]))
+        True
+        """
+        if not self.space.check_if_member(member):
+            return False
+        if self.basis.shape[1] == 1:
+            return np.allclose(self.Project(member), member)
+        return np.allclose(np.dot(self.basis.T, member), member)

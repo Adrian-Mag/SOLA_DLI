@@ -552,7 +552,7 @@ class Problem():
             resolution_misfit[index] = np.sqrt(self.H_diag[index]) / self.M.norm(target) # noqa
 
         return resolution_misfit
-    
+
     def plot_solution(self, enquiry_points):
         # Will plot the property bounds, the least norm property, the resolving
         # kernels and the target kernels with a slider used to explore them. It
@@ -890,7 +890,7 @@ class Problem():
                                    domain: domains.Domain,
                                    enquiry_points, widths,
                                    physical_parameters_symbols):
-        """Plots the necessary norm bound necesary to acieve the
+        """Plots the necessary norm bound necesary to achieve the
         desired relative error as a multiple of the least norm.
 
         Args:
