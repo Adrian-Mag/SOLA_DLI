@@ -307,7 +307,7 @@ class DirectSumMappingAdj(Mapping):
 
 class IntegralMapping(Mapping):
     """
-    Mapping representing an integral over a space.
+    Mapping representing a vector of integrals over a function space.
 
     Attributes:
     - domain (PCb): The domain space of the integral.
@@ -336,7 +336,8 @@ class IntegralMapping(Mapping):
 
     def pseudoinverse_map(self, member: spaces.RN):
         """
-        Map a member using the pseudoinverse of the Gram matrix.
+        Map a member using the Right Moore-Penrose pseudo-inverse of the
+        mapping.
 
         Parameters:
         - member (RN): The input member.
@@ -344,8 +345,8 @@ class IntegralMapping(Mapping):
         Returns:
         - The result of mapping the input member using the pseudoinverse.
         """
-        result = 0 * functions.Constant_1D(domain=self.domain.domain)
-        intermediary_result = self.GramMatrix.inverse_map(member)
+        result = functions.Null_1D(domain=self.domain.domain)
+        intermediary_result = self.GramMatrix.inverse().map(member)
         for index, kernel in enumerate(self.kernels):
             result = result + intermediary_result[index, 0] * kernel
         return result
@@ -408,7 +409,7 @@ class IntegralMapping(Mapping):
         GramMatrix = np.empty((self.codomain.dimension,
                                self.codomain.dimension))
         for i in range(self.codomain.dimension):
-            for j in range(self.codomain.dimension):
+            for j in range(i, self.codomain.dimension):
                 entry = self.domain.inner_product(self.kernels[i],
                                                   self.kernels[j])
                 GramMatrix[i, j] = entry

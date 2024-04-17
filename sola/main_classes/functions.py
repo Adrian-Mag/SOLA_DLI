@@ -1001,7 +1001,7 @@ class Interpolation_1D(Function):
 
     def plot(self):
         """Plots the interpolation function."""
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh)[1])
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
         plt.show()
 
     def evaluate(self, r, check_if_in_domain=True, return_points=False):

@@ -2,7 +2,6 @@ import numpy as np
 from abc import ABC, abstractmethod
 from sola.main_classes.domains import HyperParalelipiped
 from sola.main_classes import functions
-from sola.main_classes import mappings
 from sola.aux import function_creator, integration
 
 
@@ -20,34 +19,33 @@ class Space(ABC):
     def norm(self, member):
         pass
 
-    @abstractmethod
     @property
+    @abstractmethod
     def zero(self):
         pass
 
 
-class Subspace(ABC):
-
+class Subspace():
     def __init__(self, space: Space, basis: list) -> None:
         self.space = space
         self.basis = basis
 
-    @abstractmethod
     def random_member(self):
-        pass
+        random_coeffcients = np.random.uniform(-100, 100, len(self.basis))
+        random_member = self.space.zero
+        for base, coefficient in zip(self.basis, random_coeffcients):
+            random_member += coefficient * base
+        return random_member
 
-    @abstractmethod
     def inner_product(self, member1, member2):
-        pass
+        return self.space.inner_product(member1, member2)
 
-    @abstractmethod
     def norm(self, member):
-        pass
+        return self.space.norm(member)
 
-    @abstractmethod
     @property
     def zero(self):
-        pass
+        return self.space.zero
 
 
 class DirectSumSpace(Space):
@@ -204,8 +202,7 @@ class PCb(Space):
         function = function_creator.FunctionDrawer(domain=self.domain,
                                                    min_y=min_y, max_y=max_y)
         function.draw_function()
-        function.interpolate_function()
-        return function.interpolated_values
+        return function.interpolate_function()
 
     def random_member(self, seed=None,
                       continuous=False, boundaries=None) -> np.ndarray:
@@ -407,7 +404,7 @@ class RN(Space):
             return True
         return False
 
-    def random_member(self, N=1) -> np.ndarray:
+    def random_member(self, N=1, min=-100, max=100) -> np.ndarray:
         """
         Generates a random member of the space.
 
@@ -432,15 +429,15 @@ class RN(Space):
         if N > 1:
             if self.dimension > 1:
                 return np.array([
-                    np.random.uniform(-100, 100, self.dimension)[:, np.newaxis]
+                    np.random.uniform(min, max, self.dimension)[:, np.newaxis]
                     for _ in range(N)])
             else:
-                return np.random.uniform(-100, 100, N)
+                return np.random.uniform(min, max, N)
         else:
             if self.dimension == 1:
-                return np.random.uniform(-100, 100)
+                return np.random.uniform(min, max)
             else:
-                return np.reshape(np.random.uniform(-100, 100, self.dimension),
+                return np.reshape(np.random.uniform(min, max, self.dimension),
                                   (self.dimension, 1))
 
     def add_member(self, member_name, member):
@@ -551,80 +548,3 @@ class RN(Space):
                [0.]])
         """
         return np.zeros((self.dimension, 1))
-
-
-class RNSubspace(Space):
-    """
-    A class to represent a subspace of a given RN space.
-
-    Attributes
-    ----------
-    space : Space
-        The space from which the subspace is derived.
-    basis : np.ndarray
-        The basis functions that define the subspace.
-    Methods
-    -------
-    check_if_member(member)
-        Checks if a given member is part of the subspace.
-    random_member(N=1)
-        Generates a random member of the subspace.
-    add_member(member_name, member)
-        Adds a member to the subspace.
-    inner_product(member1, member2)
-        Calculates the inner product of two members.
-    norm(member)
-        Calculates the norm of a member.
-    zero
-        Returns the zero vector of the subspace.
-    """
-    def __init__(self, space: Space, basis: list) -> None:
-        """
-        Constructs all the necessary attributes for the Subspace object.
-
-        Parameters
-        ----------
-        space : Space
-            The space from which the subspace is derived.
-        basis : np.ndarray
-            The basis of the subspace.
-
-        Examples
-        --------
-        >>> space = RN(3)
-        >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
-        """
-        super().__init__(space, basis)
-
-    @property
-    def zero(self):
-        """
-        Returns the zero vector of the subspace.
-
-        Returns
-        -------
-        np.ndarray
-            The zero vector of the subspace.
-
-        Examples
-        --------
-        >>> space = RN(3)
-        >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
-        >>> subspace.zero
-        array([[0.],
-               [0.]])
-        """
-        return self.space.zero
-
-    def inner_product(self, member1, member2):
-        return self.space.inner_product(member1, member2)
-
-    def norm(self, member):
-        return self.space.norm(member)
-
-    def random_member(self, N=1):
-        random_coeffcients = np.random.uniform(-100, 100, len(self.basis))
-        random_member = self.space.zero
-        for base, coefficient in zip(self.basis, random_coeffcients):
-            random_member += coefficient * base
-        return random_member
