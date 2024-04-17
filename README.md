@@ -25,6 +25,10 @@ is done, you can run the provided tests (while still in SOLA_DLI) using:
 python -m unittest
 ```
 
+### Notes
+
+- You will need to have the conda package manager, and the conda-forge channel added. If you do not have the conda-forge channel you can add it using  `conda config --add channels conda-forge`
+
 ## Usage
 In examples/ there are multiple jupyter notebooks presenting the basic
 functionalities of the package.

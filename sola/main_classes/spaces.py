@@ -2,8 +2,8 @@ import numpy as np
 from abc import ABC, abstractmethod
 from sola.main_classes.domains import HyperParalelipiped
 from sola.main_classes import functions
+from sola.main_classes import mappings
 from sola.aux import function_creator, integration
-import scipy
 
 
 class Space(ABC):
@@ -21,6 +21,31 @@ class Space(ABC):
         pass
 
     @abstractmethod
+    @property
+    def zero(self):
+        pass
+
+
+class Subspace(ABC):
+
+    def __init__(self, space: Space, basis: list) -> None:
+        self.space = space
+        self.basis = basis
+
+    @abstractmethod
+    def random_member(self):
+        pass
+
+    @abstractmethod
+    def inner_product(self, member1, member2):
+        pass
+
+    @abstractmethod
+    def norm(self, member):
+        pass
+
+    @abstractmethod
+    @property
     def zero(self):
         pass
 
@@ -252,7 +277,7 @@ class PCb(Space):
         Exception
             If the inner product is not implemented for the domain.
         """
-        if (isinstance(self.domain, HyperParalelipiped) and
+        if (isinstance(self.domain, HyperParalelipiped) and # noqa
            self.domain.dimension == 1):
             # quad requires as input a function that returns only a scalar. My
             # functions always return numpy arrays because they also check
@@ -342,6 +367,7 @@ class RN(Space):
         """
         self.dimension = dimension
         self.members = {}
+        self.subspaces = {}
 
     def check_if_member(self, member):
         """
@@ -473,7 +499,7 @@ class RN(Space):
            self.check_if_member(member2)):
             raise Exception('Both elements must be members of the space.')
         if self.dimension == 1:
-            return member1*member2
+            return member1 * member2
         else:
             return np.dot(member1.T, member2)[0, 0]
 
@@ -525,3 +551,80 @@ class RN(Space):
                [0.]])
         """
         return np.zeros((self.dimension, 1))
+
+
+class RNSubspace(Space):
+    """
+    A class to represent a subspace of a given RN space.
+
+    Attributes
+    ----------
+    space : Space
+        The space from which the subspace is derived.
+    basis : np.ndarray
+        The basis functions that define the subspace.
+    Methods
+    -------
+    check_if_member(member)
+        Checks if a given member is part of the subspace.
+    random_member(N=1)
+        Generates a random member of the subspace.
+    add_member(member_name, member)
+        Adds a member to the subspace.
+    inner_product(member1, member2)
+        Calculates the inner product of two members.
+    norm(member)
+        Calculates the norm of a member.
+    zero
+        Returns the zero vector of the subspace.
+    """
+    def __init__(self, space: Space, basis: list) -> None:
+        """
+        Constructs all the necessary attributes for the Subspace object.
+
+        Parameters
+        ----------
+        space : Space
+            The space from which the subspace is derived.
+        basis : np.ndarray
+            The basis of the subspace.
+
+        Examples
+        --------
+        >>> space = RN(3)
+        >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
+        """
+        super().__init__(space, basis)
+
+    @property
+    def zero(self):
+        """
+        Returns the zero vector of the subspace.
+
+        Returns
+        -------
+        np.ndarray
+            The zero vector of the subspace.
+
+        Examples
+        --------
+        >>> space = RN(3)
+        >>> subspace = Subspace(space, np.array([[1, 0, 0], [0, 1, 0]]))
+        >>> subspace.zero
+        array([[0.],
+               [0.]])
+        """
+        return self.space.zero
+
+    def inner_product(self, member1, member2):
+        return self.space.inner_product(member1, member2)
+
+    def norm(self, member):
+        return self.space.norm(member)
+
+    def random_member(self, N=1):
+        random_coeffcients = np.random.uniform(-100, 100, len(self.basis))
+        random_member = self.space.zero
+        for base, coefficient in zip(self.basis, random_coeffcients):
+            random_member += coefficient * base
+        return random_member

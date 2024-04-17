@@ -2,7 +2,7 @@ import numpy as np
 from abc import ABC, abstractmethod
 import scipy
 
-from sola.main_classes import spaces, functions
+from sola.main_classes import spaces, functions, mappings
 
 
 class Mapping(ABC):
@@ -48,6 +48,39 @@ class Mapping(ABC):
         - The adjoint mapping.
         """
         pass
+
+
+class Projection(Mapping):
+    def __init__(self, domain: spaces.Space,
+                 codomain: spaces.Subspace) -> None:
+        super().__init__(domain, codomain)
+
+        if isinstance(domain, spaces.RN):
+            self.basis_map = mappings.FiniteLinearMapping(domain=self.domain,
+                                                          codomain=self.codomain, # noqa
+                                                          matrix=np.array(codomain.basis)) # noqa
+        elif isinstance(domain, spaces.PCb):
+            self.basis_map = mappings.IntegralMapping(domain=self.domain,
+                                                      codomain=self.codomain,
+                                                      kernels=codomain.basis)
+        self.basis_map_adj = self.basis_map.adjoint()
+        self.gram_matrix = self._compute_gram_matrix()
+        self.gram_matrix_inv = self.gram_matrix.invert()
+
+    def map(self, member):
+        pass
+
+    def _compute_gram_matrix(self):
+        """
+        Computes the Gram matrix of the subspace.
+        """
+        for i in range(self.basis.shape[1]):
+            for j in range(self.basis.shape[1]):
+                if i <= j:
+                    self.gram_matrix[i, j] = self.space.inner_product(self.basis[i], self.basis[j]) # noqa
+                else:
+                    self.gam_matrix[i, j] = self.gram_matrix[j, i]
+        return mappings.FiniteLinearMapping(self.gram_matrix)
 
 
 class DirectSumMapping(Mapping):
