@@ -859,7 +859,7 @@ class Random_1D(Function):
             for _, partition in enumerate(partitions):
                 values += self._create_model(partition)
 
-            return interp1d(self.domain.mesh, values*0.1, kind='linear',
+            return interp1d(self.domain.mesh, values * 0.1, kind='linear',
                             fill_value='extrapolate')
 
     def _determine_segments(self):
@@ -885,7 +885,7 @@ class Random_1D(Function):
         else:
             lower_bound, upper_bound = self.domain.bounds[0]
             return [np.random.uniform(lower_bound,
-                                      upper_bound) for _ in range(segments-1)]
+                                      upper_bound) for _ in range(segments - 1)] # noqa
 
     def _create_partitions(self, inpoints):
         """
@@ -950,10 +950,10 @@ class Random_1D(Function):
         return 'random1d'
 
     def __eq__(self, function: object) -> bool:
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.seed == self.seed and
-                function.continuous == self.continuous and
+        if (function.__str__() == self.__str__() and # noqa
+                function.domain == self.domain and # noqa
+                function.seed == self.seed and # noqa
+                function.continuous == self.continuous and # noqa
                 function.boundaries == self.boundaries):
             return True
 
@@ -1048,9 +1048,9 @@ class Interpolation_1D(Function):
         return 'interpolation_1d'
 
     def __eq__(self, function: object) -> bool:
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                np.array_equal(function.values, self.values) and
+        if (function.__str__() == self.__str__() and # noqa
+                function.domain == self.domain and # noqa
+                np.array_equal(function.values, self.values) and # noqa
                 np.array_equal(function.raw_domain, self.raw_domain)):
             return True
 
@@ -1111,7 +1111,7 @@ class ComplexExponential_1D(Function):
                 The values of the complex exponential function at the points r.
         """
         r = np.array(r, ndmin=1)
-        fourier_vector = np.exp(-2 * np.pi * self.frequency * 1j * r /
+        fourier_vector = np.exp(-2 * np.pi * self.frequency * 1j * r / # noqa
                                 self.domain.total_measure
                                 ) / self.domain.total_measure
         if check_if_in_domain:
@@ -1132,8 +1132,8 @@ class ComplexExponential_1D(Function):
         return 'ComplExponential_1D'
 
     def __eq__(self, function: object) -> bool:
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
+        if (function.__str__() == self.__str__() and # noqa
+                function.domain == self.domain and # noqa
                 function.frequency == self.frequency):
             return True
 
@@ -1248,17 +1248,17 @@ class Polynomial_1D(Function):
             in_domain = self.domain.check_if_in_domain(r)
             if return_points:
                 return r[in_domain], np.poly1d(self.coefficients)((
-                        r[in_domain] - self.center)/self.stretching)
+                    r[in_domain] - self.center) / self.stretching)
             else:
                 return np.poly1d(self.coefficients)((
-                        r[in_domain] - self.center)/self.stretching)
+                    r[in_domain] - self.center) / self.stretching)
         else:
             if return_points:
                 return r, np.poly1d(self.coefficients)((
-                        r - self.center)/self.stretching)
+                    r - self.center) / self.stretching)
             else:
                 return np.poly1d(self.coefficients)((
-                        r - self.center)/self.stretching)
+                    r - self.center) / self.stretching)
 
     def __str__(self) -> str:
         """Returns the string representation of the Polynomial_1D object."""
@@ -1373,9 +1373,9 @@ class SinusoidalPolynomial_1D(Function):
                 The values of the polynomial function at the points x.
         """
         result = np.sum([
-                    self.coefficients[i] * np.sin(self.frequencies[i] * x +
-                                                  self.phases[i])
-                        for i in range(self.order + 1)], axis=0)
+            self.coefficients[i] * np.sin(self.frequencies[i] * x + # noqa
+                        self.phases[i])
+            for i in range(self.order + 1)], axis=0)
         return result
 
     def evaluate(self, r, check_if_in_domain=True, return_points=False):
@@ -3050,7 +3050,7 @@ class Fourier(Function):
                 if self.type == 'sin':
                     return (r[in_domain], np.sin(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
                 else:
-                    return (r[in_domain], np.cos(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
+                    return (r[in_domain], np.cos(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
         else:
             if self.order == 0:
                 return (r, np.ones_like(r) / np.sqrt(self.period)) if return_points else np.ones_like(r) / np.sqrt(self.period) # noqa
@@ -3059,6 +3059,13 @@ class Fourier(Function):
                     return (r, np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
                 else:
                     return (r, np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
+
+    def plot(self):
+        """
+        Plot the Fourier function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
 
     def __str__(self) -> str:
         """
