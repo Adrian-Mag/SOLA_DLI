@@ -130,7 +130,6 @@ class DirectSumMapping(Mapping):
         """
         ans = self.codomain.zero
         for sub_member, mapping in zip(member, self.mappings):
-            print(sub_member, mapping)
             ans += mapping.map(sub_member)
 
         return ans
@@ -619,7 +618,7 @@ class FiniteLinearMapping(Mapping):
         Returns:
         - The kernels of the linear mapping.
         """
-        return [column for column in self.matrix.T]
+        return [row for row in self.matrix]
 
     def _compute_GramMatrix(self, return_matrix_only=False):
         """
@@ -648,6 +647,8 @@ class FiniteLinearMapping(Mapping):
         Returns:
         - The determinant of the matrix.
         """
+        if self.domain.dimension != self.codomain.dimension:
+            raise ValueError('Only square matrices have determinant.')
         return np.linalg.det(self.matrix)
 
     @property
