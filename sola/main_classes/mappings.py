@@ -54,16 +54,17 @@ class Projection(Mapping):
     def __init__(self, domain: spaces.Space,
                  codomain: spaces.Subspace) -> None:
         super().__init__(domain, codomain)
+        self.basis = codomain.basis
 
         if isinstance(domain, spaces.RN):
             self.basis_map = mappings.FiniteLinearMapping(domain=self.domain,
-                                                          codomain=self.codomain, # noqa
+                                                          codomain=spaces.RN(dimension=len(self.basis)), # noqa
                                                           matrix=np.array(codomain.basis)) # noqa
         elif isinstance(domain, spaces.PCb):
             self.basis_map = mappings.IntegralMapping(domain=self.domain,
-                                                      codomain=self.codomain,
-                                                      kernels=codomain.basis)
-        self.basis_map_adj = self.basis_map.adjoint()
+                                                      codomain=spaces.RN(dimension=len(self.basis)), # noqa
+                                                      kernels=self.basis)
+        self.basis_map_adj = self.basis_map.adjoint
         self.gram_matrix = self._compute_gram_matrix()
         self.gram_matrix_inv = self.gram_matrix.invert()
 
@@ -74,13 +75,19 @@ class Projection(Mapping):
         """
         Computes the Gram matrix of the subspace.
         """
-        for i in range(self.basis.shape[1]):
-            for j in range(self.basis.shape[1]):
+        gram_matrix = np.zeros((len(self.basis), len(self.basis)))
+        for i in range(len(self.basis)):
+            for j in range(len(self.basis)):
                 if i <= j:
-                    self.gram_matrix[i, j] = self.space.inner_product(self.basis[i], self.basis[j]) # noqa
+                    gram_matrix[i, j] = self.domain.inner_product(self.basis[i], self.basis[j]) # noqa
                 else:
-                    self.gam_matrix[i, j] = self.gram_matrix[j, i]
-        return mappings.FiniteLinearMapping(self.gram_matrix)
+                    gram_matrix[i, j] = gram_matrix[j, i]
+        return mappings.FiniteLinearMapping(domain=spaces.RN(dimension=len(self.basis)), # noqa
+                                            codomain=spaces.RN(dimension=len(self.basis)), # noqa
+                                            matrix=gram_matrix)
+
+    def adjoint(self):
+        pass
 
 
 class DirectSumMapping(Mapping):
@@ -130,7 +137,6 @@ class DirectSumMapping(Mapping):
         """
         ans = self.codomain.zero
         for sub_member, mapping in zip(member, self.mappings):
-            print(sub_member, mapping)
             ans += mapping.map(sub_member)
 
         return ans
@@ -619,7 +625,7 @@ class FiniteLinearMapping(Mapping):
         Returns:
         - The kernels of the linear mapping.
         """
-        return [column for column in self.matrix.T]
+        return [row for row in self.matrix]
 
     def _compute_GramMatrix(self, return_matrix_only=False):
         """
@@ -648,6 +654,8 @@ class FiniteLinearMapping(Mapping):
         Returns:
         - The determinant of the matrix.
         """
+        if self.domain.dimension != self.codomain.dimension:
+            raise ValueError('Only square matrices have determinant.')
         return np.linalg.det(self.matrix)
 
     @property

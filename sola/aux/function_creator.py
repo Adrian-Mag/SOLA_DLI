@@ -26,17 +26,20 @@ class FunctionDrawer:
 
         # Prepare the plot
         self.fig, self.ax = plt.subplots()
-        self.ax.set_xlim(self.domain.bounds[0][0] - length*0.1,
-                         self.domain.bounds[0][1] + length*0.1)
+        self.ax.set_xlim(self.domain.bounds[0][0] - length * 0.1,
+                         self.domain.bounds[0][1] + length * 0.1)
         self.ax.set_ylim(self.min_y, self.max_y)
         self.ax.set_title('Draw your function')
         self.fig.canvas.mpl_connect('button_press_event', self.on_click)
         self.fig.canvas.mpl_connect('motion_notify_event', self.on_motion)
         self.fig.canvas.mpl_connect('button_release_event', self.on_release)
+        self.fig.canvas.mpl_connect('close_event', self.process_points)
         plt.show()
+
+    def process_points(self, event):
         # Filter out points outside x_domain
         self.points = [(x, y) for x, y in self.points if
-                       x >= self.domain.bounds[0][0] and
+                       x >= self.domain.bounds[0][0] and # noqa
                        x <= self.domain.bounds[0][1]]
         self.raw_domain, self.values = zip(*self.points)
 
@@ -71,7 +74,7 @@ class FunctionDrawer:
             plt.title('Function')
             plt.xlabel('x')
             plt.ylabel('y')
-            plt.show()
+            plt.show(block=True)
 
     def save_function(self, name):
         with open(name + '_function.txt', 'w') as file:
