@@ -52,12 +52,10 @@ class FunctionDrawer:
         self.values = unique_values.copy()
 
     def on_click(self, event):
-        print(event)
         if event.button == 1:  # Check if the left mouse button is pressed
             self.drawing = True  # Start drawing when left click is pressed
 
     def on_motion(self, event):
-        print(event)
         if self.drawing and event.xdata is not None and event.ydata is not None: # noqa
             self.points.append((event.xdata, event.ydata))
             self.ax.plot(event.xdata, event.ydata, 'ro')
@@ -67,7 +65,6 @@ class FunctionDrawer:
             self.fig.canvas.draw()
 
     def on_release(self, event):
-        print(event)
         if event.button == 1:  # Check if the left mouse button is released
             self.drawing = False  # Stop drawing when left click is released
 
