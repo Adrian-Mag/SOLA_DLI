@@ -7,7 +7,6 @@ from abc import ABC, abstractmethod
 from scipy.interpolate import interp1d
 import matplotlib
 import matplotlib.pyplot as plt
-matplotlib.use('tkagg')
 
 
 class Function(ABC):
@@ -859,7 +858,7 @@ class Random_1D(Function):
             for _, partition in enumerate(partitions):
                 values += self._create_model(partition)
 
-            return interp1d(self.domain.mesh, values*0.1, kind='linear',
+            return interp1d(self.domain.mesh, values * 0.1, kind='linear',
                             fill_value='extrapolate')
 
     def _determine_segments(self):
@@ -885,7 +884,7 @@ class Random_1D(Function):
         else:
             lower_bound, upper_bound = self.domain.bounds[0]
             return [np.random.uniform(lower_bound,
-                                      upper_bound) for _ in range(segments-1)]
+                                      upper_bound) for _ in range(segments - 1)] # noqa
 
     def _create_partitions(self, inpoints):
         """
