@@ -732,7 +732,7 @@ class Problem():
                 figures[figure.number] = figure
                 sns.set_theme(style='white')
                 sns.set_palette('YlGnBu')
-                plt.title('Target vs Resolving kernels', fontsize=25)
+                # plt.title('Target vs Resolving kernels', fontsize=25)
                 all_y_values = []
                 for index, (target_mapping, resolving_mapping) in enumerate(zip(self.T.mappings, self.A.mappings)): # noqa
                     resolving_kernel = resolving_mapping.kernels[j + N_target_parameter_1 * i] # noqa
@@ -784,12 +784,9 @@ class Problem():
     def plot_multi_widths_resolving_error(self, enquiry_points, widths,
                                           domain: domains.Domain,
                                           physical_parameters_symbols):
-        print('FUUUUUUUUUCK')
         if self.H_diag is None:
             self._compute_H_diag()
-        print(self.A)
         if self.A is None:
-            print(self.A)
             self._compute_resolving_kernels()
         # Compute norms of the target kernels
         norms = np.array([])
@@ -824,7 +821,7 @@ class Problem():
                                           colorbar_label=colorbar_label,
                                           yticks=yticks, ylabel='Width',
                                           xlabel='Enquiry Points',
-                                          title='Resolving Error',
+                                          title=None,
                                           plot_colors=['#5ee22d', colors[99], '#fccd1a'], # noqa
                                           cmap='Blues_r',
                                           norm=LogNorm(vmin=1e-3, vmax=1),
