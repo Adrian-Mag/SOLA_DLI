@@ -7,7 +7,6 @@ from abc import ABC, abstractmethod
 from scipy.interpolate import interp1d
 import matplotlib
 import matplotlib.pyplot as plt
-matplotlib.use('tkagg')
 
 
 class Function(ABC):

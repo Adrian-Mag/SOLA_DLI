@@ -469,7 +469,7 @@ class Problem():
         self.least_norm_solution = self.G_adjoint.map(self.sdata)
 
     def _compute_Gamma(self):
-        self.Gamma = self.T*self.G_adjoint
+        self.Gamma = self.T * self.G_adjoint
 
     def _compute_X(self):
         if self.Gamma is None:
@@ -489,7 +489,7 @@ class Problem():
         if self.Gamma is None:
             self._compute_Gamma()
         self.H_diag = self.chi_diag - \
-            np.sum(self.X.matrix*self.Gamma.matrix,
+            np.sum(self.X.matrix * self.Gamma.matrix,
                    axis=1).reshape(self.chi_diag.shape)
 
     def _compute_epsilon(self):
@@ -500,7 +500,7 @@ class Problem():
         try:
             self.epsilon = self.npf * np.sqrt(self.H_diag)
         except RuntimeWarning:
-            print('A')
+            print('Error: The norm bound is too small. ')
 
     def _compute_least_norm_model_solution(self):
         if self.sdata is None:
@@ -526,7 +526,7 @@ class Problem():
     def _compute_resolving_kernels(self):
         if self.X is None:
             self._compute_X()
-        self.A = self.X*self.G
+        self.A = self.X * self.G
 
     def _compute_relative_errors(self):
         if self.epsilon is None:
@@ -540,7 +540,7 @@ class Problem():
             self._compute_epsilon()
         if self.least_norm_property is None:
             self._compute_least_norm_property()
-        property_range = (np.max(self.least_norm_property) -
+        property_range = (np.max(self.least_norm_property) - # noqa
                           np.min(self.least_norm_property))
         self.relative_errors2 = 100 * self.epsilon / property_range
 
@@ -605,7 +605,7 @@ class Problem():
                       {'title': 'Slider'}],
             )
             for j in range(no_of_traces):
-                step['args'][0]['visible'][no_of_traces*i + j] = True
+                step['args'][0]['visible'][no_of_traces * i + j] = True
 
             steps.append(step)
 
@@ -732,7 +732,7 @@ class Problem():
                 figures[figure.number] = figure
                 sns.set_theme(style='white')
                 sns.set_palette('YlGnBu')
-                plt.title('Target vs Resolving kernels', fontsize=25)
+                # plt.title('Target vs Resolving kernels', fontsize=25)
                 all_y_values = []
                 for index, (target_mapping, resolving_mapping) in enumerate(zip(self.T.mappings, self.A.mappings)): # noqa
                     resolving_kernel = resolving_mapping.kernels[j + N_target_parameter_1 * i] # noqa
@@ -786,6 +786,8 @@ class Problem():
                                           physical_parameters_symbols):
         if self.H_diag is None:
             self._compute_H_diag()
+        if self.A is None:
+            self._compute_resolving_kernels()
         # Compute norms of the target kernels
         norms = np.array([])
         for target_kernel in self.T.kernels:
@@ -797,8 +799,8 @@ class Problem():
         N_enquiry_points = len(enquiry_points)
         N_widths = len(widths)
         combinations = list(product(enquiry_points, widths))
-        exclusion_zones = np.array([((center + spread/2) > domain_max) or
-                                    ((center - spread/2) < domain_min) for
+        exclusion_zones = np.array([((center + spread / 2) > domain_max) or # noqa
+                                    ((center - spread / 2) < domain_min) for
                                     center, spread in combinations])
         exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
         H_map = ((np.sqrt(self.H_diag) / norms).reshape(N_enquiry_points, N_widths)).T # noqa
@@ -819,7 +821,7 @@ class Problem():
                                           colorbar_label=colorbar_label,
                                           yticks=yticks, ylabel='Width',
                                           xlabel='Enquiry Points',
-                                          title='Resolving Error',
+                                          title=None,
                                           plot_colors=['#5ee22d', colors[99], '#fccd1a'], # noqa
                                           cmap='Blues_r',
                                           norm=LogNorm(vmin=1e-3, vmax=1),
@@ -855,8 +857,8 @@ class Problem():
         N_enquiry_points = len(enquiry_points)
         N_widths = len(widths)
         combinations = list(product(enquiry_points, widths))
-        exclusion_zones = np.array([((center + spread/2) > domain_max) or
-                                    ((center - spread/2) < domain_min) for
+        exclusion_zones = np.array([((center + spread / 2) > domain_max) or # noqa
+                                    ((center - spread / 2) < domain_min) for
                                     center, spread in combinations])
         exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
         bound_map = (errors.reshape(N_enquiry_points, N_widths)).T
@@ -910,12 +912,12 @@ class Problem():
         N_enquiry_points = len(enquiry_points)
         N_widths = len(widths)
         combinations = list(product(enquiry_points, widths))
-        exclusion_zones = np.array([((center + spread/2) > domain_max) or
-                                    ((center - spread/2) < domain_min) for
+        exclusion_zones = np.array([((center + spread / 2) > domain_max) or # noqa
+                                    ((center - spread / 2) < domain_min) for
                                     center, spread in combinations])
         exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
 
-        alpha = np.sqrt((relative_error * np.ptp(self.least_norm_property) /
+        alpha = np.sqrt((relative_error * np.ptp(self.least_norm_property) / # noqa
                          self.least_norm)**2 / self.H_diag + 1)
         alpha = (alpha.reshape(N_enquiry_points, N_widths)).T
 
