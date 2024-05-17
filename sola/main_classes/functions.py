@@ -1773,10 +1773,10 @@ class NormalModes_1D(Function):
         r = np.atleast_1d(r)
         shifted_poly = np.zeros_like(r)
         for i in range(self.order):
-            shifted_domain = r - self.shifts[i]*(np.max(r) - np.min(r))
+            shifted_domain = r - self.shifts[i] * (np.max(r) - np.min(r))
             shifted_poly += np.power(shifted_domain, i + 1)
         sin_poly = np.sin(r * self.frequency +
-                          self.shift/(np.max(r) - np.min(r))) * shifted_poly
+                          self.shift / (np.max(r) - np.min(r))) * shifted_poly
 
         if self.no_sensitivity_regions is not None:
             for region in self.no_sensitivity_regions:
@@ -1910,8 +1910,8 @@ class Gaussian_Bump_1D(Function):
         np.ndarray
             The bump function values at the points
         """
-        where_compact = np.where((r > (self.center - self.width/2)) &
-                                 (r < (self.center + self.width/2)))
+        where_compact = np.where((r > (self.center - self.width / 2)) &
+                                 (r < (self.center + self.width / 2)))
         r_compact = r[where_compact]
         r_compact_centered = r_compact - self.center
         bump = np.zeros_like(r, dtype=float)
