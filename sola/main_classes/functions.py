@@ -516,7 +516,9 @@ class _ProductFunction(Function):
         return (f'_ProductFunction (function1={self.function1}, '
                 'function2={self.function2})')
 
-
+################
+# Pure functions
+################
 class Piecewise_1D(Function):
     """
     The Piecewise_1D class inherits from the Function class and represents a
@@ -545,6 +547,7 @@ class Piecewise_1D(Function):
         super().__init__(domain)
         self.intervals = intervals
         self.values = values
+        self.type = ''
 
     def _evaluate_piecewise(self, r: np.ndarray) -> np.ndarray:
         """
@@ -629,7 +632,6 @@ class Piecewise_1D(Function):
 
             return True
 
-
 class Null_1D(Function):
     """
     This class represents a null function in one dimension. It is initialized
@@ -702,7 +704,6 @@ class Null_1D(Function):
         if (function.__str__() == self.__str__() and
                 function.domain == self.domain):
             return True
-
 
 class Constant_1D(Function):
     """
@@ -781,7 +782,6 @@ class Constant_1D(Function):
                 function.domain == self.domain and
                 function.value == self.value):
             return True
-
 
 class Random_1D(Function):
     """
@@ -956,7 +956,6 @@ class Random_1D(Function):
                 function.boundaries == self.boundaries):
             return True
 
-
 class Interpolation_1D(Function):
     """
     A class used to represent a 1D interpolation function.
@@ -1053,7 +1052,6 @@ class Interpolation_1D(Function):
                 np.array_equal(function.raw_domain, self.raw_domain)):
             return True
 
-
 class ComplexExponential_1D(Function):
     """
     A class used to represent a 1D complex exponential function.
@@ -1135,7 +1133,6 @@ class ComplexExponential_1D(Function):
                 function.domain == self.domain and # noqa
                 function.frequency == self.frequency):
             return True
-
 
 class Polynomial_1D(Function):
     """
@@ -1262,7 +1259,6 @@ class Polynomial_1D(Function):
     def __str__(self) -> str:
         """Returns the string representation of the Polynomial_1D object."""
         return 'Polynomial_1D'
-
 
 class SinusoidalPolynomial_1D(Function):
     """
@@ -1428,7 +1424,6 @@ class SinusoidalPolynomial_1D(Function):
                 np.array_equal(function.frequencies, self.frequencies) and
                 np.array_equal(function.phases, self.phases)):
             return True
-
 
 class SinusoidalGaussianPolynomial_1D(Function):
     """
@@ -1627,7 +1622,6 @@ class SinusoidalGaussianPolynomial_1D(Function):
                 function.std_dev == self.std_dev):
             return True
 
-
 class NormalModes_1D(Function):
     """
     A class used to represent 1D Normal Modes
@@ -1815,7 +1809,6 @@ class NormalModes_1D(Function):
                 function.shift == self.shift):
             return True
 
-
 class Gaussian_Bump_1D(Function):
     """
     A class used to compute a Gaussian looking bump function over a given
@@ -1968,7 +1961,6 @@ class Gaussian_Bump_1D(Function):
                 function.pointiness == self.pointiness):
             return True
 
-
 class Dgaussian_Bump_1D(Function):
     """
     This class represents a derivative of a Gaussian bump function over a given
@@ -2111,7 +2103,6 @@ class Dgaussian_Bump_1D(Function):
                 function.pointiness == self.pointiness):
             return True
 
-
 class Gaussian_1D(Function):
     """
     This class represents a Gaussian function over a given domain.
@@ -2208,7 +2199,6 @@ class Gaussian_1D(Function):
                 function.center == self.center and
                 function.width == self.width):
             return True
-
 
 class Moorlet_1D(Function):
     """
@@ -2312,7 +2302,6 @@ class Moorlet_1D(Function):
                 function.frequency == self.frequency):
             return True
 
-
 class Haar_1D(Function):
     """
     Compute the Haar wavelet function over a given domain.
@@ -2399,7 +2388,6 @@ class Haar_1D(Function):
                 function.center == self.center and
                 function.width == self.width):
             return True
-
 
 class Ricker_1D(Function):
     """
@@ -2493,7 +2481,6 @@ class Ricker_1D(Function):
                 function.width == self.width):
             return True
 
-
 class Dgaussian_1D(Function):
     """
     Compute the Polynomial wavelet function over a given domain.
@@ -2583,7 +2570,6 @@ class Dgaussian_1D(Function):
                 function.center == self.center and
                 function.width == self.width):
             return True
-
 
 class Boxcar_1D(Function):
     """
@@ -2681,7 +2667,6 @@ class Boxcar_1D(Function):
                 function.center == self.center and
                 function.width == self.width):
             return True
-
 
 class Bump_1D(Function):
     """
@@ -2808,7 +2793,6 @@ class Bump_1D(Function):
                 function.width == self.width):
             return True
 
-
 class Dbump_1D(Function):
     """
     Compute the Bump derivative function over a given domain.
@@ -2908,7 +2892,6 @@ class Dbump_1D(Function):
                 function.width == self.width):
             return True
 
-
 class Triangular_1D(Function):
     """
     Compute the Triangular function over a given domain.
@@ -2995,7 +2978,6 @@ class Triangular_1D(Function):
                 function.center == self.center and
                 function.width == self.width):
             return True
-
 
 class Fourier(Function):
     """

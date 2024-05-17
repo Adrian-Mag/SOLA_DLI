@@ -349,7 +349,7 @@ class PCb(Space):
                             'implemented for this domain')
 
     def norm(self, member) -> float:
-        """
+        """a
         Calculates the norm of a function.
 
         Parameters
