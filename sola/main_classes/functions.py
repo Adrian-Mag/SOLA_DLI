@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from scipy.interpolate import interp1d
 import matplotlib
 import matplotlib.pyplot as plt
+matplotlib.use('TkAgg')
 
 
 class Function(ABC):
@@ -516,6 +517,7 @@ class _ProductFunction(Function):
         return (f'_ProductFunction (function1={self.function1}, '
                 'function2={self.function2})')
 
+
 ################
 # Pure functions
 ################
@@ -632,6 +634,7 @@ class Piecewise_1D(Function):
 
             return True
 
+
 class Null_1D(Function):
     """
     This class represents a null function in one dimension. It is initialized
@@ -704,6 +707,7 @@ class Null_1D(Function):
         if (function.__str__() == self.__str__() and
                 function.domain == self.domain):
             return True
+
 
 class Constant_1D(Function):
     """
@@ -783,274 +787,6 @@ class Constant_1D(Function):
                 function.value == self.value):
             return True
 
-class Random_1D(Function):
-    """
-    A class used to represent a one-dimensional random function.
-
-    Attributes
-    ----------
-    domain : Domain
-        The domain of the function.
-    seed : float, optional
-        The seed for the random number generator.
-    continuous : bool, optional
-        Whether the function is continuous.
-    boundaries : list, optional
-        The boundaries of the function.
-    function : callable
-        The actual function that is created.
-
-    Methods
-    -------
-    plot():
-        Plots the function.
-    _create_function():
-        Creates the function.
-    _determine_segments():
-        Determines the number of segments in the function.
-    _determine_inpoints(segments):
-        Determines the inpoints of the function.
-    _create_partitions(inpoints):
-        Creates the partitions of the function.
-    _create_model(partition):
-        Creates a model for a partition of the function.
-    evaluate(r, check_if_in_domain=True, return_points=False):
-        Evaluates the function at a given point.
-    """
-
-    def __init__(self, domain: Domain, seed: float = None,
-                 continuous: bool = False, boundaries: list = None) -> None:
-        """
-        Constructs all the necessary attributes for the Random_1D object.
-
-        Parameters
-        ----------
-        domain : Domain
-            The domain of the function.
-        seed : float, optional
-            The seed for the random number generator.
-        continuous : bool, optional
-            Whether the function is continuous.
-        boundaries : list, optional
-            The boundaries of the function.
-        """
-        super().__init__(domain)
-        self.seed = seed if seed is not None else np.random.randint(0, 10000)
-        self.continuous = continuous
-        self.boundaries = boundaries
-        self.function = self._create_function()
-
-    def plot(self):
-        """Plots the function."""
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def _create_function(self):
-        """Creates the function."""
-        np.random.seed(self.seed)
-
-        if self.domain.dimension == 1:
-            values = np.zeros_like(self.domain.mesh)
-            segments = self._determine_segments()
-            inpoints = self._determine_inpoints(segments)
-            partitions = self._create_partitions(inpoints)
-
-            for _, partition in enumerate(partitions):
-                values += self._create_model(partition)
-
-            return interp1d(self.domain.mesh, values * 0.1, kind='linear',
-                            fill_value='extrapolate')
-
-    def _determine_segments(self):
-        """Determines the number of segments in the function."""
-        if self.continuous:
-            return 1
-        elif self.boundaries is not None:
-            return len(self.boundaries) + 1
-        else:
-            return np.random.randint(1, 10)
-
-    def _determine_inpoints(self, segments):
-        """
-        Determines the inpoints of the function.
-
-        Parameters
-        ----------
-        segments : int
-            The number of segments in the function.
-        """
-        if self.boundaries is not None and not self.continuous:
-            return self.boundaries
-        else:
-            lower_bound, upper_bound = self.domain.bounds[0]
-            return [np.random.uniform(lower_bound,
-                                      upper_bound) for _ in range(segments - 1)] # noqa
-
-    def _create_partitions(self, inpoints):
-        """
-        Creates the partitions of the function.
-
-        Parameters
-        ----------
-        inpoints : list
-            The inpoints of the function.
-        """
-        allpoints = sorted(list(self.domain.bounds[0]) + inpoints)
-        return list(zip(allpoints, allpoints[1:]))
-
-    def _create_model(self, partition):
-        """
-        Creates a model for a partition of the function.
-
-        Parameters
-        ----------
-        partition : tuple
-            The start and end points of the partition.
-        """
-        x_shift = np.random.uniform(partition[0], partition[1])
-        a0, a1, a2, a3 = np.random.uniform(-1, 1, 4)
-        shifted_mesh = (self.domain.mesh + x_shift) / self.domain.total_measure
-        model = a0
-        model += a1 * shifted_mesh
-        model += a2 * shifted_mesh**2
-        model += a3 * shifted_mesh**3
-        model[self.domain.mesh < partition[0]] = 0
-        model[self.domain.mesh > partition[1]] = 0
-        return model
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluates the function at a given point.
-
-        Parameters
-        ----------
-        r : float
-            The point at which to evaluate the function.
-        check_if_in_domain : bool, optional
-            Whether to check if the point is in the domain of the function.
-        return_points : bool, optional
-            Whether to return the point if it is in the domain of the function.
-        """
-        r = np.array(r, ndmin=1)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], self.function(r[in_domain])
-            else:
-                return self.function(r[in_domain])
-        else:
-            if return_points:
-                return r, self.function(r)
-            else:
-                return self.function(r)
-
-    def __str__(self) -> str:
-        """Returns the string representation of the function."""
-        return 'random1d'
-
-    def __eq__(self, function: object) -> bool:
-        if (function.__str__() == self.__str__() and # noqa
-                function.domain == self.domain and # noqa
-                function.seed == self.seed and # noqa
-                function.continuous == self.continuous and # noqa
-                function.boundaries == self.boundaries):
-            return True
-
-class Interpolation_1D(Function):
-    """
-    A class used to represent a 1D interpolation function.
-
-    ...
-
-    Attributes
-    ----------
-    values : array_like
-        The y-coordinates of the data points.
-    raw_domain : array_like
-        The x-coordinates of the data points.
-    domain : Domain
-        The domain of the function.
-
-    Methods
-    -------
-    plot():
-        Plots the interpolation function.
-    evaluate(r, check_if_in_domain=True):
-        Evaluates the interpolation function at the points r.
-    """
-
-    def __init__(self, values, raw_domain, domain: Domain) -> None:
-        """
-        Constructs all the necessary attributes for the Interpolation_1D
-        object.
-
-        Parameters
-        ----------
-            values : array_like
-                The y-coordinates of the data points.
-            raw_domain : array_like
-                The x-coordinates of the data points.
-            domain : Domain
-                The domain of the function.
-        """
-        super().__init__(domain)
-        self.values = values
-        self.raw_domain = raw_domain
-
-    def plot(self):
-        """Plots the interpolation function."""
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluates the interpolation function at the points r.
-
-        Parameters
-        ----------
-            r : array_like
-                The points at which to evaluate the interpolation function.
-            check_if_in_domain : bool, optional
-                Whether to check if the points r are in the domain (default is
-                True).
-            return_points : bool, optional
-                Whether to return the points r if they are in the domain
-                (default is False).
-
-        Returns
-        -------
-            array_like
-                The values of the interpolation function at the points r.
-        """
-        r = np.array(r, ndmin=1)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], interp1d(self.raw_domain, self.values,
-                                              kind='linear',
-                                              fill_value='extrapolate'
-                                              )(r[in_domain])
-            else:
-                return interp1d(self.raw_domain, self.values, kind='linear',
-                                fill_value='extrapolate')(r[in_domain])
-        else:
-            if return_points:
-                return r, interp1d(self.raw_domain, self.values, kind='linear',
-                                   fill_value='extrapolate')(r)
-            else:
-                return interp1d(self.raw_domain, self.values, kind='linear',
-                                fill_value='extrapolate')(r)
-
-    def __str__(self) -> str:
-        """Returns the string representation of the Interpolation_1D object."""
-        return 'interpolation_1d'
-
-    def __eq__(self, function: object) -> bool:
-        if (function.__str__() == self.__str__() and # noqa
-                function.domain == self.domain and # noqa
-                np.array_equal(function.values, self.values) and # noqa
-                np.array_equal(function.raw_domain, self.raw_domain)):
-            return True
 
 class ComplexExponential_1D(Function):
     """
@@ -1134,132 +870,1289 @@ class ComplexExponential_1D(Function):
                 function.frequency == self.frequency):
             return True
 
-class Polynomial_1D(Function):
-    """
-    A class used to represent a 1D polynomial function.
 
-    ...
+class Gaussian_Bump_1D(Function):
+    """
+    A class used to compute a Gaussian looking bump function over a given
+    domain.
 
     Attributes
     ----------
-    order : int
-        The order of the polynomial function.
-    min_val : float
-        The minimum value for the random coefficients of the polynomial.
-    max_val : float
-        The maximum value for the random coefficients of the polynomial.
-    coefficients : array_like
-        The coefficients of the polynomial.
+    domain : HyperParalelipiped
+        The domain of the function
+    center : float
+        Center of the compact domain
+    width : float
+        Width of the compact domain
+    pointiness : int, optional
+        Pointiness of the Gaussian function (default is 2)
+    unimodularity_precision : int, optional
+        Precision of the unimodularity (default is 1000)
 
     Methods
     -------
     plot():
-        Plots the polynomial function.
-    generate_random_coefficients():
-        Generates random coefficients for the polynomial.
-    evaluate(r, check_if_in_domain=True, return_points=False):
-        Evaluates the polynomial function at the points r.
+        Plots the function over the domain mesh
+    normalization():
+        Computes the normalization of the function
+    _compute_bump(r: np.ndarray):
+        Computes the bump function at given points
+    evaluate(r: Union[float, np.ndarray], check_if_in_domain: bool = True,
+    retrun_points: bool = False):
+        Evaluates the function at given points
     """
 
-    def __init__(self, domain: HyperParalelipiped, order: int, min_val:
-                 float, max_val: float, stretching: float = 1.0,
-                 center: float = 0.0):
+    def __init__(self, domain: HyperParalelipiped, center: float, width: float,
+                 pointiness: int = 2,
+                 unimodularity_precision: int = 1000) -> None:
         """
-        Constructs all the necessary attributes for the Polynomial_1D object.
+        Constructs all the necessary attributes for the Gaussian_Bump_1D
+        object.
 
         Parameters
         ----------
             domain : HyperParalelipiped
-                The domain of the function.
-            order : int
-                The order of the polynomial function.
-            min_val : float
-                The minimum value for the random coefficients of the
-                polynomial.
-            max_val : float
-                The maximum value for the random coefficients of the
-                polynomial.
+                The domain of the function
+            center : float
+                Center of the compact domain
+            width : float
+                Width of the compact domain
+            pointiness : int, optional
+                Pointiness of the Gaussian function (default is 2)
+            unimodularity_precision : int, optional
+                Precision of the unimodularity (default is 1000)
         """
-        super().__init__(domain)
-        self.order = order
-        self.min_val = min_val
-        self.max_val = max_val
-        self.stretching = stretching
+        super().__init__(domain=domain)
         self.center = center
-        self.coefficients = self.generate_random_coefficients()
+        self.width = width
+        self.pointiness = pointiness
+        self.unimodularity_precision = unimodularity_precision
+        self._normalization_stored = None
 
-    def plot(self):
-        """Plots the polynomial function."""
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh,
-                                                 return_points=False))
+    def plot(self) -> None:
+        """Plots the function over the domain mesh."""
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
         plt.show()
 
-    def generate_random_coefficients(self):
+    @property
+    def normalization(self) -> float:
         """
-        Generates random coefficients for the polynomial.
-
-        Raises
-        ------
-        ValueError
-            If the order of the polynomial is negative.
-        """
-        if self.order < 0:
-            raise ValueError("The polynomial order must be non-negative.")
-
-        # Generate random coefficients within the specified range
-        coefficients = np.random.uniform(self.min_val, self.max_val,
-                                         self.order + 1)
-
-        # Set some coefficients to zero to introduce more variation
-        num_zero_coefficients = np.random.randint(1, self.order + 1)
-        zero_indices = np.random.choice(range(self.order + 1),
-                                        num_zero_coefficients, replace=False)
-        coefficients[zero_indices] = 0
-
-        return coefficients
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluates the polynomial function at the points r.
-
-        Parameters
-        ----------
-            r : array_like
-                The points at which to evaluate the polynomial function.
-            check_if_in_domain : bool, optional
-                Whether to check if the points r are in the domain (default is
-                True).
-            return_points : bool, optional
-                Whether to return the points r along with the function values
-                (default is False).
+        Computes the normalization of the function.
 
         Returns
         -------
-            array_like
-                The values of the polynomial function at the points r.
+        float
+            The normalization of the function
         """
-        if np.ndim(r) == 0:
-            r = np.array([r])
+        if self._normalization_stored is None:
+            area = scipy.integrate.quad(
+                lambda x: np.exp(1 / (x**2 - 1) - self.pointiness * x**2), -1, 1)[0] # noqa
+            return (self.width / 2) * area
+        else:
+            return self._normalization_stored
+
+    def _compute_bump(self, r: np.ndarray) -> np.ndarray:
+        """
+        Computes the bump function at given points.
+
+        Parameters
+        ----------
+        r : np.ndarray
+            Points at which to compute the bump function
+
+        Returns
+        -------
+        np.ndarray
+            The bump function values at the points
+        """
+        where_compact = np.where((r > (self.center - self.width / 2)) &
+                                 (r < (self.center + self.width / 2)))
+        r_compact = r[where_compact]
+        r_compact_centered = r_compact - self.center
+        bump = np.zeros_like(r, dtype=float)
+        aaa = np.exp(((self.width/2)**4 - self.pointiness * r_compact_centered**2 * (r_compact_centered**2 - (self.width/2)**2)) / # noqa
+                                     ((self.width/2)**2 * r_compact_centered**2 - (self.width/2)**4)) # noqa
+        bump[where_compact] = aaa
+        bump = np.where(np.isfinite(bump), bump, 0)
+        bump /= self.normalization
+        return bump
+
+    def evaluate(self, r: Union[float, np.ndarray],
+                 check_if_in_domain: bool = True,
+                 retrun_points: bool = False) -> Tuple[np.ndarray,
+                                                       np.ndarray]:
+        """
+        Evaluates the function at given points.
+
+        Parameters
+        ----------
+        r : Union[float, np.ndarray]
+            Points at which to evaluate the function
+        check_if_in_domain : bool, optional
+            Whether to check if points are in the domain (default is True)
+        retrun_points : bool, optional
+            Whether to return the points (default is False)
+
+        Returns
+        -------
+        Tuple[np.ndarray, np.ndarray]
+            The points and the function values at the points
+        """
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            if retrun_points:
+                return r[in_domain], self._compute_bump(r[in_domain])
+            else:
+                return self._compute_bump(r[in_domain])
+        else:
+            if retrun_points:
+                return r, self._compute_bump(r)
+            else:
+                return self._compute_bump(r)
+
+    def __str__(self) -> str:
+        """Returns the string representation of the class."""
+        return 'Gaussian_Bump_1D'
+
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width and
+                function.pointiness == self.pointiness):
+            return True
+
+
+class Dgaussian_Bump_1D(Function):
+    """
+    This class represents a derivative of a Gaussian bump function over a given
+    domain.
+
+    Attributes:
+        domain (HyperParalelipiped): The domain for computation.
+        center (float): The center of the Gaussian function.
+        width (float): The width of the Gaussian function.
+        pointiness (int): The pointiness of the Gaussian function. Defaults to
+        2.
+        unimodularity_precision (int): The precision of the Gaussian function.
+        Defaults to 1000.
+    """
+
+    def __init__(self, domain: HyperParalelipiped, center: float, width: float,
+                 pointiness: int = 2,
+                 unimodularity_precision: int = 1000) -> None:
+        """
+        The constructor for Dgaussian_Bump_1D class.
+
+        Args:
+            domain (HyperParalelipiped): The domain for computation.
+            center (float): The center of the Gaussian function.
+            width (float): The width of the Gaussian function.
+            pointiness (int, optional): The pointiness of the Gaussian
+            function. Defaults to 2.
+            unimodularity_precision (int, optional): The precision of the
+            Gaussian function. Defaults to 1000.
+        """
+        super().__init__(domain=domain)
+        assert width > 0, "Width must be a positive number"
+        assert pointiness >= 0, "Pointiness must be a non-negative integer"
+        self.center = center
+        self.width = width
+        self.pointiness = pointiness
+        self.unimodularity_precision = unimodularity_precision
+        self.bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
+                                     width=self.width,
+                                     pointiness=self.pointiness)
+
+    def plot(self) -> plt.Figure:
+        """
+        Plot the Gaussian function.
+
+        Returns:
+            plt.Figure: The plot object.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def _compute_multiplier(self,
+                            r_compact_centered: np.ndarray) -> np.ndarray:
+        """
+        Compute the multiplier for the Gaussian function.
+
+        Args:
+            r (numpy.ndarray): Points at which to compute the multiplier.
+
+        Returns:
+            numpy.ndarray: The multiplier values at the points.
+        """
+        multiplier = (-(2 * self.pointiness * r_compact_centered) / (self.width / 2)**2 # noqa
+                      -(2 * (self.width/2)**2 * r_compact_centered) / ((r_compact_centered**2 - (self.width/2)**2)**2)) # noqa
+        multiplier[~np.isfinite(multiplier)] = 0
+        return multiplier
+
+    def evaluate(self, r: np.ndarray,
+                 check_if_in_domain: bool = True,
+                 return_points: bool = False) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Evaluate the Gaussian function at given points.
+
+        Args:
+            r (numpy.ndarray): Points at which to evaluate the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+
+        Returns:
+            tuple: Tuple containing points and corresponding function values.
+        """
+        r = np.atleast_1d(r)
+
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            dbump = np.zeros_like(r[in_domain])
+            where_compact = np.where((r[in_domain] > (self.center - self.width/2)) & # noqa
+                                     (r[in_domain] < (self.center + self.width/2))) # noqa
+            r_compact = r[in_domain][where_compact]
+            r_compact_centered = r_compact - self.center
+
+            multiplier = self._compute_multiplier(r_compact_centered)
+            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
+                                    width=self.width,
+                                    pointiness=self.pointiness)
+            dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
+            if return_points:
+                return r[in_domain], dbump[in_domain]
+            else:
+                return dbump[in_domain]
+        else:
+            dbump = np.zeros_like(r)
+            where_compact = np.where((r > (self.center - self.width/2)) & # noqa
+                                     (r < (self.center + self.width/2))) # noqa
+            r_compact = r[where_compact]
+            r_compact_centered = r_compact - self.center
+            multiplier = self._compute_multiplier(r_compact_centered)
+            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
+                                    width=self.width,
+                                    pointiness=self.pointiness)
+            dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
+            if return_points:
+                return r, dbump
+            else:
+                return dbump
+
+    def __str__(self) -> str:
+        """
+        Returns the string representation of the class.
+
+        Returns:
+            str: The string representation of the class.
+        """
+        return 'Dgaussian_Bump_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Dgaussian_Bump_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width and
+                function.pointiness == self.pointiness):
+            return True
+
+
+class Gaussian_1D(Function):
+    """
+    This class represents a Gaussian function over a given domain.
+
+    Attributes:
+        domain (HyperParalelipiped): The domain for computation.
+        center (float): The center of the Gaussian function.
+        width (float): The width of the Gaussian function.
+        unimodularity_precision (int): The precision of the Gaussian function.
+        spread (float): The spread of the Gaussian function.
+    """
+
+    def __init__(self, domain: HyperParalelipiped, center: float, width: float,
+                 unimodularity_precision: int = 1000) -> None:
+        """
+        The constructor for Gaussian_1D class.
+
+        Args:
+            domain (HyperParalelipiped): The domain for computation.
+            center (float): The center of the Gaussian function.
+            width (float): The width of the Gaussian function.
+            unimodularity_precision (int, optional): The precision of the
+            Gaussian function. Defaults to 1000.
+        """
+        super().__init__(domain=domain)
+        self.center = center
+        self.width = width
+        self.unimodularity_precision = unimodularity_precision
+        self.spread = self.width / (5 * np.sqrt(2 * np.log(2)))
+        self.normalization = (1 / (self.spread * np.sqrt(2 * np.pi)))
+
+    def plot(self):
+        """
+        Plot the Gaussian function.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def evaluate(self, r: np.ndarray,
+                 check_if_in_domain: bool = True,
+                 return_points: bool = False) -> Tuple[np.ndarray,
+                                                       np.ndarray]:
+        """
+        Evaluate the Gaussian function at given points.
+
+        Args:
+            r (numpy.ndarray): Points at which to evaluate the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+            return_points (bool, optional): Whether to return the points along
+            with the function values. Defaults to False.
+
+        Returns:
+            Union[tuple, numpy.ndarray]: If return_points is True, returns a
+            tuple containing points and corresponding function values.
+            If return_points is False, returns only the function values.
+        """
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            r_in_domain = r[in_domain]
+            r_normalized = (r_in_domain - self.center) / self.spread
+            gaussian_vector = self.normalization * np.exp(-0.5 * (r_normalized) ** 2) # noqa
+            if return_points:
+                return r_in_domain, gaussian_vector
+            else:
+                return gaussian_vector
+        else:
+            r_normalized = (r - self.center) / self.spread
+            gaussian_vector = self.normalization * np.exp(-0.5 * (r_normalized) ** 2) # noqa
+            if return_points:
+                return r, gaussian_vector
+            else:
+                return gaussian_vector
+
+    def __str__(self) -> str:
+        """
+        Returns the string representation of the class.
+
+        Returns:
+            str: The string representation of the class.
+        """
+        return 'Gaussian_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Gaussian_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Moorlet_1D(Function):
+    """
+    Compute the Moorlet function over a given domain.
+
+    Args:
+        domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        center (float): Center of the Moorlet function.
+        spread (float): Spread of the Moorlet function.
+        frequency (float): Frequency parameter for the Moorlet function.
+        unimodularity_precision (int, optional): Precision for the
+        unimodularity. Defaults to 1000.
+    """
+    def __init__(self, domain: HyperParalelipiped, center, spread, frequency,
+                 unimodularity_precision=1000):
+        super().__init__(domain)
+        self.center = center
+        self.spread = spread
+        self.frequency = frequency
+        self.unimodularity_precision = unimodularity_precision
+        self.normalization = self._compute_normalization()
+
+    def plot(self):
+        """
+        Plot the Moorlet function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def _compute_normalization(self):
+        """
+        Compute the normalization factor for the Moorlet function.
+
+        Returns:
+            float: The normalization factor.
+        """
+        moorlet_vector = np.cos(self.frequency * (self.domain.dynamic_mesh(self.unimodularity_precision) - self.center)) \
+            * np.exp(-0.5 * ((self.domain.dynamic_mesh(self.unimodularity_precision) - self.center) / self.spread) ** 2) # noqa
+
+        area = np.trapz(moorlet_vector, self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
+        return area
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Moorlet function at given points.
+
+        Args:
+            r (numpy.ndarray): Points at which to evaluate the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+            return_points (bool, optional): Whether to return the points along
+            with
+            the function values. Defaults to False.
+
+        Returns:
+            Union[tuple, numpy.ndarray]: If return_points is True, returns a
+            tuple containing points and corresponding function values.
+            If return_points is False, returns only the function values.
+        """
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            moorlet_vector = np.cos(self.frequency * (r[in_domain] - self.center)) \
+                * np.exp(-0.5 * ((r[in_domain] - self.center) / self.spread) ** 2) # noqa
+            if return_points:
+                return r[in_domain], moorlet_vector / self.normalization
+            else:
+                return moorlet_vector / self.normalization
+        else:
+            moorlet_vector = np.cos(self.frequency * (r - self.center)) \
+                * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
+            if return_points:
+                return r, moorlet_vector / self.normalization
+            else:
+                return moorlet_vector / self.normalization
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the Moorlet_1D object.
+
+        Returns:
+            str: String representation of the Moorlet_1D object.
+        """
+        return 'Moorlet_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Moorlet_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.spread == self.spread and
+                function.frequency == self.frequency):
+            return True
+
+
+class Haar_1D(Function):
+    """
+    Compute the Haar wavelet function over a given domain.
+
+    Args:
+        domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        center (float): Center of the Haar wavelet function.
+        width (float): Width of the Haar wavelet function.
+    """
+    def __init__(self, domain: HyperParalelipiped, center, width):
+        """
+        Initialize the Haar_1D object.
+
+        Args:
+            domain (HyperParalelipiped): Array representing the domain for
+            computation.
+            center (float): Center of the Haar wavelet function.
+            width (float): Width of the Haar wavelet function.
+        """
+        super().__init__(domain)
+        self.center = center
+        self.width = width
+
+    def plot(self):
+        """
+        Plot the Haar wavelet function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Haar wavelet function at given points.
+
+        Args:
+            r (numpy.ndarray): Points at which to evaluate the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+            return_points (bool, optional): Whether to return the points along
+            with the function values. Defaults to False.
+
+        Returns:
+            Union[tuple, numpy.ndarray]: If return_points is True, returns a
+            tuple containing points and corresponding function values.
+            If return_points is False, returns only the function values.
+        """
+        r = np.atleast_1d(r)
+        scaled_domain = (r - self.center) / self.width
+        haar_vector = 4 * np.where((scaled_domain >= -0.5) & (scaled_domain < 0.5), np.sign(scaled_domain), 0) / self.width**2 # noqa
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             if return_points:
-                return r[in_domain], np.poly1d(self.coefficients)((
-                    r[in_domain] - self.center) / self.stretching)
+                return r[in_domain], haar_vector[in_domain]
             else:
-                return np.poly1d(self.coefficients)((
-                    r[in_domain] - self.center) / self.stretching)
+                return haar_vector[in_domain]
         else:
             if return_points:
-                return r, np.poly1d(self.coefficients)((
-                    r - self.center) / self.stretching)
+                return r, haar_vector
             else:
-                return np.poly1d(self.coefficients)((
-                    r - self.center) / self.stretching)
+                return haar_vector
 
     def __str__(self) -> str:
-        """Returns the string representation of the Polynomial_1D object."""
-        return 'Polynomial_1D'
+        """
+        Return a string representation of the Haar_1D object.
 
+        Returns:
+            str: String representation of the Haar_1D object.
+        """
+        return 'Haar_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Haar_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Ricker_1D(Function):
+    """
+    Compute the Ricker wavelet function over a given domain.
+
+    Args:
+        domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        center (float): Center of the Ricker wavelet function.
+        width (float): Width of the Ricker wavelet function.
+    """
+    def __init__(self, domain: HyperParalelipiped, center, width):
+        """
+        Initialize the Ricker_1D object.
+
+        Args:
+            domain (HyperParalelipiped): Array representing the domain for
+            computation.
+            center (float): Center of the Ricker wavelet function.
+            width (float): Width of the Ricker wavelet function.
+        """
+        super().__init__(domain)
+        self.center = center
+        self.width = width
+
+    def plot(self):
+        """
+        Plot the Ricker wavelet function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Ricker wavelet function at given points.
+
+        Args:
+            r (numpy.ndarray): Points at which to evaluate the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+            return_points (bool, optional): Whether to return the points along
+            with the function values. Defaults to False.
+
+        Returns:
+            Union[tuple, numpy.ndarray]: If return_points is True, returns a
+            tuple containing points and corresponding function values.
+            If return_points is False, returns only the function values.
+        """
+        A = 2 / (np.sqrt(3 * self.width) * (np.pi ** 0.25))
+        ricker_specific_width = self.width / 7
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            vector = A * (1 - ((r[in_domain] - self.center) /
+                               ricker_specific_width)**2) * np.exp(
+                -0.5 * ((r[in_domain] - self.center) / ricker_specific_width)**2) # noqa
+            if return_points:
+                return r[in_domain], vector
+            else:
+                return vector
+        else:
+            vector = A * (1 - ((r - self.center) / ricker_specific_width) ** 2) * np.exp( # noqa
+                -0.5 * ((r - self.center) / ricker_specific_width) ** 2)
+            if return_points:
+                return r, vector
+            else:
+                return vector
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the Ricker_1D object.
+
+        Returns:
+            str: String representation of the Ricker_1D object.
+        """
+        return 'Ricker_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Ricker_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Dgaussian_1D(Function):
+    """
+    Compute the Polynomial wavelet function over a given domain.
+
+    Args:
+        domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        center (float): Center of the Polynomial wavelet function.
+        width (float): Width of the Polynomial wavelet function.
+    """
+    def __init__(self, domain: HyperParalelipiped, center, width):
+        """
+        Initialize the Dgaussian_1D object.
+
+        Args:
+            domain (HyperParalelipiped): Array representing the domain for
+            computation.
+            center (float): Center of the Polynomial wavelet function.
+            width (float): Width of the Polynomial wavelet function.
+        """
+        super().__init__(domain)
+        self.center = center
+        self.width = width
+        self.spread = width / (5 * np.sqrt(2 * np.log(2)))
+
+    def plot(self):
+        """
+        Plot the Polynomial wavelet function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Polynomial wavelet function at given points.
+
+        Args:
+            r (numpy.ndarray): Points at which to evaluate the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+            return_points (bool, optional): Whether to return the points along
+            with the function values. Defaults to False.
+
+        Returns:
+            Union[tuple, numpy.ndarray]: If return_points is True, returns a
+            tuple containing points and corresponding function values.
+            If return_points is False, returns only the function values.
+        """
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            Dgaussian_vector = ((r[in_domain] - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
+                -0.5 * ((r[in_domain] - self.center) / self.spread) ** 2)
+            if return_points:
+                return r[in_domain], Dgaussian_vector
+            else:
+                return Dgaussian_vector
+        else:
+            Dgaussian_vector = ((r - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
+                -0.5 * ((r - self.center) / self.spread) ** 2)
+            if return_points:
+                return r, Dgaussian_vector
+            else:
+                return Dgaussian_vector
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the Dgaussian_1D object.
+
+        Returns:
+            str: String representation of the Dgaussian_1D object.
+        """
+        return 'Dgaussian_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Dgaussian_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Boxcar_1D(Function):
+    """
+    Compute the Boxcar function over a given domain.
+
+    Args:
+        domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        center (float): Center of the Boxcar function.
+        width (float): Width of the Boxcar function.
+        unimodularity_precision (int, optional): Precision for unimodularity.
+        Defaults to 1000.
+    """
+    def __init__(self, domain: HyperParalelipiped, center, width,
+                 unimodularity_precision=1000):
+        """
+        Initialize the Boxcar_1D object.
+
+        Args:
+            domain (HyperParalelipiped): Array representing the domain for
+            computation.
+            center (float): Center of the Boxcar function.
+            width (float): Width of the Boxcar function.
+            unimodularity_precision (int, optional): Precision for
+            unimodularity. Defaults to 1000.
+        """
+        super().__init__(domain)
+        self.center = center
+        self.width = width
+        self.unimodularity_precision = unimodularity_precision
+
+    def plot(self):
+        """
+        Plot the Boxcar function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Boxcar function at given points.
+
+        Args:
+            r (Union[int, float, numpy.ndarray]): Points at which to evaluate
+            the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+            return_points (bool, optional): Whether to return the points along
+            with the function values. Defaults to False.
+
+        Returns:
+            Union[tuple, numpy.ndarray]: If return_points is True, returns a
+            tuple containing points and corresponding function values.
+            If return_points is False, returns only the function values.
+        """
+        r = np.atleast_1d(r)
+
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            scaled_domain = (r[in_domain] - self.center) / self.width
+            boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
+            if return_points:
+                return r[in_domain], boxcar_vector
+            else:
+                return boxcar_vector
+        else:
+            scaled_domain = (r - self.center) / self.width
+            boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
+            if return_points:
+                return r, boxcar_vector
+            else:
+                return boxcar_vector
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the Boxcar_1D object.
+
+        Returns:
+            str: String representation of the Boxcar_1D object.
+        """
+        return 'Boxcar_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Boxcar_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Bump_1D(Function):
+    """
+    Compute the Bump function over a given domain.
+
+    Args:
+    - domain (HyperParalelipiped): Array representing the domain for
+    computation.
+    - center (float): Center of the Bump function.
+    - width (float): Width of the Bump function.
+    - unimodularity_precision (int, optional): Precision for unimodularity.
+    Defaults to 1000.
+
+    Returns:
+    - numpy.ndarray: Computed Bump function values over the domain.
+    """
+    def __init__(self, domain: HyperParalelipiped, center, width,
+                 unimodularity_precision=1000):
+        """
+        Initialize the Bump_1D object.
+
+        Args:
+        - domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        - center (float): Center of the Bump function.
+        - width (float): Width of the Bump function.
+        - unimodularity_precision (int, optional): Precision for unimodularity.
+        Defaults to 1000.
+        """
+        super().__init__(domain)
+        self.center = center
+        self.width = width
+        self.unimodularity_precision = unimodularity_precision
+        self.normalization = self._compute_normalization()
+
+    def plot(self):
+        """
+        Plot the Bump function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def _compute_normalization(self):
+        """
+        Compute the normalization constant for the Bump function.
+        """
+        limits = [-0.5 * self.width + self.center,
+                  0.5 * self.width + self.center]
+        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) >= limits[0]) & ( # noqa
+                    self.domain.dynamic_mesh(self.unimodularity_precision) <= limits[1]) # noqa
+        bump_vector = np.zeros_like(self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
+        bump_vector[mask] = np.exp(
+            1 / ((2 * (self.domain.dynamic_mesh(self.unimodularity_precision)[mask] - self.center) / self.width) ** 2 - 1)) # noqa
+        area = np.trapz(bump_vector[mask],
+                        self.domain.dynamic_mesh(self.unimodularity_precision)[mask]) # noqa
+        return area
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Bump function at given points.
+
+        Args:
+            r (Union[int, float, numpy.ndarray]): Points at which to evaluate
+            the function.
+            check_if_in_domain (bool, optional): Whether to check if points are
+            in domain. Defaults to True.
+            return_points (bool, optional): Whether to return the points along
+            with the function values. Defaults to False.
+
+        Returns:
+            Union[tuple, numpy.ndarray]: If return_points is True, returns a
+            tuple containing points and corresponding function values.
+            If return_points is False, returns only the function values.
+        """
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            limits = [-0.5 * self.width + self.center,
+                      0.5 * self.width + self.center]
+            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
+            bump_vector = np.zeros_like(r[in_domain])
+            bump_vector[mask] = np.exp(
+                1 / ((2 * (r[in_domain][mask] - self.center) / self.width) ** 2 - 1)) # noqa
+            if return_points:
+                return r[in_domain], bump_vector / self.normalization
+            else:
+                return bump_vector / self.normalization
+        else:
+            limits = [-0.5 * self.width + self.center,
+                      0.5 * self.width + self.center]
+            mask = (r > limits[0]) & (r < limits[1])
+            bump_vector = np.zeros_like(r)
+            bump_vector[mask] = np.exp(
+                1 / ((2 * (r[mask] - self.center) / self.width) ** 2 - 1))
+            bump_vector[mask] = np.nan_to_num(bump_vector[mask], nan=0.0,
+                                              posinf=0.0, neginf=0.0)
+            if return_points:
+                return r, bump_vector / self.normalization
+            else:
+                return bump_vector / self.normalization
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the Bump_1D object.
+
+        Returns:
+            str: String representation of the Bump_1D object.
+        """
+        return 'Bump_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Bump_1D objects are equal.
+
+        Args:
+            function (object): The function to compare.
+
+        Returns:
+            bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Dbump_1D(Function):
+    """
+    Compute the Bump derivative function over a given domain.
+
+    Args:
+    - domain (HyperParalelipiped): Array representing the domain for
+    computation.
+    - center (float): Center of the Bump function.
+    - width (float): Width of the Bump function.
+    - unimodularity_precision (int, optional): Precision for the unimodularity.
+    Defaults to 1000.
+
+    Attributes:
+    - center (float): Center of the Bump function.
+    - width (float): Width of the Bump function.
+    - unimodularity_precision (int): Precision for the unimodularity.
+    - area (float): Area under the Bump function.
+    """
+    def __init__(self, domain: HyperParalelipiped, center, width,
+                 unimodularity_precision=1000):
+        super().__init__(domain)
+        self.center = center
+        self.width = width
+        self.unimodularity_precision = unimodularity_precision
+        self.area = self._compute_area()
+
+    def plot(self):
+        """Plot the Bump function over the domain."""
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def _compute_area(self):
+        """Compute the area under the Bump function."""
+        limits = [-0.5 * self.width + self.center,
+                  0.5 * self.width + self.center]
+        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) > limits[0]) & ( # noqa
+                    self.domain.dynamic_mesh(self.unimodularity_precision) < limits[1]) # noqa
+        bump_vector = np.zeros_like(self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
+        bump_vector[mask] = np.exp(
+            1 / ((2 * (self.domain.dynamic_mesh(self.unimodularity_precision)[mask] - self.center) / self.width) ** 2 - 1)) # noqa
+        area = np.trapz(bump_vector[mask], self.domain.dynamic_mesh(self.unimodularity_precision)[mask]) # noqa
+        return area
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Bump function at given points.
+
+        Args:
+        - r (numpy.ndarray): Points at which to evaluate the function.
+        - check_if_in_domain (bool, optional): Whether to check if points are
+        in the domain. Defaults to True.
+        - return_points (bool, optional): Whether to return the points along
+        with the function values. Defaults to False.
+
+        Returns:
+        - numpy.ndarray: Function values at the given points. If return_points
+        is True, also return the points.
+        """
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            limits = [-0.5 * self.width + self.center,
+                      0.5 * self.width + self.center]
+            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
+            bump_vector = np.zeros_like(r[in_domain])
+            bump_vector = Bump_1D(domain=self.domain, center=self.center,
+                                  width=self.width).evaluate(r[in_domain])
+            multiplier =  8 * (self.width**2) * (r[in_domain][mask] - self.center) / ( # noqa
+                    (2 * (r[in_domain][mask] - self.center))**2 - self.width**2)**2 # noqa
+            multiplier = np.nan_to_num(multiplier, nan=0.0,
+                                       posinf=0.0, neginf=0.0)
+            bump_vector[mask] = multiplier * bump_vector[mask]
+            return (r[in_domain], bump_vector / self.area) if return_points else bump_vector / self.area # noqa
+        else:
+            limits = [-0.5 * self.width + self.center,
+                      0.5 * self.width + self.center]
+            mask = (r > limits[0]) & (r < limits[1])
+            bump_vector = np.zeros_like(r)
+            bump_vector = Bump_1D(domain=self.domain, center=self.center,
+                                  width=self.width).evaluate(r)
+            multiplier =  8 * (self.width**2) * (r[mask] - self.center) / ( # noqa
+                    (2 * (r[mask] - self.center))**2 - self.width**2)**2 # noqa
+            multiplier = np.nan_to_num(multiplier, nan=0.0,
+                                       posinf=0.0, neginf=0.0)
+            bump_vector[mask] = multiplier * bump_vector[mask]
+            return (r, bump_vector / self.area) if return_points else bump_vector / self.area # noqa
+
+    def __str__(self) -> str:
+        """Return a string representation of the object."""
+        return 'Dbump_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """Check if two Dbump_1D objects are equal."""
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Triangular_1D(Function):
+    """
+    Compute the Triangular function over a given domain.
+
+    Args:
+    - domain (HyperParalelipiped): Array representing the domain for
+    computation.
+    - center (float): Center of the Triangular function.
+    - width (float): Width of the Triangular function.
+    """
+
+    def __init__(self, domain: HyperParalelipiped, center, width):
+        """
+        Initialize the Triangular_1D object.
+
+        Args:
+        - domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        - center (float): Center of the Triangular function.
+        - width (float): Width of the Triangular function.
+        """
+        super().__init__(domain)
+        self.center = center
+        self.width = width
+
+    def plot(self):
+        """
+        Plot the Triangular function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Triangular function at given points.
+
+        Args:
+        - r (numpy.ndarray): Points at which to evaluate the function.
+        - check_if_in_domain (bool, optional): Whether to check if points are
+        in the domain. Defaults to True.
+        - return_points (bool, optional): Whether to return the points along
+        with the function values. Defaults to False.
+
+        Returns:
+        - numpy.ndarray: Function values at the given points. If return_points
+        is True, also return the points.
+        """
+        r = np.atleast_1d(r)
+        limits = [-0.5 * self.width + self.center,
+                  0.5 * self.width + self.center]
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            mask = (r[in_domain] >= limits[0]) & (r[in_domain] <= limits[1])
+            triangular_vector = np.zeros_like(r[in_domain])
+            triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[in_domain][mask] - self.center) / self.width**2 # noqa
+            return (r[in_domain], triangular_vector) if return_points else triangular_vector # noqa
+        else:
+            mask = (r >= limits[0]) & (r <= limits[1])
+            triangular_vector = np.zeros_like(r)
+            triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[mask] - self.center) / self.width**2 # noqa
+            return (r, triangular_vector) if return_points else triangular_vector # noqa
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the object.
+
+        Returns:
+        - str: String representation of the object.
+        """
+        return 'Triangular_1D'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Triangular_1D objects are equal.
+
+        Args:
+        - function (object): The function to compare.
+
+        Returns:
+        - bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.center == self.center and
+                function.width == self.width):
+            return True
+
+
+class Fourier(Function):
+    """
+    Compute Fourier basis functions on a domain of type [0, P].
+
+    Args:
+    - domain (HyperParalelipiped): Array representing the domain for
+    computation.
+    - type (str): Type of the Fourier function ('sin' or 'cos').
+    - order (int): Order of the Fourier function.
+    """
+
+    def __init__(self, domain: HyperParalelipiped,
+                 type: str, order: int) -> None:
+        """
+        Initialize the Fourier object.
+
+        Args:
+        - domain (HyperParalelipiped): Array representing the domain for
+        computation.
+        - type (str): Type of the Fourier function ('sin' or 'cos').
+        - order (int): Order of the Fourier function.
+        """
+        super().__init__(domain)
+        self.type = type
+        self.order = order
+        self.period = self.domain.bounds[0][1] - self.domain.bounds[0][0]
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluate the Fourier function at given points.
+
+        Args:
+        - r (numpy.ndarray): Points at which to evaluate the function.
+        - check_if_in_domain (bool, optional): Whether to check if points are
+        in the domain. Defaults to True.
+        - return_points (bool, optional): Whether to return the points along
+        with the function values. Defaults to False.
+
+        Returns:
+        - numpy.ndarray: Function values at the given points. If return_points
+        is True, also return the points.
+        """
+        r = np.atleast_1d(r)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            if self.order == 0:
+                return (r[in_domain], np.ones_like(r[in_domain]) /
+                        np.sqrt(self.period)) if return_points else np.ones_like(r[in_domain]) / np.sqrt(self.period) # noqa
+            else:
+                if self.type == 'sin':
+                    return (r[in_domain], np.sin(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
+                else:
+                    return (r[in_domain], np.cos(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
+        else:
+            if self.order == 0:
+                return (r, np.ones_like(r) / np.sqrt(self.period)) if return_points else np.ones_like(r) / np.sqrt(self.period) # noqa
+            else:
+                if self.type == 'sin':
+                    return (r, np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
+                else:
+                    return (r, np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
+
+    def plot(self):
+        """
+        Plot the Fourier function over the domain.
+        """
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def __str__(self) -> str:
+        """
+        Return a string representation of the object.
+
+        Returns:
+        - str: String representation of the object.
+        """
+        return 'Fourier'
+
+    def __eq__(self, function: object) -> bool:
+        """
+        Check if two Fourier objects are equal.
+
+        Args:
+        - function (object): The function to compare.
+
+        Returns:
+        - bool: True if the functions are equal, False otherwise.
+        """
+        if (function.__str__() == self.__str__() and
+                function.domain == self.domain and
+                function.type == self.type and
+                function.order == self.order):
+            return True
+
+
+##################
+# Random Functions
+##################
 class SinusoidalPolynomial_1D(Function):
     """
     A class used to represent a 1D sinusoidal polynomial function.
@@ -1424,6 +2317,134 @@ class SinusoidalPolynomial_1D(Function):
                 np.array_equal(function.frequencies, self.frequencies) and
                 np.array_equal(function.phases, self.phases)):
             return True
+
+
+class Polynomial_1D(Function):
+    """
+    A class used to represent a 1D polynomial function.
+
+    ...
+
+    Attributes
+    ----------
+    order : int
+        The order of the polynomial function.
+    min_val : float
+        The minimum value for the random coefficients of the polynomial.
+    max_val : float
+        The maximum value for the random coefficients of the polynomial.
+    coefficients : array_like
+        The coefficients of the polynomial.
+
+    Methods
+    -------
+    plot():
+        Plots the polynomial function.
+    generate_random_coefficients():
+        Generates random coefficients for the polynomial.
+    evaluate(r, check_if_in_domain=True, return_points=False):
+        Evaluates the polynomial function at the points r.
+    """
+
+    def __init__(self, domain: HyperParalelipiped, order: int, min_val:
+                 float, max_val: float, stretching: float = 1.0,
+                 center: float = 0.0):
+        """
+        Constructs all the necessary attributes for the Polynomial_1D object.
+
+        Parameters
+        ----------
+            domain : HyperParalelipiped
+                The domain of the function.
+            order : int
+                The order of the polynomial function.
+            min_val : float
+                The minimum value for the random coefficients of the
+                polynomial.
+            max_val : float
+                The maximum value for the random coefficients of the
+                polynomial.
+        """
+        super().__init__(domain)
+        self.order = order
+        self.min_val = min_val
+        self.max_val = max_val
+        self.stretching = stretching
+        self.center = center
+        self.coefficients = self.generate_random_coefficients()
+
+    def plot(self):
+        """Plots the polynomial function."""
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh,
+                                                 return_points=False))
+        plt.show()
+
+    def generate_random_coefficients(self):
+        """
+        Generates random coefficients for the polynomial.
+
+        Raises
+        ------
+        ValueError
+            If the order of the polynomial is negative.
+        """
+        if self.order < 0:
+            raise ValueError("The polynomial order must be non-negative.")
+
+        # Generate random coefficients within the specified range
+        coefficients = np.random.uniform(self.min_val, self.max_val,
+                                         self.order + 1)
+
+        # Set some coefficients to zero to introduce more variation
+        num_zero_coefficients = np.random.randint(1, self.order + 1)
+        zero_indices = np.random.choice(range(self.order + 1),
+                                        num_zero_coefficients, replace=False)
+        coefficients[zero_indices] = 0
+
+        return coefficients
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluates the polynomial function at the points r.
+
+        Parameters
+        ----------
+            r : array_like
+                The points at which to evaluate the polynomial function.
+            check_if_in_domain : bool, optional
+                Whether to check if the points r are in the domain (default is
+                True).
+            return_points : bool, optional
+                Whether to return the points r along with the function values
+                (default is False).
+
+        Returns
+        -------
+            array_like
+                The values of the polynomial function at the points r.
+        """
+        if np.ndim(r) == 0:
+            r = np.array([r])
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            if return_points:
+                return r[in_domain], np.poly1d(self.coefficients)((
+                    r[in_domain] - self.center) / self.stretching)
+            else:
+                return np.poly1d(self.coefficients)((
+                    r[in_domain] - self.center) / self.stretching)
+        else:
+            if return_points:
+                return r, np.poly1d(self.coefficients)((
+                    r - self.center) / self.stretching)
+            else:
+                return np.poly1d(self.coefficients)((
+                    r - self.center) / self.stretching)
+
+    def __str__(self) -> str:
+        """Returns the string representation of the Polynomial_1D object."""
+        return 'Polynomial_1D'
+
 
 class SinusoidalGaussianPolynomial_1D(Function):
     """
@@ -1622,6 +2643,7 @@ class SinusoidalGaussianPolynomial_1D(Function):
                 function.std_dev == self.std_dev):
             return True
 
+
 class NormalModes_1D(Function):
     """
     A class used to represent 1D Normal Modes
@@ -1809,1266 +2831,276 @@ class NormalModes_1D(Function):
                 function.shift == self.shift):
             return True
 
-class Gaussian_Bump_1D(Function):
+
+class Random_1D(Function):
     """
-    A class used to compute a Gaussian looking bump function over a given
-    domain.
+    A class used to represent a one-dimensional random function.
 
     Attributes
     ----------
-    domain : HyperParalelipiped
-        The domain of the function
-    center : float
-        Center of the compact domain
-    width : float
-        Width of the compact domain
-    pointiness : int, optional
-        Pointiness of the Gaussian function (default is 2)
-    unimodularity_precision : int, optional
-        Precision of the unimodularity (default is 1000)
+    domain : Domain
+        The domain of the function.
+    seed : float, optional
+        The seed for the random number generator.
+    continuous : bool, optional
+        Whether the function is continuous.
+    boundaries : list, optional
+        The boundaries of the function.
+    function : callable
+        The actual function that is created.
 
     Methods
     -------
     plot():
-        Plots the function over the domain mesh
-    normalization():
-        Computes the normalization of the function
-    _compute_bump(r: np.ndarray):
-        Computes the bump function at given points
-    evaluate(r: Union[float, np.ndarray], check_if_in_domain: bool = True,
-    retrun_points: bool = False):
-        Evaluates the function at given points
+        Plots the function.
+    _create_function():
+        Creates the function.
+    _determine_segments():
+        Determines the number of segments in the function.
+    _determine_inpoints(segments):
+        Determines the inpoints of the function.
+    _create_partitions(inpoints):
+        Creates the partitions of the function.
+    _create_model(partition):
+        Creates a model for a partition of the function.
+    evaluate(r, check_if_in_domain=True, return_points=False):
+        Evaluates the function at a given point.
     """
 
-    def __init__(self, domain: HyperParalelipiped, center: float, width: float,
-                 pointiness: int = 2,
-                 unimodularity_precision: int = 1000) -> None:
+    def __init__(self, domain: Domain, seed: float = None,
+                 continuous: bool = False, boundaries: list = None) -> None:
         """
-        Constructs all the necessary attributes for the Gaussian_Bump_1D
+        Constructs all the necessary attributes for the Random_1D object.
+
+        Parameters
+        ----------
+        domain : Domain
+            The domain of the function.
+        seed : float, optional
+            The seed for the random number generator.
+        continuous : bool, optional
+            Whether the function is continuous.
+        boundaries : list, optional
+            The boundaries of the function.
+        """
+        super().__init__(domain)
+        self.seed = seed if seed is not None else np.random.randint(0, 10000)
+        self.continuous = continuous
+        self.boundaries = boundaries
+        self.function = self._create_function()
+
+    def plot(self):
+        """Plots the function."""
+        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
+        plt.show()
+
+    def _create_function(self):
+        """Creates the function."""
+        np.random.seed(self.seed)
+
+        if self.domain.dimension == 1:
+            values = np.zeros_like(self.domain.mesh)
+            segments = self._determine_segments()
+            inpoints = self._determine_inpoints(segments)
+            partitions = self._create_partitions(inpoints)
+
+            for _, partition in enumerate(partitions):
+                values += self._create_model(partition)
+
+            return interp1d(self.domain.mesh, values * 0.1, kind='linear',
+                            fill_value='extrapolate')
+
+    def _determine_segments(self):
+        """Determines the number of segments in the function."""
+        if self.continuous:
+            return 1
+        elif self.boundaries is not None:
+            return len(self.boundaries) + 1
+        else:
+            return np.random.randint(1, 10)
+
+    def _determine_inpoints(self, segments):
+        """
+        Determines the inpoints of the function.
+
+        Parameters
+        ----------
+        segments : int
+            The number of segments in the function.
+        """
+        if self.boundaries is not None and not self.continuous:
+            return self.boundaries
+        else:
+            lower_bound, upper_bound = self.domain.bounds[0]
+            return [np.random.uniform(lower_bound,
+                                      upper_bound) for _ in range(segments - 1)] # noqa
+
+    def _create_partitions(self, inpoints):
+        """
+        Creates the partitions of the function.
+
+        Parameters
+        ----------
+        inpoints : list
+            The inpoints of the function.
+        """
+        allpoints = sorted(list(self.domain.bounds[0]) + inpoints)
+        return list(zip(allpoints, allpoints[1:]))
+
+    def _create_model(self, partition):
+        """
+        Creates a model for a partition of the function.
+
+        Parameters
+        ----------
+        partition : tuple
+            The start and end points of the partition.
+        """
+        x_shift = np.random.uniform(partition[0], partition[1])
+        a0, a1, a2, a3 = np.random.uniform(-1, 1, 4)
+        shifted_mesh = (self.domain.mesh + x_shift) / self.domain.total_measure
+        model = a0
+        model += a1 * shifted_mesh
+        model += a2 * shifted_mesh**2
+        model += a3 * shifted_mesh**3
+        model[self.domain.mesh < partition[0]] = 0
+        model[self.domain.mesh > partition[1]] = 0
+        return model
+
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
+        """
+        Evaluates the function at a given point.
+
+        Parameters
+        ----------
+        r : float
+            The point at which to evaluate the function.
+        check_if_in_domain : bool, optional
+            Whether to check if the point is in the domain of the function.
+        return_points : bool, optional
+            Whether to return the point if it is in the domain of the function.
+        """
+        r = np.array(r, ndmin=1)
+        if check_if_in_domain:
+            in_domain = self.domain.check_if_in_domain(r)
+            if return_points:
+                return r[in_domain], self.function(r[in_domain])
+            else:
+                return self.function(r[in_domain])
+        else:
+            if return_points:
+                return r, self.function(r)
+            else:
+                return self.function(r)
+
+    def __str__(self) -> str:
+        """Returns the string representation of the function."""
+        return 'random1d'
+
+    def __eq__(self, function: object) -> bool:
+        if (function.__str__() == self.__str__() and # noqa
+                function.domain == self.domain and # noqa
+                function.seed == self.seed and # noqa
+                function.continuous == self.continuous and # noqa
+                function.boundaries == self.boundaries):
+            return True
+
+
+#########################
+# Interpolation Functions
+#########################
+class Interpolation_1D(Function):
+    """
+    A class used to represent a 1D interpolation function.
+
+    ...
+
+    Attributes
+    ----------
+    values : array_like
+        The y-coordinates of the data points.
+    raw_domain : array_like
+        The x-coordinates of the data points.
+    domain : Domain
+        The domain of the function.
+
+    Methods
+    -------
+    plot():
+        Plots the interpolation function.
+    evaluate(r, check_if_in_domain=True):
+        Evaluates the interpolation function at the points r.
+    """
+
+    def __init__(self, values, raw_domain, domain: Domain) -> None:
+        """
+        Constructs all the necessary attributes for the Interpolation_1D
         object.
 
         Parameters
         ----------
-            domain : HyperParalelipiped
-                The domain of the function
-            center : float
-                Center of the compact domain
-            width : float
-                Width of the compact domain
-            pointiness : int, optional
-                Pointiness of the Gaussian function (default is 2)
-            unimodularity_precision : int, optional
-                Precision of the unimodularity (default is 1000)
+            values : array_like
+                The y-coordinates of the data points.
+            raw_domain : array_like
+                The x-coordinates of the data points.
+            domain : Domain
+                The domain of the function.
         """
-        super().__init__(domain=domain)
-        self.center = center
-        self.width = width
-        self.pointiness = pointiness
-        self.unimodularity_precision = unimodularity_precision
-        self._normalization_stored = None
+        super().__init__(domain)
+        self.values = values
+        self.raw_domain = raw_domain
 
-    def plot(self) -> None:
-        """Plots the function over the domain mesh."""
+    def plot(self):
+        """Plots the interpolation function."""
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
         plt.show()
 
-    @property
-    def normalization(self) -> float:
+    def evaluate(self, r, check_if_in_domain=True, return_points=False):
         """
-        Computes the normalization of the function.
-
-        Returns
-        -------
-        float
-            The normalization of the function
-        """
-        if self._normalization_stored is None:
-            area = scipy.integrate.quad(
-                lambda x: np.exp(1 / (x**2 - 1) - self.pointiness * x**2), -1, 1)[0] # noqa
-            return (self.width / 2) * area
-        else:
-            return self._normalization_stored
-
-    def _compute_bump(self, r: np.ndarray) -> np.ndarray:
-        """
-        Computes the bump function at given points.
+        Evaluates the interpolation function at the points r.
 
         Parameters
         ----------
-        r : np.ndarray
-            Points at which to compute the bump function
+            r : array_like
+                The points at which to evaluate the interpolation function.
+            check_if_in_domain : bool, optional
+                Whether to check if the points r are in the domain (default is
+                True).
+            return_points : bool, optional
+                Whether to return the points r if they are in the domain
+                (default is False).
 
         Returns
         -------
-        np.ndarray
-            The bump function values at the points
+            array_like
+                The values of the interpolation function at the points r.
         """
-        where_compact = np.where((r > (self.center - self.width / 2)) &
-                                 (r < (self.center + self.width / 2)))
-        r_compact = r[where_compact]
-        r_compact_centered = r_compact - self.center
-        bump = np.zeros_like(r, dtype=float)
-        aaa = np.exp(((self.width/2)**4 - self.pointiness * r_compact_centered**2 * (r_compact_centered**2 - (self.width/2)**2)) / # noqa
-                                     ((self.width/2)**2 * r_compact_centered**2 - (self.width/2)**4)) # noqa
-        bump[where_compact] = aaa
-        bump = np.where(np.isfinite(bump), bump, 0)
-        bump /= self.normalization
-        return bump
-
-    def evaluate(self, r: Union[float, np.ndarray],
-                 check_if_in_domain: bool = True,
-                 retrun_points: bool = False) -> Tuple[np.ndarray,
-                                                       np.ndarray]:
-        """
-        Evaluates the function at given points.
-
-        Parameters
-        ----------
-        r : Union[float, np.ndarray]
-            Points at which to evaluate the function
-        check_if_in_domain : bool, optional
-            Whether to check if points are in the domain (default is True)
-        retrun_points : bool, optional
-            Whether to return the points (default is False)
-
-        Returns
-        -------
-        Tuple[np.ndarray, np.ndarray]
-            The points and the function values at the points
-        """
-        r = np.atleast_1d(r)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            if retrun_points:
-                return r[in_domain], self._compute_bump(r[in_domain])
-            else:
-                return self._compute_bump(r[in_domain])
-        else:
-            if retrun_points:
-                return r, self._compute_bump(r)
-            else:
-                return self._compute_bump(r)
-
-    def __str__(self) -> str:
-        """Returns the string representation of the class."""
-        return 'Gaussian_Bump_1D'
-
-    def __eq__(self, function: object) -> bool:
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width and
-                function.pointiness == self.pointiness):
-            return True
-
-class Dgaussian_Bump_1D(Function):
-    """
-    This class represents a derivative of a Gaussian bump function over a given
-    domain.
-
-    Attributes:
-        domain (HyperParalelipiped): The domain for computation.
-        center (float): The center of the Gaussian function.
-        width (float): The width of the Gaussian function.
-        pointiness (int): The pointiness of the Gaussian function. Defaults to
-        2.
-        unimodularity_precision (int): The precision of the Gaussian function.
-        Defaults to 1000.
-    """
-
-    def __init__(self, domain: HyperParalelipiped, center: float, width: float,
-                 pointiness: int = 2,
-                 unimodularity_precision: int = 1000) -> None:
-        """
-        The constructor for Dgaussian_Bump_1D class.
-
-        Args:
-            domain (HyperParalelipiped): The domain for computation.
-            center (float): The center of the Gaussian function.
-            width (float): The width of the Gaussian function.
-            pointiness (int, optional): The pointiness of the Gaussian
-            function. Defaults to 2.
-            unimodularity_precision (int, optional): The precision of the
-            Gaussian function. Defaults to 1000.
-        """
-        super().__init__(domain=domain)
-        assert width > 0, "Width must be a positive number"
-        assert pointiness >= 0, "Pointiness must be a non-negative integer"
-        self.center = center
-        self.width = width
-        self.pointiness = pointiness
-        self.unimodularity_precision = unimodularity_precision
-        self.bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
-                                     width=self.width,
-                                     pointiness=self.pointiness)
-
-    def plot(self) -> plt.Figure:
-        """
-        Plot the Gaussian function.
-
-        Returns:
-            plt.Figure: The plot object.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def _compute_multiplier(self,
-                            r_compact_centered: np.ndarray) -> np.ndarray:
-        """
-        Compute the multiplier for the Gaussian function.
-
-        Args:
-            r (numpy.ndarray): Points at which to compute the multiplier.
-
-        Returns:
-            numpy.ndarray: The multiplier values at the points.
-        """
-        multiplier = (-(2 * self.pointiness * r_compact_centered) / (self.width / 2)**2 # noqa
-                      -(2 * (self.width/2)**2 * r_compact_centered) / ((r_compact_centered**2 - (self.width/2)**2)**2)) # noqa
-        multiplier[~np.isfinite(multiplier)] = 0
-        return multiplier
-
-    def evaluate(self, r: np.ndarray,
-                 check_if_in_domain: bool = True,
-                 return_points: bool = False) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Evaluate the Gaussian function at given points.
-
-        Args:
-            r (numpy.ndarray): Points at which to evaluate the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-
-        Returns:
-            tuple: Tuple containing points and corresponding function values.
-        """
-        r = np.atleast_1d(r)
-
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            dbump = np.zeros_like(r[in_domain])
-            where_compact = np.where((r[in_domain] > (self.center - self.width/2)) & # noqa
-                                     (r[in_domain] < (self.center + self.width/2))) # noqa
-            r_compact = r[in_domain][where_compact]
-            r_compact_centered = r_compact - self.center
-
-            multiplier = self._compute_multiplier(r_compact_centered)
-            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
-                                    width=self.width,
-                                    pointiness=self.pointiness)
-            dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
-            if return_points:
-                return r[in_domain], dbump[in_domain]
-            else:
-                return dbump[in_domain]
-        else:
-            dbump = np.zeros_like(r)
-            where_compact = np.where((r > (self.center - self.width/2)) & # noqa
-                                     (r < (self.center + self.width/2))) # noqa
-            r_compact = r[where_compact]
-            r_compact_centered = r_compact - self.center
-            multiplier = self._compute_multiplier(r_compact_centered)
-            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
-                                    width=self.width,
-                                    pointiness=self.pointiness)
-            dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
-            if return_points:
-                return r, dbump
-            else:
-                return dbump
-
-    def __str__(self) -> str:
-        """
-        Returns the string representation of the class.
-
-        Returns:
-            str: The string representation of the class.
-        """
-        return 'Dgaussian_Bump_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Dgaussian_Bump_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width and
-                function.pointiness == self.pointiness):
-            return True
-
-class Gaussian_1D(Function):
-    """
-    This class represents a Gaussian function over a given domain.
-
-    Attributes:
-        domain (HyperParalelipiped): The domain for computation.
-        center (float): The center of the Gaussian function.
-        width (float): The width of the Gaussian function.
-        unimodularity_precision (int): The precision of the Gaussian function.
-        spread (float): The spread of the Gaussian function.
-    """
-
-    def __init__(self, domain: HyperParalelipiped, center: float, width: float,
-                 unimodularity_precision: int = 1000) -> None:
-        """
-        The constructor for Gaussian_1D class.
-
-        Args:
-            domain (HyperParalelipiped): The domain for computation.
-            center (float): The center of the Gaussian function.
-            width (float): The width of the Gaussian function.
-            unimodularity_precision (int, optional): The precision of the
-            Gaussian function. Defaults to 1000.
-        """
-        super().__init__(domain=domain)
-        self.center = center
-        self.width = width
-        self.unimodularity_precision = unimodularity_precision
-        self.spread = self.width / (5 * np.sqrt(2 * np.log(2)))
-
-    def plot(self):
-        """
-        Plot the Gaussian function.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def evaluate(self, r: np.ndarray,
-                 check_if_in_domain: bool = True,
-                 return_points: bool = False) -> Tuple[np.ndarray,
-                                                       np.ndarray]:
-        """
-        Evaluate the Gaussian function at given points.
-
-        Args:
-            r (numpy.ndarray): Points at which to evaluate the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-            return_points (bool, optional): Whether to return the points along
-            with the function values. Defaults to False.
-
-        Returns:
-            Union[tuple, numpy.ndarray]: If return_points is True, returns a
-            tuple containing points and corresponding function values.
-            If return_points is False, returns only the function values.
-        """
-        r = np.atleast_1d(r)
-
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            gaussian_vector = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r[in_domain] - self.center) / self.spread) ** 2) # noqa
-            if return_points:
-                return r[in_domain], gaussian_vector
-            else:
-                return gaussian_vector
-        else:
-            gaussian_vector = (1 / (self.spread * np.sqrt(2 * np.pi))) * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2) # noqa
-            if return_points:
-                return r, gaussian_vector
-            else:
-                return gaussian_vector
-
-    def __str__(self) -> str:
-        """
-        Returns the string representation of the class.
-
-        Returns:
-            str: The string representation of the class.
-        """
-        return 'Gaussian_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Gaussian_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Moorlet_1D(Function):
-    """
-    Compute the Moorlet function over a given domain.
-
-    Args:
-        domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        center (float): Center of the Moorlet function.
-        spread (float): Spread of the Moorlet function.
-        frequency (float): Frequency parameter for the Moorlet function.
-        unimodularity_precision (int, optional): Precision for the
-        unimodularity. Defaults to 1000.
-    """
-    def __init__(self, domain: HyperParalelipiped, center, spread, frequency,
-                 unimodularity_precision=1000):
-        super().__init__(domain)
-        self.center = center
-        self.spread = spread
-        self.frequency = frequency
-        self.unimodularity_precision = unimodularity_precision
-        self.normalization = self._compute_normalization()
-
-    def plot(self):
-        """
-        Plot the Moorlet function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def _compute_normalization(self):
-        """
-        Compute the normalization factor for the Moorlet function.
-
-        Returns:
-            float: The normalization factor.
-        """
-        moorlet_vector = np.cos(self.frequency * (self.domain.dynamic_mesh(self.unimodularity_precision) - self.center)) \
-            * np.exp(-0.5 * ((self.domain.dynamic_mesh(self.unimodularity_precision) - self.center) / self.spread) ** 2) # noqa
-
-        area = np.trapz(moorlet_vector, self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
-        return area
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Moorlet function at given points.
-
-        Args:
-            r (numpy.ndarray): Points at which to evaluate the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-            return_points (bool, optional): Whether to return the points along
-            with
-            the function values. Defaults to False.
-
-        Returns:
-            Union[tuple, numpy.ndarray]: If return_points is True, returns a
-            tuple containing points and corresponding function values.
-            If return_points is False, returns only the function values.
-        """
-        r = np.atleast_1d(r)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            moorlet_vector = np.cos(self.frequency * (r[in_domain] - self.center)) \
-                * np.exp(-0.5 * ((r[in_domain] - self.center) / self.spread) ** 2) # noqa
-            if return_points:
-                return r[in_domain], moorlet_vector / self.normalization
-            else:
-                return moorlet_vector / self.normalization
-        else:
-            moorlet_vector = np.cos(self.frequency * (r - self.center)) \
-                * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
-            if return_points:
-                return r, moorlet_vector / self.normalization
-            else:
-                return moorlet_vector / self.normalization
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the Moorlet_1D object.
-
-        Returns:
-            str: String representation of the Moorlet_1D object.
-        """
-        return 'Moorlet_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Moorlet_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.spread == self.spread and
-                function.frequency == self.frequency):
-            return True
-
-class Haar_1D(Function):
-    """
-    Compute the Haar wavelet function over a given domain.
-
-    Args:
-        domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        center (float): Center of the Haar wavelet function.
-        width (float): Width of the Haar wavelet function.
-    """
-    def __init__(self, domain: HyperParalelipiped, center, width):
-        """
-        Initialize the Haar_1D object.
-
-        Args:
-            domain (HyperParalelipiped): Array representing the domain for
-            computation.
-            center (float): Center of the Haar wavelet function.
-            width (float): Width of the Haar wavelet function.
-        """
-        super().__init__(domain)
-        self.center = center
-        self.width = width
-
-    def plot(self):
-        """
-        Plot the Haar wavelet function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Haar wavelet function at given points.
-
-        Args:
-            r (numpy.ndarray): Points at which to evaluate the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-            return_points (bool, optional): Whether to return the points along
-            with the function values. Defaults to False.
-
-        Returns:
-            Union[tuple, numpy.ndarray]: If return_points is True, returns a
-            tuple containing points and corresponding function values.
-            If return_points is False, returns only the function values.
-        """
-        r = np.atleast_1d(r)
-        scaled_domain = (r - self.center) / self.width
-        haar_vector = 4 * np.where((scaled_domain >= -0.5) & (scaled_domain < 0.5), np.sign(scaled_domain), 0) / self.width**2 # noqa
+        r = np.array(r, ndmin=1)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
             if return_points:
-                return r[in_domain], haar_vector[in_domain]
+                return r[in_domain], interp1d(self.raw_domain, self.values,
+                                              kind='linear',
+                                              fill_value='extrapolate'
+                                              )(r[in_domain])
             else:
-                return haar_vector[in_domain]
+                return interp1d(self.raw_domain, self.values, kind='linear',
+                                fill_value='extrapolate')(r[in_domain])
         else:
             if return_points:
-                return r, haar_vector
+                return r, interp1d(self.raw_domain, self.values, kind='linear',
+                                   fill_value='extrapolate')(r)
             else:
-                return haar_vector
+                return interp1d(self.raw_domain, self.values, kind='linear',
+                                fill_value='extrapolate')(r)
 
     def __str__(self) -> str:
-        """
-        Return a string representation of the Haar_1D object.
-
-        Returns:
-            str: String representation of the Haar_1D object.
-        """
-        return 'Haar_1D'
+        """Returns the string representation of the Interpolation_1D object."""
+        return 'interpolation_1d'
 
     def __eq__(self, function: object) -> bool:
-        """
-        Check if two Haar_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Ricker_1D(Function):
-    """
-    Compute the Ricker wavelet function over a given domain.
-
-    Args:
-        domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        center (float): Center of the Ricker wavelet function.
-        width (float): Width of the Ricker wavelet function.
-    """
-    def __init__(self, domain: HyperParalelipiped, center, width):
-        """
-        Initialize the Ricker_1D object.
-
-        Args:
-            domain (HyperParalelipiped): Array representing the domain for
-            computation.
-            center (float): Center of the Ricker wavelet function.
-            width (float): Width of the Ricker wavelet function.
-        """
-        super().__init__(domain)
-        self.center = center
-        self.width = width
-
-    def plot(self):
-        """
-        Plot the Ricker wavelet function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Ricker wavelet function at given points.
-
-        Args:
-            r (numpy.ndarray): Points at which to evaluate the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-            return_points (bool, optional): Whether to return the points along
-            with the function values. Defaults to False.
-
-        Returns:
-            Union[tuple, numpy.ndarray]: If return_points is True, returns a
-            tuple containing points and corresponding function values.
-            If return_points is False, returns only the function values.
-        """
-        A = 2 / (np.sqrt(3 * self.width) * (np.pi ** 0.25))
-        ricker_specific_width = self.width / 7
-        r = np.atleast_1d(r)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            vector = A * (1 - ((r[in_domain] - self.center) /
-                               ricker_specific_width)**2) * np.exp(
-                -0.5 * ((r[in_domain] - self.center) / ricker_specific_width)**2) # noqa
-            if return_points:
-                return r[in_domain], vector
-            else:
-                return vector
-        else:
-            vector = A * (1 - ((r - self.center) / ricker_specific_width) ** 2) * np.exp( # noqa
-                -0.5 * ((r - self.center) / ricker_specific_width) ** 2)
-            if return_points:
-                return r, vector
-            else:
-                return vector
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the Ricker_1D object.
-
-        Returns:
-            str: String representation of the Ricker_1D object.
-        """
-        return 'Ricker_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Ricker_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Dgaussian_1D(Function):
-    """
-    Compute the Polynomial wavelet function over a given domain.
-
-    Args:
-        domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        center (float): Center of the Polynomial wavelet function.
-        width (float): Width of the Polynomial wavelet function.
-    """
-    def __init__(self, domain: HyperParalelipiped, center, width):
-        """
-        Initialize the Dgaussian_1D object.
-
-        Args:
-            domain (HyperParalelipiped): Array representing the domain for
-            computation.
-            center (float): Center of the Polynomial wavelet function.
-            width (float): Width of the Polynomial wavelet function.
-        """
-        super().__init__(domain)
-        self.center = center
-        self.width = width
-        self.spread = width / (5 * np.sqrt(2 * np.log(2)))
-
-    def plot(self):
-        """
-        Plot the Polynomial wavelet function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Polynomial wavelet function at given points.
-
-        Args:
-            r (numpy.ndarray): Points at which to evaluate the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-            return_points (bool, optional): Whether to return the points along
-            with the function values. Defaults to False.
-
-        Returns:
-            Union[tuple, numpy.ndarray]: If return_points is True, returns a
-            tuple containing points and corresponding function values.
-            If return_points is False, returns only the function values.
-        """
-        r = np.atleast_1d(r)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            Dgaussian_vector = ((r[in_domain] - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
-                -0.5 * ((r[in_domain] - self.center) / self.spread) ** 2)
-            if return_points:
-                return r[in_domain], Dgaussian_vector
-            else:
-                return Dgaussian_vector
-        else:
-            Dgaussian_vector = ((r - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
-                -0.5 * ((r - self.center) / self.spread) ** 2)
-            if return_points:
-                return r, Dgaussian_vector
-            else:
-                return Dgaussian_vector
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the Dgaussian_1D object.
-
-        Returns:
-            str: String representation of the Dgaussian_1D object.
-        """
-        return 'Dgaussian_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Dgaussian_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Boxcar_1D(Function):
-    """
-    Compute the Boxcar function over a given domain.
-
-    Args:
-        domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        center (float): Center of the Boxcar function.
-        width (float): Width of the Boxcar function.
-        unimodularity_precision (int, optional): Precision for unimodularity.
-        Defaults to 1000.
-    """
-    def __init__(self, domain: HyperParalelipiped, center, width,
-                 unimodularity_precision=1000):
-        """
-        Initialize the Boxcar_1D object.
-
-        Args:
-            domain (HyperParalelipiped): Array representing the domain for
-            computation.
-            center (float): Center of the Boxcar function.
-            width (float): Width of the Boxcar function.
-            unimodularity_precision (int, optional): Precision for
-            unimodularity. Defaults to 1000.
-        """
-        super().__init__(domain)
-        self.center = center
-        self.width = width
-        self.unimodularity_precision = unimodularity_precision
-
-    def plot(self):
-        """
-        Plot the Boxcar function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Boxcar function at given points.
-
-        Args:
-            r (Union[int, float, numpy.ndarray]): Points at which to evaluate
-            the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-            return_points (bool, optional): Whether to return the points along
-            with the function values. Defaults to False.
-
-        Returns:
-            Union[tuple, numpy.ndarray]: If return_points is True, returns a
-            tuple containing points and corresponding function values.
-            If return_points is False, returns only the function values.
-        """
-        r = np.atleast_1d(r)
-
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            scaled_domain = (r[in_domain] - self.center) / self.width
-            boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
-            if return_points:
-                return r[in_domain], boxcar_vector
-            else:
-                return boxcar_vector
-        else:
-            scaled_domain = (r - self.center) / self.width
-            boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
-            if return_points:
-                return r, boxcar_vector
-            else:
-                return boxcar_vector
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the Boxcar_1D object.
-
-        Returns:
-            str: String representation of the Boxcar_1D object.
-        """
-        return 'Boxcar_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Boxcar_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Bump_1D(Function):
-    """
-    Compute the Bump function over a given domain.
-
-    Args:
-    - domain (HyperParalelipiped): Array representing the domain for
-    computation.
-    - center (float): Center of the Bump function.
-    - width (float): Width of the Bump function.
-    - unimodularity_precision (int, optional): Precision for unimodularity.
-    Defaults to 1000.
-
-    Returns:
-    - numpy.ndarray: Computed Bump function values over the domain.
-    """
-    def __init__(self, domain: HyperParalelipiped, center, width,
-                 unimodularity_precision=1000):
-        """
-        Initialize the Bump_1D object.
-
-        Args:
-        - domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        - center (float): Center of the Bump function.
-        - width (float): Width of the Bump function.
-        - unimodularity_precision (int, optional): Precision for unimodularity.
-        Defaults to 1000.
-        """
-        super().__init__(domain)
-        self.center = center
-        self.width = width
-        self.unimodularity_precision = unimodularity_precision
-        self.normalization = self._compute_normalization()
-
-    def plot(self):
-        """
-        Plot the Bump function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def _compute_normalization(self):
-        """
-        Compute the normalization constant for the Bump function.
-        """
-        limits = [-0.5 * self.width + self.center,
-                  0.5 * self.width + self.center]
-        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) >= limits[0]) & ( # noqa
-                    self.domain.dynamic_mesh(self.unimodularity_precision) <= limits[1]) # noqa
-        bump_vector = np.zeros_like(self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
-        bump_vector[mask] = np.exp(
-            1 / ((2 * (self.domain.dynamic_mesh(self.unimodularity_precision)[mask] - self.center) / self.width) ** 2 - 1)) # noqa
-        area = np.trapz(bump_vector[mask],
-                        self.domain.dynamic_mesh(self.unimodularity_precision)[mask]) # noqa
-        return area
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Bump function at given points.
-
-        Args:
-            r (Union[int, float, numpy.ndarray]): Points at which to evaluate
-            the function.
-            check_if_in_domain (bool, optional): Whether to check if points are
-            in domain. Defaults to True.
-            return_points (bool, optional): Whether to return the points along
-            with the function values. Defaults to False.
-
-        Returns:
-            Union[tuple, numpy.ndarray]: If return_points is True, returns a
-            tuple containing points and corresponding function values.
-            If return_points is False, returns only the function values.
-        """
-        r = np.atleast_1d(r)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
-            bump_vector = np.zeros_like(r[in_domain])
-            bump_vector[mask] = np.exp(
-                1 / ((2 * (r[in_domain][mask] - self.center) / self.width) ** 2 - 1)) # noqa
-            if return_points:
-                return r[in_domain], bump_vector / self.normalization
-            else:
-                return bump_vector / self.normalization
-        else:
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r > limits[0]) & (r < limits[1])
-            bump_vector = np.zeros_like(r)
-            bump_vector[mask] = np.exp(
-                1 / ((2 * (r[mask] - self.center) / self.width) ** 2 - 1))
-            bump_vector[mask] = np.nan_to_num(bump_vector[mask], nan=0.0,
-                                              posinf=0.0, neginf=0.0)
-            if return_points:
-                return r, bump_vector / self.normalization
-            else:
-                return bump_vector / self.normalization
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the Bump_1D object.
-
-        Returns:
-            str: String representation of the Bump_1D object.
-        """
-        return 'Bump_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Bump_1D objects are equal.
-
-        Args:
-            function (object): The function to compare.
-
-        Returns:
-            bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Dbump_1D(Function):
-    """
-    Compute the Bump derivative function over a given domain.
-
-    Args:
-    - domain (HyperParalelipiped): Array representing the domain for
-    computation.
-    - center (float): Center of the Bump function.
-    - width (float): Width of the Bump function.
-    - unimodularity_precision (int, optional): Precision for the unimodularity.
-    Defaults to 1000.
-
-    Attributes:
-    - center (float): Center of the Bump function.
-    - width (float): Width of the Bump function.
-    - unimodularity_precision (int): Precision for the unimodularity.
-    - area (float): Area under the Bump function.
-    """
-    def __init__(self, domain: HyperParalelipiped, center, width,
-                 unimodularity_precision=1000):
-        super().__init__(domain)
-        self.center = center
-        self.width = width
-        self.unimodularity_precision = unimodularity_precision
-        self.area = self._compute_area()
-
-    def plot(self):
-        """Plot the Bump function over the domain."""
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def _compute_area(self):
-        """Compute the area under the Bump function."""
-        limits = [-0.5 * self.width + self.center,
-                  0.5 * self.width + self.center]
-        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) > limits[0]) & ( # noqa
-                    self.domain.dynamic_mesh(self.unimodularity_precision) < limits[1]) # noqa
-        bump_vector = np.zeros_like(self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
-        bump_vector[mask] = np.exp(
-            1 / ((2 * (self.domain.dynamic_mesh(self.unimodularity_precision)[mask] - self.center) / self.width) ** 2 - 1)) # noqa
-        area = np.trapz(bump_vector[mask], self.domain.dynamic_mesh(self.unimodularity_precision)[mask]) # noqa
-        return area
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Bump function at given points.
-
-        Args:
-        - r (numpy.ndarray): Points at which to evaluate the function.
-        - check_if_in_domain (bool, optional): Whether to check if points are
-        in the domain. Defaults to True.
-        - return_points (bool, optional): Whether to return the points along
-        with the function values. Defaults to False.
-
-        Returns:
-        - numpy.ndarray: Function values at the given points. If return_points
-        is True, also return the points.
-        """
-        r = np.atleast_1d(r)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
-            bump_vector = np.zeros_like(r[in_domain])
-            bump_vector = Bump_1D(domain=self.domain, center=self.center,
-                                  width=self.width).evaluate(r[in_domain])
-            multiplier =  8 * (self.width**2) * (r[in_domain][mask] - self.center) / ( # noqa
-                    (2 * (r[in_domain][mask] - self.center))**2 - self.width**2)**2 # noqa
-            multiplier = np.nan_to_num(multiplier, nan=0.0,
-                                       posinf=0.0, neginf=0.0)
-            bump_vector[mask] = multiplier * bump_vector[mask]
-            return (r[in_domain], bump_vector / self.area) if return_points else bump_vector / self.area # noqa
-        else:
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r > limits[0]) & (r < limits[1])
-            bump_vector = np.zeros_like(r)
-            bump_vector = Bump_1D(domain=self.domain, center=self.center,
-                                  width=self.width).evaluate(r)
-            multiplier =  8 * (self.width**2) * (r[mask] - self.center) / ( # noqa
-                    (2 * (r[mask] - self.center))**2 - self.width**2)**2 # noqa
-            multiplier = np.nan_to_num(multiplier, nan=0.0,
-                                       posinf=0.0, neginf=0.0)
-            bump_vector[mask] = multiplier * bump_vector[mask]
-            return (r, bump_vector / self.area) if return_points else bump_vector / self.area # noqa
-
-    def __str__(self) -> str:
-        """Return a string representation of the object."""
-        return 'Dbump_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """Check if two Dbump_1D objects are equal."""
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Triangular_1D(Function):
-    """
-    Compute the Triangular function over a given domain.
-
-    Args:
-    - domain (HyperParalelipiped): Array representing the domain for
-    computation.
-    - center (float): Center of the Triangular function.
-    - width (float): Width of the Triangular function.
-    """
-
-    def __init__(self, domain: HyperParalelipiped, center, width):
-        """
-        Initialize the Triangular_1D object.
-
-        Args:
-        - domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        - center (float): Center of the Triangular function.
-        - width (float): Width of the Triangular function.
-        """
-        super().__init__(domain)
-        self.center = center
-        self.width = width
-
-    def plot(self):
-        """
-        Plot the Triangular function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Triangular function at given points.
-
-        Args:
-        - r (numpy.ndarray): Points at which to evaluate the function.
-        - check_if_in_domain (bool, optional): Whether to check if points are
-        in the domain. Defaults to True.
-        - return_points (bool, optional): Whether to return the points along
-        with the function values. Defaults to False.
-
-        Returns:
-        - numpy.ndarray: Function values at the given points. If return_points
-        is True, also return the points.
-        """
-        r = np.atleast_1d(r)
-        limits = [-0.5 * self.width + self.center,
-                  0.5 * self.width + self.center]
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            mask = (r[in_domain] >= limits[0]) & (r[in_domain] <= limits[1])
-            triangular_vector = np.zeros_like(r[in_domain])
-            triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[in_domain][mask] - self.center) / self.width**2 # noqa
-            return (r[in_domain], triangular_vector) if return_points else triangular_vector # noqa
-        else:
-            mask = (r >= limits[0]) & (r <= limits[1])
-            triangular_vector = np.zeros_like(r)
-            triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[mask] - self.center) / self.width**2 # noqa
-            return (r, triangular_vector) if return_points else triangular_vector # noqa
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the object.
-
-        Returns:
-        - str: String representation of the object.
-        """
-        return 'Triangular_1D'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Triangular_1D objects are equal.
-
-        Args:
-        - function (object): The function to compare.
-
-        Returns:
-        - bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.center == self.center and
-                function.width == self.width):
-            return True
-
-class Fourier(Function):
-    """
-    Compute Fourier basis functions on a domain of type [0, P].
-
-    Args:
-    - domain (HyperParalelipiped): Array representing the domain for
-    computation.
-    - type (str): Type of the Fourier function ('sin' or 'cos').
-    - order (int): Order of the Fourier function.
-    """
-
-    def __init__(self, domain: HyperParalelipiped,
-                 type: str, order: int) -> None:
-        """
-        Initialize the Fourier object.
-
-        Args:
-        - domain (HyperParalelipiped): Array representing the domain for
-        computation.
-        - type (str): Type of the Fourier function ('sin' or 'cos').
-        - order (int): Order of the Fourier function.
-        """
-        super().__init__(domain)
-        self.type = type
-        self.order = order
-        self.period = self.domain.bounds[0][1] - self.domain.bounds[0][0]
-
-    def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the Fourier function at given points.
-
-        Args:
-        - r (numpy.ndarray): Points at which to evaluate the function.
-        - check_if_in_domain (bool, optional): Whether to check if points are
-        in the domain. Defaults to True.
-        - return_points (bool, optional): Whether to return the points along
-        with the function values. Defaults to False.
-
-        Returns:
-        - numpy.ndarray: Function values at the given points. If return_points
-        is True, also return the points.
-        """
-        r = np.atleast_1d(r)
-        if check_if_in_domain:
-            in_domain = self.domain.check_if_in_domain(r)
-            if self.order == 0:
-                return (r[in_domain], np.ones_like(r[in_domain]) /
-                        np.sqrt(self.period)) if return_points else np.ones_like(r[in_domain]) / np.sqrt(self.period) # noqa
-            else:
-                if self.type == 'sin':
-                    return (r[in_domain], np.sin(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
-                else:
-                    return (r[in_domain], np.cos(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
-        else:
-            if self.order == 0:
-                return (r, np.ones_like(r) / np.sqrt(self.period)) if return_points else np.ones_like(r) / np.sqrt(self.period) # noqa
-            else:
-                if self.type == 'sin':
-                    return (r, np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
-                else:
-                    return (r, np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
-
-    def plot(self):
-        """
-        Plot the Fourier function over the domain.
-        """
-        plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
-        plt.show()
-
-    def __str__(self) -> str:
-        """
-        Return a string representation of the object.
-
-        Returns:
-        - str: String representation of the object.
-        """
-        return 'Fourier'
-
-    def __eq__(self, function: object) -> bool:
-        """
-        Check if two Fourier objects are equal.
-
-        Args:
-        - function (object): The function to compare.
-
-        Returns:
-        - bool: True if the functions are equal, False otherwise.
-        """
-        if (function.__str__() == self.__str__() and
-                function.domain == self.domain and
-                function.type == self.type and
-                function.order == self.order):
+        if (function.__str__() == self.__str__() and # noqa
+                function.domain == self.domain and # noqa
+                np.array_equal(function.values, self.values) and # noqa
+                np.array_equal(function.raw_domain, self.raw_domain)):
             return True
