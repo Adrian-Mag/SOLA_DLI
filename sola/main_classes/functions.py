@@ -927,15 +927,14 @@ class Gaussian_Bump_1D(Function):
         self.width = width
         self.pointiness = pointiness
         self.unimodularity_precision = unimodularity_precision
-        self._normalization_stored = None
+        self._normalization_stored = self._compute_normalization()
 
     def plot(self) -> None:
         """Plots the function over the domain mesh."""
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
         plt.show()
 
-    @property
-    def normalization(self) -> float:
+    def _compute_normalization(self) -> float:
         """
         Computes the normalization of the function.
 
