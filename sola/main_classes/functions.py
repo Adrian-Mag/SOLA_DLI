@@ -2786,12 +2786,13 @@ class NormalModes_1D(Function):
             Function values at the points
         """
         r = np.atleast_1d(r)
-        shifted_poly = np.zeros_like(r)
-        for i in range(self.order):
-            shifted_domain = r - self.shifts[i] * (np.max(r) - np.min(r))
-            shifted_poly += np.power(shifted_domain, i + 1)
-        sin_poly = np.sin(r * self.frequency +
-                          self.shift / (np.max(r) - np.min(r))) * shifted_poly
+        shifted_domains = r[:, None] - self.shifts * self.domain.total_measure
+        powers = np.arange(1, self.order + 1)
+        #shifted_poly = np.sum(shifted_domains ** powers, axis=1)
+        np.power(shifted_domains, powers, out=shifted_domains)
+        shifted_poly = np.sum(shifted_domains, axis=1)
+        sin_poly = np.sin(r * self.frequency + self.shift /
+                            self.domain.total_measure) * shifted_poly
 
         if self.no_sensitivity_regions is not None:
             for region in self.no_sensitivity_regions:
