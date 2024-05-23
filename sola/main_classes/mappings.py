@@ -405,7 +405,7 @@ class IntegralMapping(Mapping):
             result = result + intermediary_result[index, 0] * kernel
         return result
 
-    def map(self, member: spaces.PCb, fineness=None):
+    def map(self, member: spaces.PCb, fineness=1000):
         """
         Map a member from the domain to the codomain using integration.
 
@@ -416,13 +416,9 @@ class IntegralMapping(Mapping):
         Returns:
         - The result of mapping the input member.
         """
-        if fineness is None:
-            mesh = self.domain.domain.mesh
-        else:
-            mesh = self.domain.domain.dynamic_mesh(fineness)
         result = np.empty((self.codomain.dimension, 1))
         for index, kernel in enumerate(self.kernels):
-            result[index, 0] = scipy.integrate.simpson((kernel * member).evaluate(mesh), mesh) # noqa
+            result[index, 0] = self.domain.inner_product(kernel, member, fineness) # noqa
         return result
 
     @property
