@@ -449,7 +449,7 @@ class IntegralMapping(Mapping):
             self._gram_matrix_stored = self._compute_GramMatrix()
             return self._gram_matrix_stored
 
-    def _compute_GramMatrix(self, return_matrix_only=False):
+    def _compute_GramMatrix(self, return_matrix_only: bool = False, parallel: bool = True):
         """
         Compute the Gram matrix associated with the IntegralMapping.
 
@@ -462,19 +462,22 @@ class IntegralMapping(Mapping):
         """
         GramMatrix = np.empty((self.codomain.dimension,
                                self.codomain.dimension))
-        """ for i in range(self.codomain.dimension):
-            for j in range(i, self.codomain.dimension):
-                entry = self.domain.inner_product(self.kernels[i],
-                                                  self.kernels[j])
-                GramMatrix[i, j] = entry
-                if i != j:
-                    GramMatrix[j, i] = entry """
-        with Pool() as p:
-            entries = p.starmap(self._compute_GramMatrix_entry, [(i, j) for i in range(self.codomain.dimension) for j in range(i, self.codomain.dimension)])
-        for entry in entries:
-            GramMatrix[entry[0], entry[1]] = entry[2]
-            if entry[0] != entry[1]:
-                GramMatrix[entry[1], entry[0]] = entry[2]
+        if not parallel:
+            for i in range(self.codomain.dimension):
+                for j in range(i, self.codomain.dimension):
+                    entry = self.domain.inner_product(self.kernels[i],
+                                                    self.kernels[j])
+                    GramMatrix[i, j] = entry
+                    if i != j:
+                        GramMatrix[j, i] = entry
+        else:
+            with Pool() as p:
+                entries = p.starmap(self._compute_GramMatrix_entry,
+                                    [(i, j) for i in range(self.codomain.dimension) for j in range(i, self.codomain.dimension)])
+            for entry in entries:
+                GramMatrix[entry[0], entry[1]] = entry[2]
+                if entry[0] != entry[1]:
+                    GramMatrix[entry[1], entry[0]] = entry[2]
 
         if return_matrix_only:
             return GramMatrix

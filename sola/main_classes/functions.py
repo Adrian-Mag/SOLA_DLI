@@ -8,6 +8,7 @@ from scipy.interpolate import interp1d
 import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.use('TkAgg')
+from numba import jit
 
 
 class Function(ABC):
@@ -666,33 +667,18 @@ class Null_1D(Function):
         plt.ylabel("Function values")
         plt.show()
 
+
     def evaluate(self, r, check_if_in_domain=True, return_points=False):
-        """
-        Evaluate the null function at a given point or array of points.
+        r = np.atleast_1d(r)
 
-        Args:
-            r (float or numpy.ndarray): The point(s) at which to evaluate the
-            function.
-            check_if_in_domain (bool, optional): Whether to check if the points
-            are in the domain. Defaults to True.
-
-        Returns:
-            tuple: A tuple containing the points at which the function was
-            evaluated and the function values.
-        """
-
-        r = np.array(r, ndmin=1)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], np.zeros_like(r[in_domain])
-            else:
-                return np.zeros_like(r[in_domain])
+            r = r[in_domain]
+
+        if return_points:
+            return r, np.zeros_like(r)
         else:
-            if return_points:
-                return r, np.zeros_like(r)
-            else:
-                return np.zeros_like(r)
+            return np.zeros_like(r)
 
     def __str__(self) -> str:
         """
@@ -759,18 +745,15 @@ class Constant_1D(Function):
             tuple: A tuple containing the points at which the function was
             evaluated and the function values.
         """
-        r = np.array(r, ndmin=1)
+        r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], np.full_like(r[in_domain], self.value)
-            else:
-                return np.full_like(r[in_domain], self.value)
+            r = r[in_domain]
+
+        if return_points:
+            return r, np.full_like(r, self.value)
         else:
-            if return_points:
-                return r, np.full_like(r, self.value)
-            else:
-                return np.full_like(r, self.value)
+            return np.full_like(r, self.value)
 
     def __str__(self) -> str:
         """
@@ -787,6 +770,14 @@ class Constant_1D(Function):
                 function.value == self.value):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_ComplexExponential_1D(r, frequency, domain_total_measure,
+                                    check_if_in_domain):
+    fourier_vector = np.exp(-2 * np.pi * frequency * 1j * r /
+                                domain_total_measure
+                                ) / domain_total_measure
+    return fourier_vector
 
 class ComplexExponential_1D(Function):
     """
@@ -843,21 +834,18 @@ class ComplexExponential_1D(Function):
             array_like
                 The values of the complex exponential function at the points r.
         """
-        r = np.array(r, ndmin=1)
-        fourier_vector = np.exp(-2 * np.pi * self.frequency * 1j * r / # noqa
-                                self.domain.total_measure
-                                ) / self.domain.total_measure
+        r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], fourier_vector[in_domain]
-            else:
-                return fourier_vector[in_domain]
+            r = r[in_domain]
+
+        fourier_vector = _evaluate_ComplexExponential_1D(
+            r, self.frequency, self.domain.total_measure, check_if_in_domain)
+
+        if return_points:
+            return r, fourier_vector
         else:
-            if return_points:
-                return r, fourier_vector
-            else:
-                return fourier_vector
+            return fourier_vector
 
     def __str__(self) -> str:
         """Returns the string representation of the ComplexExponential_1D
@@ -870,6 +858,33 @@ class ComplexExponential_1D(Function):
                 function.frequency == self.frequency):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_Gaussian_Bump_1D(r: np.ndarray, center, width, pointiness, _normalization) -> np.ndarray:
+        """
+        Computes the bump function at given points.
+
+        Parameters
+        ----------
+        r : np.ndarray
+            Points at which to compute the bump function
+
+        Returns
+        -------
+        np.ndarray
+            The bump function values at the points
+        """
+        where_compact = np.where((r > (center - width / 2)) &
+                                 (r < (center + width / 2)))
+        r_compact = r[where_compact]
+        r_compact_centered = r_compact - center
+        bump = np.zeros(np.shape(r))
+        aaa = np.exp(((width/2)**4 - pointiness * r_compact_centered**2 * (r_compact_centered**2 - (width/2)**2)) / # noqa
+                                     ((width/2)**2 * r_compact_centered**2 - (width/2)**4)) # noqa
+        bump[where_compact] = aaa
+        bump = np.where(np.isfinite(bump), bump, 0)
+        bump /= _normalization
+        return bump
 
 class Gaussian_Bump_1D(Function):
     """
@@ -927,7 +942,7 @@ class Gaussian_Bump_1D(Function):
         self.width = width
         self.pointiness = pointiness
         self.unimodularity_precision = unimodularity_precision
-        self._normalization_stored = self._compute_normalization()
+        self._normalization = self._compute_normalization()
 
     def plot(self) -> None:
         """Plots the function over the domain mesh."""
@@ -943,38 +958,9 @@ class Gaussian_Bump_1D(Function):
         float
             The normalization of the function
         """
-        if self._normalization_stored is None:
-            area = scipy.integrate.quad(
-                lambda x: np.exp(1 / (x**2 - 1) - self.pointiness * x**2), -1, 1)[0] # noqa
-            return (self.width / 2) * area
-        else:
-            return self._normalization_stored
-
-    def _compute_bump(self, r: np.ndarray) -> np.ndarray:
-        """
-        Computes the bump function at given points.
-
-        Parameters
-        ----------
-        r : np.ndarray
-            Points at which to compute the bump function
-
-        Returns
-        -------
-        np.ndarray
-            The bump function values at the points
-        """
-        where_compact = np.where((r > (self.center - self.width / 2)) &
-                                 (r < (self.center + self.width / 2)))
-        r_compact = r[where_compact]
-        r_compact_centered = r_compact - self.center
-        bump = np.zeros_like(r, dtype=float)
-        aaa = np.exp(((self.width/2)**4 - self.pointiness * r_compact_centered**2 * (r_compact_centered**2 - (self.width/2)**2)) / # noqa
-                                     ((self.width/2)**2 * r_compact_centered**2 - (self.width/2)**4)) # noqa
-        bump[where_compact] = aaa
-        bump = np.where(np.isfinite(bump), bump, 0)
-        bump /= self.normalization
-        return bump
+        area = scipy.integrate.quad(
+            lambda x: np.exp(1 / (x**2 - 1) - self.pointiness * x**2), -1, 1)[0] # noqa
+        return (self.width / 2) * area
 
     def evaluate(self, r: Union[float, np.ndarray],
                  check_if_in_domain: bool = True,
@@ -1000,15 +986,13 @@ class Gaussian_Bump_1D(Function):
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if retrun_points:
-                return r[in_domain], self._compute_bump(r[in_domain])
-            else:
-                return self._compute_bump(r[in_domain])
+            r = r[in_domain]
+        result = _evaluate_Gaussian_Bump_1D(r, self.center, self.width,
+                                            self.pointiness, self._normalization)
+        if retrun_points:
+            return r, result
         else:
-            if retrun_points:
-                return r, self._compute_bump(r)
-            else:
-                return self._compute_bump(r)
+            return result
 
     def __str__(self) -> str:
         """Returns the string representation of the class."""
@@ -1022,6 +1006,22 @@ class Gaussian_Bump_1D(Function):
                 function.pointiness == self.pointiness):
             return True
 
+
+@jit(nopython=True)
+def _compute_multiplier(r_compact_centered, width, pointiness) -> np.ndarray:
+    """
+    Compute the multiplier for the Gaussian function.
+
+    Args:
+        r (numpy.ndarray): Points at which to compute the multiplier.
+
+    Returns:
+        numpy.ndarray: The multiplier values at the points.
+    """
+    multiplier = (-(2 * pointiness * r_compact_centered) / (width / 2)**2 # noqa
+                    -(2 * (width/2)**2 * r_compact_centered) / ((r_compact_centered**2 - (width/2)**2)**2)) # noqa
+    multiplier[~np.isfinite(multiplier)] = 0
+    return multiplier
 
 class Dgaussian_Bump_1D(Function):
     """
@@ -1074,21 +1074,6 @@ class Dgaussian_Bump_1D(Function):
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
         plt.show()
 
-    def _compute_multiplier(self,
-                            r_compact_centered: np.ndarray) -> np.ndarray:
-        """
-        Compute the multiplier for the Gaussian function.
-
-        Args:
-            r (numpy.ndarray): Points at which to compute the multiplier.
-
-        Returns:
-            numpy.ndarray: The multiplier values at the points.
-        """
-        multiplier = (-(2 * self.pointiness * r_compact_centered) / (self.width / 2)**2 # noqa
-                      -(2 * (self.width/2)**2 * r_compact_centered) / ((r_compact_centered**2 - (self.width/2)**2)**2)) # noqa
-        multiplier[~np.isfinite(multiplier)] = 0
-        return multiplier
 
     def evaluate(self, r: np.ndarray,
                  check_if_in_domain: bool = True,
@@ -1105,39 +1090,25 @@ class Dgaussian_Bump_1D(Function):
             tuple: Tuple containing points and corresponding function values.
         """
         r = np.atleast_1d(r)
-
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            dbump = np.zeros_like(r[in_domain])
-            where_compact = np.where((r[in_domain] > (self.center - self.width/2)) & # noqa
-                                     (r[in_domain] < (self.center + self.width/2))) # noqa
-            r_compact = r[in_domain][where_compact]
-            r_compact_centered = r_compact - self.center
+            r = r[in_domain]
+        dbump = np.zeros_like(r)
+        where_compact = np.where((r> (self.center - self.width/2)) &
+                                    (r< (self.center + self.width/2)))
 
-            multiplier = self._compute_multiplier(r_compact_centered)
-            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
-                                    width=self.width,
-                                    pointiness=self.pointiness)
-            dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
-            if return_points:
-                return r[in_domain], dbump[in_domain]
-            else:
-                return dbump[in_domain]
+        r_compact = r[where_compact]
+        r_compact_centered = r_compact - self.center
+        multiplier = _compute_multiplier(r_compact_centered,
+                                         self.width, self.pointiness)
+        bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
+                                width=self.width,
+                                pointiness=self.pointiness)
+        dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
+        if return_points:
+            return r, dbump
         else:
-            dbump = np.zeros_like(r)
-            where_compact = np.where((r > (self.center - self.width/2)) & # noqa
-                                     (r < (self.center + self.width/2))) # noqa
-            r_compact = r[where_compact]
-            r_compact_centered = r_compact - self.center
-            multiplier = self._compute_multiplier(r_compact_centered)
-            bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
-                                    width=self.width,
-                                    pointiness=self.pointiness)
-            dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
-            if return_points:
-                return r, dbump
-            else:
-                return dbump
+            return dbump
 
     def __str__(self) -> str:
         """
@@ -1165,6 +1136,12 @@ class Dgaussian_Bump_1D(Function):
                 function.pointiness == self.pointiness):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_Gaussian_1D(r, center, spread, _normalization):
+    r_normalized = (r - center) / spread
+    gaussian_vector = _normalization * np.exp(-0.5 * (r_normalized) ** 2) # noqa
+    return gaussian_vector
 
 class Gaussian_1D(Function):
     """
@@ -1195,7 +1172,7 @@ class Gaussian_1D(Function):
         self.width = width
         self.unimodularity_precision = unimodularity_precision
         self.spread = self.width / (5 * np.sqrt(2 * np.log(2)))
-        self.normalization = (1 / (self.spread * np.sqrt(2 * np.pi)))
+        self._normalization = (1 / (self.spread * np.sqrt(2 * np.pi)))
 
     def plot(self):
         """
@@ -1226,20 +1203,14 @@ class Gaussian_1D(Function):
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            r_in_domain = r[in_domain]
-            r_normalized = (r_in_domain - self.center) / self.spread
-            gaussian_vector = self.normalization * np.exp(-0.5 * (r_normalized) ** 2) # noqa
-            if return_points:
-                return r_in_domain, gaussian_vector
-            else:
-                return gaussian_vector
+            r = r[in_domain]
+        result = _evaluate_Gaussian_1D(r, self.center, self.spread,
+                                       self._normalization)
+        if return_points:
+            return r, result
         else:
-            r_normalized = (r - self.center) / self.spread
-            gaussian_vector = self.normalization * np.exp(-0.5 * (r_normalized) ** 2) # noqa
-            if return_points:
-                return r, gaussian_vector
-            else:
-                return gaussian_vector
+            return result
+
 
     def __str__(self) -> str:
         """
@@ -1267,6 +1238,11 @@ class Gaussian_1D(Function):
             return True
 
 
+def _evaluate_Moorlet_1D(r, center, spread, frequency, _normalization):
+    moorlet_vector = np.cos(frequency * (r - center)) \
+                * np.exp(-0.5 * ((r - center) / spread) ** 2)
+    return moorlet_vector / _normalization
+
 class Moorlet_1D(Function):
     """
     Compute the Moorlet function over a given domain.
@@ -1287,7 +1263,7 @@ class Moorlet_1D(Function):
         self.spread = spread
         self.frequency = frequency
         self.unimodularity_precision = unimodularity_precision
-        self.normalization = self._compute_normalization()
+        self._normalization = self._compute_normalization()
 
     def plot(self):
         """
@@ -1329,19 +1305,14 @@ class Moorlet_1D(Function):
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            moorlet_vector = np.cos(self.frequency * (r[in_domain] - self.center)) \
-                * np.exp(-0.5 * ((r[in_domain] - self.center) / self.spread) ** 2) # noqa
-            if return_points:
-                return r[in_domain], moorlet_vector / self.normalization
-            else:
-                return moorlet_vector / self.normalization
+            r = r[in_domain]
+        result = _evaluate_Moorlet_1D(r, self.center, self.spread,
+                                      self.frequency, self._normalization)
+        if return_points:
+            return r, result
         else:
-            moorlet_vector = np.cos(self.frequency * (r - self.center)) \
-                * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
-            if return_points:
-                return r, moorlet_vector / self.normalization
-            else:
-                return moorlet_vector / self.normalization
+            return result
+
 
     def __str__(self) -> str:
         """
@@ -1369,6 +1340,11 @@ class Moorlet_1D(Function):
                 function.frequency == self.frequency):
             return True
 
+@jit(nopython=True)
+def _evaluate_Haar_1D(r, center, width):
+    scaled_domain = (r - center) / width
+    haar_vector = 4 * np.where((scaled_domain >= -0.5) & (scaled_domain < 0.5), np.sign(scaled_domain), 0) / width**2 # noqa
+    return haar_vector
 
 class Haar_1D(Function):
     """
@@ -1418,19 +1394,15 @@ class Haar_1D(Function):
             If return_points is False, returns only the function values.
         """
         r = np.atleast_1d(r)
-        scaled_domain = (r - self.center) / self.width
-        haar_vector = 4 * np.where((scaled_domain >= -0.5) & (scaled_domain < 0.5), np.sign(scaled_domain), 0) / self.width**2 # noqa
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], haar_vector[in_domain]
-            else:
-                return haar_vector[in_domain]
+            r = r[in_domain]
+
+        result = _evaluate_Haar_1D(r, self.center, self.width)
+        if return_points:
+            return r, result
         else:
-            if return_points:
-                return r, haar_vector
-            else:
-                return haar_vector
+            return result
 
     def __str__(self) -> str:
         """
@@ -1458,6 +1430,13 @@ class Haar_1D(Function):
             return True
 
 
+@jit(nopython=True)
+def _evaluate_Ricker_1D(r, center, width, _normalization, _specific_width):
+    vector = _normalization * (1 - ((r - center) /
+                            _specific_width)**2) * np.exp(
+            -0.5 * ((r - center) / _specific_width)**2) # noqa
+    return vector
+
 class Ricker_1D(Function):
     """
     Compute the Ricker wavelet function over a given domain.
@@ -1481,6 +1460,8 @@ class Ricker_1D(Function):
         super().__init__(domain)
         self.center = center
         self.width = width
+        self._normalization = 2 / (np.sqrt(3 * self.width) * (np.pi ** 0.25))
+        self._specific_width = self.width / 7
 
     def plot(self):
         """
@@ -1505,25 +1486,18 @@ class Ricker_1D(Function):
             tuple containing points and corresponding function values.
             If return_points is False, returns only the function values.
         """
-        A = 2 / (np.sqrt(3 * self.width) * (np.pi ** 0.25))
-        ricker_specific_width = self.width / 7
+
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            vector = A * (1 - ((r[in_domain] - self.center) /
-                               ricker_specific_width)**2) * np.exp(
-                -0.5 * ((r[in_domain] - self.center) / ricker_specific_width)**2) # noqa
-            if return_points:
-                return r[in_domain], vector
-            else:
-                return vector
+            r = r[in_domain]
+
+        result = _evaluate_Ricker_1D(r, self.center, self.width,
+                                    self._normalization, self._specific_width)
+        if return_points:
+            return r, result
         else:
-            vector = A * (1 - ((r - self.center) / ricker_specific_width) ** 2) * np.exp( # noqa
-                -0.5 * ((r - self.center) / ricker_specific_width) ** 2)
-            if return_points:
-                return r, vector
-            else:
-                return vector
+            return result
 
     def __str__(self) -> str:
         """
@@ -1550,6 +1524,13 @@ class Ricker_1D(Function):
                 function.width == self.width):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_Dgaussian_1D(r, center, spread):
+    r_normalized = (r - center) / spread
+    Dgaussian_vector = (r_normalized / (spread ** 2 * np.sqrt(2 * np.pi))) * np.exp( # noqa
+                -0.5 * (r_normalized ** 2))
+    return Dgaussian_vector
 
 class Dgaussian_1D(Function):
     """
@@ -1602,19 +1583,13 @@ class Dgaussian_1D(Function):
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            Dgaussian_vector = ((r[in_domain] - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
-                -0.5 * ((r[in_domain] - self.center) / self.spread) ** 2)
-            if return_points:
-                return r[in_domain], Dgaussian_vector
-            else:
-                return Dgaussian_vector
+            r = r[in_domain]
+
+        result = _evaluate_Dgaussian_1D(r, self.center, self.spread)
+        if return_points:
+            return r, result
         else:
-            Dgaussian_vector = ((r - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
-                -0.5 * ((r - self.center) / self.spread) ** 2)
-            if return_points:
-                return r, Dgaussian_vector
-            else:
-                return Dgaussian_vector
+            return result
 
     def __str__(self) -> str:
         """
@@ -1641,6 +1616,12 @@ class Dgaussian_1D(Function):
                 function.width == self.width):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_Boxcar_1D(r, center, width):
+    scaled_domain = (r - center) / width
+    boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / width, 0) # noqa
+    return boxcar_vector
 
 class Boxcar_1D(Function):
     """
@@ -1700,19 +1681,13 @@ class Boxcar_1D(Function):
 
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            scaled_domain = (r[in_domain] - self.center) / self.width
-            boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
-            if return_points:
-                return r[in_domain], boxcar_vector
-            else:
-                return boxcar_vector
+            r = r[in_domain]
+
+        result = _evaluate_Boxcar_1D(r, self.center, self.width)
+        if return_points:
+            return r, result
         else:
-            scaled_domain = (r - self.center) / self.width
-            boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
-            if return_points:
-                return r, boxcar_vector
-            else:
-                return boxcar_vector
+            return result
 
     def __str__(self) -> str:
         """
@@ -1739,6 +1714,17 @@ class Boxcar_1D(Function):
                 function.width == self.width):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_Bump_1D(r, center, width, _normalization):
+    limits = [-0.5 * width + center,
+                    0.5 * width + center]
+    mask = (r > limits[0]) & (r < limits[1])
+    bump_vector = np.zeros_like(r)
+    bump_vector[mask] = np.exp(
+        1 / ((2 * (r[mask] - center) / width) ** 2 - 1))
+
+    return bump_vector / _normalization
 
 class Bump_1D(Function):
     """
@@ -1772,7 +1758,7 @@ class Bump_1D(Function):
         self.center = center
         self.width = width
         self.unimodularity_precision = unimodularity_precision
-        self.normalization = self._compute_normalization()
+        self._normalization = self._compute_normalization()
 
     def plot(self):
         """
@@ -1787,13 +1773,12 @@ class Bump_1D(Function):
         """
         limits = [-0.5 * self.width + self.center,
                   0.5 * self.width + self.center]
-        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) >= limits[0]) & ( # noqa
-                    self.domain.dynamic_mesh(self.unimodularity_precision) <= limits[1]) # noqa
-        bump_vector = np.zeros_like(self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
+        computation_mesh = self.domain.dynamic_mesh(self.unimodularity_precision)
+        mask = (computation_mesh >= limits[0]) & (computation_mesh <= limits[1])
+        bump_vector = np.zeros_like(computation_mesh)
         bump_vector[mask] = np.exp(
-            1 / ((2 * (self.domain.dynamic_mesh(self.unimodularity_precision)[mask] - self.center) / self.width) ** 2 - 1)) # noqa
-        area = np.trapz(bump_vector[mask],
-                        self.domain.dynamic_mesh(self.unimodularity_precision)[mask]) # noqa
+            1 / ((2 * (computation_mesh[mask] - self.center) / self.width) ** 2 - 1))
+        area = np.trapz(bump_vector[mask], computation_mesh[mask])
         return area
 
     def evaluate(self, r, check_if_in_domain=True, return_points=False):
@@ -1816,29 +1801,14 @@ class Bump_1D(Function):
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
-            bump_vector = np.zeros_like(r[in_domain])
-            bump_vector[mask] = np.exp(
-                1 / ((2 * (r[in_domain][mask] - self.center) / self.width) ** 2 - 1)) # noqa
-            if return_points:
-                return r[in_domain], bump_vector / self.normalization
-            else:
-                return bump_vector / self.normalization
+            r = r[in_domain]
+
+        result = _evaluate_Bump_1D(r, self.center, self.width,
+                                   self._normalization)
+        if return_points:
+            return r, result
         else:
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r > limits[0]) & (r < limits[1])
-            bump_vector = np.zeros_like(r)
-            bump_vector[mask] = np.exp(
-                1 / ((2 * (r[mask] - self.center) / self.width) ** 2 - 1))
-            bump_vector[mask] = np.nan_to_num(bump_vector[mask], nan=0.0,
-                                              posinf=0.0, neginf=0.0)
-            if return_points:
-                return r, bump_vector / self.normalization
-            else:
-                return bump_vector / self.normalization
+            return result
 
     def __str__(self) -> str:
         """
@@ -1890,23 +1860,23 @@ class Dbump_1D(Function):
         self.center = center
         self.width = width
         self.unimodularity_precision = unimodularity_precision
-        self.area = self._compute_area()
+        self._normalization = self._compute_normalization()
 
     def plot(self):
         """Plot the Bump function over the domain."""
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh))
         plt.show()
 
-    def _compute_area(self):
+    def _compute_normalization(self):
         """Compute the area under the Bump function."""
         limits = [-0.5 * self.width + self.center,
                   0.5 * self.width + self.center]
-        mask = (self.domain.dynamic_mesh(self.unimodularity_precision) > limits[0]) & ( # noqa
-                    self.domain.dynamic_mesh(self.unimodularity_precision) < limits[1]) # noqa
-        bump_vector = np.zeros_like(self.domain.dynamic_mesh(self.unimodularity_precision)) # noqa
+        computation_mesh = self.domain.dynamic_mesh(self.unimodularity_precision)
+        mask = (computation_mesh >= limits[0]) & (computation_mesh <= limits[1])
+        bump_vector = np.zeros_like(computation_mesh)
         bump_vector[mask] = np.exp(
-            1 / ((2 * (self.domain.dynamic_mesh(self.unimodularity_precision)[mask] - self.center) / self.width) ** 2 - 1)) # noqa
-        area = np.trapz(bump_vector[mask], self.domain.dynamic_mesh(self.unimodularity_precision)[mask]) # noqa
+            1 / ((2 * (computation_mesh[mask] - self.center) / self.width) ** 2 - 1))
+        area = np.trapz(bump_vector[mask], computation_mesh[mask])
         return area
 
     def evaluate(self, r, check_if_in_domain=True, return_points=False):
@@ -1927,31 +1897,23 @@ class Dbump_1D(Function):
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
-            bump_vector = np.zeros_like(r[in_domain])
-            bump_vector = Bump_1D(domain=self.domain, center=self.center,
-                                  width=self.width).evaluate(r[in_domain])
-            multiplier =  8 * (self.width**2) * (r[in_domain][mask] - self.center) / ( # noqa
-                    (2 * (r[in_domain][mask] - self.center))**2 - self.width**2)**2 # noqa
-            multiplier = np.nan_to_num(multiplier, nan=0.0,
-                                       posinf=0.0, neginf=0.0)
-            bump_vector[mask] = multiplier * bump_vector[mask]
-            return (r[in_domain], bump_vector / self.area) if return_points else bump_vector / self.area # noqa
+            r = r[in_domain]
+
+        limits = [-0.5 * self.width + self.center,
+                    0.5 * self.width + self.center]
+        mask = (r > limits[0]) & (r < limits[1])
+        bump_vector = np.zeros_like(r)
+        bump_vector = Bump_1D(domain=self.domain, center=self.center,
+                                width=self.width).evaluate(r)
+        multiplier =  8 * (self.width**2) * (r[mask] - self.center) / ( # noqa
+                (2 * (r[mask] - self.center))**2 - self.width**2)**2 # noqa
+
+        bump_vector[mask] = multiplier * bump_vector[mask]
+
+        if return_points:
+            return r, bump_vector / self._normalization
         else:
-            limits = [-0.5 * self.width + self.center,
-                      0.5 * self.width + self.center]
-            mask = (r > limits[0]) & (r < limits[1])
-            bump_vector = np.zeros_like(r)
-            bump_vector = Bump_1D(domain=self.domain, center=self.center,
-                                  width=self.width).evaluate(r)
-            multiplier =  8 * (self.width**2) * (r[mask] - self.center) / ( # noqa
-                    (2 * (r[mask] - self.center))**2 - self.width**2)**2 # noqa
-            multiplier = np.nan_to_num(multiplier, nan=0.0,
-                                       posinf=0.0, neginf=0.0)
-            bump_vector[mask] = multiplier * bump_vector[mask]
-            return (r, bump_vector / self.area) if return_points else bump_vector / self.area # noqa
+            return bump_vector / self._normalization
 
     def __str__(self) -> str:
         """Return a string representation of the object."""
@@ -1965,6 +1927,13 @@ class Dbump_1D(Function):
                 function.width == self.width):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_Triangular_1D(r, left_limit, right_limit, center, width):
+    mask = (r >= left_limit) & (r <= right_limit)
+    triangular_vector = np.zeros_like(r)
+    triangular_vector[mask] = 2 / width - 4 * np.abs(r[mask] - center) / width**2 # noqa
+    return triangular_vector
 
 class Triangular_1D(Function):
     """
@@ -2018,15 +1987,14 @@ class Triangular_1D(Function):
                   0.5 * self.width + self.center]
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            mask = (r[in_domain] >= limits[0]) & (r[in_domain] <= limits[1])
-            triangular_vector = np.zeros_like(r[in_domain])
-            triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[in_domain][mask] - self.center) / self.width**2 # noqa
-            return (r[in_domain], triangular_vector) if return_points else triangular_vector # noqa
+            r = r[in_domain]
+
+        result = _evaluate_Triangular_1D(r, limits[0], limits[1],
+                                         self.center, self.width)
+        if return_points:
+            return r, result
         else:
-            mask = (r >= limits[0]) & (r <= limits[1])
-            triangular_vector = np.zeros_like(r)
-            triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[mask] - self.center) / self.width**2 # noqa
-            return (r, triangular_vector) if return_points else triangular_vector # noqa
+            return result
 
     def __str__(self) -> str:
         """
@@ -2053,6 +2021,16 @@ class Triangular_1D(Function):
                 function.width == self.width):
             return True
 
+
+@jit(nopython=True)
+def _evaluate_Fourier(r, type, order, period):
+    if order == 0:
+        return np.ones_like(r) / np.sqrt(period)
+    else:
+        if type == 'sin':
+            return np.sin(2 * np.pi * order * r / period) * np.sqrt(2 / period)
+        else:
+            return np.cos(2 * np.pi * order * r / period) * np.sqrt(2 / period)
 
 class Fourier(Function):
     """
@@ -2099,22 +2077,14 @@ class Fourier(Function):
         r = np.atleast_1d(r)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if self.order == 0:
-                return (r[in_domain], np.ones_like(r[in_domain]) /
-                        np.sqrt(self.period)) if return_points else np.ones_like(r[in_domain]) / np.sqrt(self.period) # noqa
-            else:
-                if self.type == 'sin':
-                    return (r[in_domain], np.sin(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
-                else:
-                    return (r[in_domain], np.cos(2*np.pi*self.order*r[in_domain] / self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r[in_domain]/self.period) * np.sqrt(2/self.period) # noqa
+            r = r[in_domain]
+
+        result = _evaluate_Fourier(r, self.type, self.order,
+                                        self.period)
+        if return_points:
+            return r, result
         else:
-            if self.order == 0:
-                return (r, np.ones_like(r) / np.sqrt(self.period)) if return_points else np.ones_like(r) / np.sqrt(self.period) # noqa
-            else:
-                if self.type == 'sin':
-                    return (r, np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.sin(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
-                else:
-                    return (r, np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period)) if return_points else np.cos(2*np.pi*self.order*r/self.period) * np.sqrt(2/self.period) # noqa
+            return result
 
     def plot(self):
         """
@@ -2152,6 +2122,8 @@ class Fourier(Function):
 ##################
 # Random Functions
 ##################
+
+# Not jit-ed yet because I don't use them very often. May jit them later
 class SinusoidalPolynomial_1D(Function):
     """
     A class used to represent a 1D sinusoidal polynomial function.
@@ -2643,6 +2615,59 @@ class SinusoidalGaussianPolynomial_1D(Function):
             return True
 
 
+@jit(nopython=True)
+def _evaluate_NormalModes_1D(r, shifts, total_measure, order, no_sensitivity_regions,
+                  frequency, shift, mean, std_dev):
+    """
+    This is specifically made for jit acceleration.
+    Evaluate a function that combines a polynomial, a sinusoidal, and a Gaussian
+    component.
+
+    Args:
+        r (np.array): The input values at which to evaluate the function.
+        shifts (np.array): The shifts to apply to the input values.
+        total_measure (float): The total measure of the domain.
+        order (int): The order of the polynomial component.
+        no_sensitivity_regions (list of tuples): Regions where the function
+        should be zero.
+        frequency (float): The frequency of the sinusoidal component.
+        shift (float): The phase shift of the sinusoidal component.
+        mean (float): The mean of the Gaussian component.
+        std_dev (float): The standard deviation of the Gaussian component.
+
+    Returns:
+        np.array: The evaluated function at the input values.
+    """
+    # Ensure r is a 1D array
+    r = np.atleast_1d(r)
+
+    # Compute the shifted domains for the polynomial component
+    shifted_domains = r[:, None] - shifts * total_measure
+
+    # Compute the powers for the polynomial component
+    powers = np.arange(1, order + 1)
+
+    # Raise the shifted domains to the computed powers
+    shifted_domains = shifted_domains ** powers
+
+    # Compute the polynomial component
+    shifted_poly = np.sum(shifted_domains, axis=1)
+
+    # Compute the sinusoidal component and multiply it with the polynomial component
+    sin_poly = np.sin(r * frequency + shift / total_measure) * shifted_poly
+
+    # Zero out the function in the no sensitivity regions
+    if no_sensitivity_regions is not None:
+        for region in no_sensitivity_regions:
+            sin_poly[(r >= region[0]) & (r <= region[1])] = 0
+
+    # Compute the Gaussian component
+    gaussian_function = (1 / (std_dev * np.sqrt(2 * np.pi))) * \
+        np.exp(-0.5 * ((r - mean) / std_dev) ** 2)
+
+    # Return the product of the sinusoidal and Gaussian components
+    return sin_poly * gaussian_function
+
 class NormalModes_1D(Function):
     """
     A class used to represent 1D Normal Modes
@@ -2703,7 +2728,7 @@ class NormalModes_1D(Function):
         self.seed = seed
         self.spread = spread
         self.max_freq = max_freq
-        self.no_sensitivity_regions = no_sensitivity_regions
+        self.no_sensitivity_regions = np.array(no_sensitivity_regions) if no_sensitivity_regions is not None else None
         self.coefficients, self.shifts = self.generate_random_parameters()
         func_parameters = self.generate_function_parameters()
         self.mean, self.std_dev, self.frequency, self.shift = func_parameters
@@ -2767,7 +2792,8 @@ class NormalModes_1D(Function):
         return mean, std_dev, frequency, shift
 
     def evaluate(self, r, check_if_in_domain=True,
-                 return_points: bool = False) -> Tuple[np.array, np.array]:
+                 return_points: bool = False,
+                 evaluate_with_jit: bool = True) -> Tuple[np.array, np.array]:
         """
         Evaluates the function at given points.
 
@@ -2785,32 +2811,18 @@ class NormalModes_1D(Function):
         result : np.array
             Function values at the points
         """
-        r = np.atleast_1d(r)
-        shifted_domains = r[:, None] - self.shifts * self.domain.total_measure
-        powers = np.arange(1, self.order + 1)
-        #shifted_poly = np.sum(shifted_domains ** powers, axis=1)
-        np.power(shifted_domains, powers, out=shifted_domains)
-        shifted_poly = np.sum(shifted_domains, axis=1)
-        sin_poly = np.sin(r * self.frequency + self.shift /
-                            self.domain.total_measure) * shifted_poly
-
-        if self.no_sensitivity_regions is not None:
-            for region in self.no_sensitivity_regions:
-                sin_poly[(r >= region[0]) & (r <= region[1])] = 0
-
-        gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * \
-            np.exp(-0.5 * ((r - self.mean) / self.std_dev) ** 2)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], sin_poly[in_domain] * gaussian_function
-            else:
-                return sin_poly[in_domain] * gaussian_function
+            r = r[in_domain]
+
+        result = _evaluate_NormalModes_1D(r, self.shifts, self.domain.total_measure, self.order,
+                              self.no_sensitivity_regions, self.frequency, self.shift,
+                              self.mean, self.std_dev)
+
+        if return_points:
+            return r, result
         else:
-            if return_points:
-                return r, sin_poly * gaussian_function
-            else:
-                return sin_poly * gaussian_function
+            return result
 
     def __str__(self) -> str:
         return 'NormalModes_1D'
@@ -2831,7 +2843,8 @@ class NormalModes_1D(Function):
                 function.shift == self.shift):
             return True
 
-
+# Not jit-ed yet becauser interp1d is not supported by numba. Will have to
+# create my own interpolation functions at some point.
 class Random_1D(Function):
     """
     A class used to represent a one-dimensional random function.
@@ -2983,15 +2996,12 @@ class Random_1D(Function):
         r = np.array(r, ndmin=1)
         if check_if_in_domain:
             in_domain = self.domain.check_if_in_domain(r)
-            if return_points:
-                return r[in_domain], self.function(r[in_domain])
-            else:
-                return self.function(r[in_domain])
+            r = r[in_domain]
+
+        if return_points:
+            return r, self.function(r)
         else:
-            if return_points:
-                return r, self.function(r)
-            else:
-                return self.function(r)
+            return self.function(r)
 
     def __str__(self) -> str:
         """Returns the string representation of the function."""
