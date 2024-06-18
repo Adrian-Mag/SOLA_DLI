@@ -9,7 +9,7 @@ from plotly.subplots import make_subplots
 from sola.aux.other import round_to_sf
 import plotly.graph_objects as go
 from itertools import product
-from matplotlib.colors import LogNorm  # Import LogNorm from colors module
+from matplotlib.colors import LogNorm, Normalize  # Import LogNorm from colors module
 import seaborn as sns
 from matplotlib.ticker import LogFormatter
 import numpy as np
@@ -627,35 +627,43 @@ class Problem():
                                      target_parameter_2: np.ndarray,
                                      quantity: np.ndarray,
                                      uninterpretable_region: np.ndarray,
-                                     ticks: list, colorbar_label: str,
+                                     ticks: list,
                                      xticks, yticks,
                                      xlabel, ylabel, title, plot_colors,
                                      physical_parameters_symbols: list,
                                      cmap: str = None, norm=None,
                                      colorbar_format=None,
                                      fill_betweenx_calls=None, args_list=None):
-        """ Method for plotting some quantity that was evaluated at a uniform
-        grid of 2 target parameters. For each point in the parameter 1 vs
-        parameter 2 grid the plot will also provide a graph of the target
-        kernels and their resolving kernels.
+        """
+        Plots a quantity evaluated on a grid defined by two target parameters. This method also overlays information
+        about target and resolving kernels at each grid point.
 
-        Args:
-            target_parameter_1 (np.ndarray): target parameter on x axis
-            target_parameter_2 (np.ndarray): target parameter on y axis
-            quantity (np.ndarray): what gets plotted uninterpretable_region
-            (np.ndarray): locations of uninterpretable targets ticks (list):
-            tick values for colorbar colorbar_label (str): label for colorbar
-            cmap (str): colormap norm (matplotlib.colors.Normalize, optional):
-            normalization object for the colormap colorbar_format (str,
-            optional): format string for colorbar tick labels xticks (list,
-            optional): x ticks for the main plot yticks (list, optional): y
-            ticks for the main plot xlabel (str): x label ylabel (str): y label
-            title (str): main plot title plot_colors (list): list of colors for
-            the target/resolving kernels physical_parameters_symbols (list):
-            List of math symbols for the legend
+        This method is designed to provide a comprehensive visualization of how a certain quantity varies across a
+        two-dimensional parameter space, with additional insights into the resolution capabilities of the analysis
+        through the display of target and resolving kernels.
+
+        Parameters:
+        - target_parameter_1 (np.ndarray): The first target parameter, defining the x-axis of the grid.
+        - target_parameter_2 (np.ndarray): The second target parameter, defining the y-axis of the grid.
+        - quantity (np.ndarray): The quantity to be plotted over the parameter grid.
+        - uninterpretable_region (np.ndarray): A boolean array indicating grid points that are not interpretable or valid.
+        - ticks (list): Tick values for the colorbar.
+        - xticks: Tick labels for the x-axis.
+        - yticks: Tick labels for the y-axis.
+        - xlabel: Label for the x-axis.
+        - ylabel: Label for the y-axis.
+        - title: Title of the plot.
+        - plot_colors (list): Colors to be used for plotting the target and resolving kernels.
+        - physical_parameters_symbols (list): Symbols representing physical parameters, used in the legend.
+        - cmap (str, optional): Colormap for the quantity plot.
+        - norm (optional): A matplotlib.colors.Normalize instance to scale luminance data.
+        - colorbar_format (optional): Format specification for the colorbar labels.
+        - fill_betweenx_calls (optional): List of functions to fill between for highlighting specific regions.
+        - args_list (optional): List of arguments for each fill_betweenx call.
 
         Returns:
-            plot: interactive plot
+        - An interactive plot displaying the specified quantity over the parameter grid, with additional features
+        such as colorbar, exclusion zones, and interactive kernel analysis on click.
         """
 
         N_target_parameter_1 = len(target_parameter_1)
@@ -671,7 +679,7 @@ class Problem():
         # Add colorbar
         plt.colorbar(ticks=ticks,
                      format=colorbar_format,
-                     shrink=0.7).set_label(colorbar_label, fontsize=20)
+                     shrink=0.7)
 
         # Overlay exclusion zones with diagonal stripes in gray
         for i in range(N_target_parameter_2):
@@ -780,7 +788,37 @@ class Problem():
 
     def resolution_analysis(self, enquiry_points: np.ndarray, widths:np.ndarray,
                             error_type: str, domain: domains.Domain,
-                            physical_parameters_symbols: dict):
+                            physical_parameters_symbols: dict,
+                            ticks: list=None, norm_type: str='log', plot_range: list=None):
+        """
+        Performs a resolution analysis based on the provided enquiry points and widths, and visualizes the results.
+
+        This method is designed to assess and visualize the resolution quality of a geophysical inversion process
+        by analyzing the resolving kernels computed for a set of enquiry points and widths. It supports different
+        types of error analysis including absolute errors, relative errors, and resolution misfit.
+
+        Parameters:
+        - enquiry_points (np.ndarray): Array of enquiry points at which the resolution is evaluated.
+        - widths (np.ndarray): Array of widths defining the scale of analysis around each enquiry point.
+        - error_type (str): Type of error to compute and visualize. Supported values are 'absolute', 'relative',
+        and 'resolution_misfit'.
+        - domain (domains.Domain): The domain over which the analysis is performed, providing context such as
+        bounds and discretization.
+        - physical_parameters_symbols (dict): Dictionary mapping physical parameters to their symbols for
+        visualization purposes.
+        - ticks (list, optional): Tick values for the colorbar. If None, default ticks are used.
+        - norm_type (str, optional): Normalization type for the error visualization. Supported values are 'log'
+        and others as per matplotlib norms.
+        - plot_range (list, optional): The range of values to plot. If None, the range is determined based on
+        the errors.
+
+        Returns:
+        - A plot visualizing the resolution analysis results, including error distributions across the enquiry
+        points and widths, with options for interactive exploration of the resolving kernels.
+        """
+        N_enquiry_points = len(enquiry_points)
+        N_widths = len(widths)
+
         # Ensure necessary computations are done
         if self.A is None:
             self._compute_resolving_kernels()
@@ -791,11 +829,6 @@ class Problem():
                 self._compute_epsilon()
             errors = self.epsilon
         elif error_type == 'relative':
-            # Compute relative errors
-            if self.relative_errors is None:
-                self._compute_relative_errors()
-            errors = self.relative_errors
-        elif error_type == 'relative2':
             # Compute modified relative errors
             if self.relative_errors2 is None:
                 self._compute_relative_errors2()
@@ -807,12 +840,6 @@ class Problem():
             raise ValueError('Error type must be absolute, '
                              'relative, relative2 or resolution_misfit')
 
-        N_enquiry_points = len(enquiry_points)
-        N_widths = len(widths)
-
-        # Compute errors map
-        errors_map = (errors.reshape(N_enquiry_points, N_widths)).T
-
         # Compute exclusion zone
         domain_min, domain_max = domain.bounds[0]
         combinations = list(product(enquiry_points, widths))
@@ -821,13 +848,45 @@ class Problem():
                                     center, spread in combinations])
         exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
 
+        # Compute errors map
+        errors_map = (errors.reshape(N_enquiry_points, N_widths)).T
+
+
         # Set figure parameters
-        ticks = [1, 5, 10, 100, 500, 1000]
-        colorbar_label = 'Relative Error bound as %'
+        if error_type == 'absolute':
+            title = 'Absolute Error Bounds'
+            max_error = np.max(np.abs(errors))
+            if norm_type == 'log':
+                if plot_range is None:
+                    plot_range = [max_error*1e-3, max_error]
+                norm = LogNorm(vmin=plot_range[0], vmax=plot_range[1])
+                if ticks is None:
+                    ticks = np.logspace(plot_range[0], plot_range[1], 5)
+            elif norm_type == 'linear':
+                if plot_range is None:
+                    plot_range = [0, max_error]
+                norm = Normalize(vmin=plot_range[0], vmax=plot_range[1])
+                if ticks is None:
+                    ticks = np.linspace(plot_range[0], plot_range[1], 5)
+        elif error_type == 'relative':
+            title = 'Relative Error Bounds'
+            if plot_range is None:
+                plot_range = [1, 1000]
+            norm = LogNorm(vmin=plot_range[0], vmax=plot_range[1])
+            if ticks is None:
+                ticks = [1, 10, 100, 1000]
+        elif error_type == 'resolution_misfit':
+            title = 'Resolution Misfit'
+            if plot_range is None:
+                plot_range = [0.001, 1]
+            norm = LogNorm(vmin=plot_range[0], vmax=plot_range[1])
+            if ticks is None:
+                ticks = [0.01, 0.1, 1]
+
         xticks = ['{:.2}'.format(point) for point in
-                  enquiry_points[::int(len(enquiry_points) / 10) + 1]]
+                    enquiry_points[::int(len(enquiry_points) / 10) + 1]]
         yticks = ['{:.0%}'.format(spread / (domain_max - domain_min)) for
-                  spread in widths[::int(len(widths) / 10) + 1]]
+                    spread in widths[::int(len(widths) / 10) + 1]]
         colors = sns.color_palette('YlGnBu', n_colors=100)
 
         # Plot the errors map (this gives an interactive plot)
@@ -836,15 +895,14 @@ class Problem():
                                           quantity=errors_map,
                                           uninterpretable_region=exclusion_map,
                                           ticks=ticks,
-                                          colorbar_label=colorbar_label,
                                           xticks=xticks,
                                           yticks=yticks,
                                           xlabel='Enquiry Points',
                                           ylabel='Width',
-                                          title='Relative Error Bounds',
+                                          title=title,
                                           plot_colors=['#5ee22d', colors[99], '#fccd1a'], # noqa
                                           cmap='Blues_r',
-                                          norm=LogNorm(vmin=1, vmax=100),
+                                          norm=norm,
                                           physical_parameters_symbols=list(physical_parameters_symbols.values()), # noqa
                                           colorbar_format=LogFormatter(10, labelOnlyBase=False)) # noqa
 
