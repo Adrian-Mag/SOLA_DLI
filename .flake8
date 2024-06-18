@@ -7,3 +7,4 @@ exclude=
     setup.py
     test.py
 ignore=F401
+ignore=W504

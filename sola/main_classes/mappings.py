@@ -51,8 +51,33 @@ class Mapping(ABC):
 
 
 class Projection(Mapping):
+    """
+    A class representing a projection mapping.
+
+    Attributes:
+        domain (spaces.Space): The domain of the projection.
+        codomain (spaces.Subspace): The codomain of the projection.
+        basis (list): The basis vectors of the codomain.
+        basis_map: The mapping of the basis vectors.
+        basis_map_adj: The adjoint of the basis mapping.
+        gram_matrix: The Gram matrix of the subspace.
+        gram_matrix_inv: The inverse of the Gram matrix.
+
+    Methods:
+        map(member): Maps a member of the domain to the codomain.
+        _compute_gram_matrix(): Computes the Gram matrix of the subspace.
+        adjoint(): Returns the adjoint of the projection.
+    """
+
     def __init__(self, domain: spaces.Space,
                  codomain: spaces.Subspace) -> None:
+        """
+        Constructs a new Projection object.
+
+        Args:
+            domain (spaces.Space): The domain of the projection.
+            codomain (spaces.Subspace): The codomain of the projection.
+        """
         super().__init__(domain, codomain)
         self.basis = codomain.basis
 
@@ -69,11 +94,26 @@ class Projection(Mapping):
         self.gram_matrix_inv = self.gram_matrix.invert()
 
     def map(self, member):
-        pass
+        """
+        Maps a member of the domain to the codomain.
+
+        Args:
+            member: The member of the domain.
+
+        Returns:
+            The mapped member in the codomain.
+        """
+        projected = self.domain.zero
+        for base in self.basis:
+            projected += self.domain.inner_product(member, base) * base
+        return projected
 
     def _compute_gram_matrix(self):
         """
         Computes the Gram matrix of the subspace.
+
+        Returns:
+            The Gram matrix of the subspace.
         """
         gram_matrix = np.zeros((len(self.basis), len(self.basis)))
         for i in range(len(self.basis)):
@@ -87,6 +127,12 @@ class Projection(Mapping):
                                             matrix=gram_matrix)
 
     def adjoint(self):
+        """
+        Returns the adjoint of the projection.
+
+        Returns:
+            The adjoint of the projection.
+        """
         pass
 
 

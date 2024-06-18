@@ -179,11 +179,9 @@ class HyperParalelipiped(Domain):
         """
         if fineness <= 0:
             raise ValueError('The number of samples must be greater than 0.')
-        axes = [
-                np.linspace(bound[0], bound[1], fineness + 2)[1:-1]
+        axes = [np.linspace(bound[0], bound[1], fineness + 2)[1:-1]
                 if self.open else np.linspace(bound[0], bound[1], fineness) # noqa
-                for bound in self.bounds
-                ]
+                for bound in self.bounds]
         if self.dimension == 1:
             mesh = axes[0]
         else:
@@ -217,11 +215,10 @@ class HyperParalelipiped(Domain):
             For domains with two or more dimensions, a list of numpy arrays,
             where each array represents the points along one dimension.
         """
-        axes = [
-                np.linspace(bound[0], bound[1], self.fineness + 2)[1:-1]
+        axes = [np.linspace(bound[0], bound[1], self.fineness + 2)[1:-1]
                 if self.open else np.linspace(bound[0], bound[1], self.fineness) # noqa
-                for bound in self.bounds
-                ]
+                for bound in self.bounds]
+
         if self.dimension == 1:
             mesh = axes[0]
         else:
@@ -310,7 +307,7 @@ class HyperParalelipiped(Domain):
                         self.open else values <= self.bounds[0][1])
             elif isinstance(values, np.ndarray) and values.ndim == 1:
                 return ((values > self.bounds[0][0] if
-                         self.open else values >= self.bounds[0][0]) &
+                         self.open else values >= self.bounds[0][0]) & # noqa
                         (values < self.bounds[0][1] if
                          self.open else values <= self.bounds[0][1]))
             else:

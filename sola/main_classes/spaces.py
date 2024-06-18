@@ -26,11 +26,40 @@ class Space(ABC):
 
 
 class Subspace():
+    """
+    A class representing a subspace within a given space.
+
+    Attributes:
+        space (Space): The space in which the subspace exists.
+        basis (list): The basis vectors defining the subspace.
+
+    Methods:
+        random_member(): Returns a random member of the subspace.
+        inner_product(member1, member2): Returns the inner product of two
+        members of the subspace.
+        norm(member): Returns the norm of a member of the subspace.
+        zero: Returns the zero vector of the subspace.
+    """
+
     def __init__(self, space: Space, basis: list) -> None:
+        """
+        Constructs a new Subspace object.
+
+        Args:
+            space (Space): The space in which the subspace exists.
+            basis (list): The basis vectors defining the subspace.
+        """
         self.space = space
         self.basis = basis
 
-    def random_member(self):
+    def random_member(self, seed: int = None):
+        """
+        Returns a random member of the subspace.
+
+        Returns:
+            The random member of the subspace.
+        """
+        np.random.seed(seed)
         random_coeffcients = np.random.uniform(-100, 100, len(self.basis))
         random_member = self.space.zero
         for base, coefficient in zip(self.basis, random_coeffcients):
@@ -38,13 +67,38 @@ class Subspace():
         return random_member
 
     def inner_product(self, member1, member2):
+        """
+        Returns the inner product of two members of the subspace.
+
+        Args:
+            member1: The first member of the subspace.
+            member2: The second member of the subspace.
+
+        Returns:
+            The inner product of the two members.
+        """
         return self.space.inner_product(member1, member2)
 
     def norm(self, member):
+        """
+        Returns the norm of a member of the subspace.
+
+        Args:
+            member: The member of the subspace.
+
+        Returns:
+            The norm of the member.
+        """
         return self.space.norm(member)
 
     @property
     def zero(self):
+        """
+        Returns the zero vector of the subspace.
+
+        Returns:
+            The zero vector of the subspace.
+        """
         return self.space.zero
 
 
