@@ -1,0 +1,54 @@
+Timer unit: 1e-09 s
+
+Total time: 3.22208 s
+File: /disks/data/PhD/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 2769
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  2769                                               def evaluate(self, r, check_if_in_domain=True,
+  2770                                                            return_points: bool = False) -> Tuple[np.array, np.array]:
+  2771                                                   """
+  2772                                                   Evaluates the function at given points.
+  2773                                           
+  2774                                                   Parameters
+  2775                                                   ----------
+  2776                                                   r : np.array
+  2777                                                       Points at which to evaluate the function
+  2778                                                   check_if_in_domain : bool, optional
+  2779                                                       Whether to check if points are in the domain (default is True)
+  2780                                           
+  2781                                                   Returns
+  2782                                                   -------
+  2783                                                   r : np.array
+  2784                                                       Points at which the function was evaluated
+  2785                                                   result : np.array
+  2786                                                       Function values at the points
+  2787                                                   """
+  2788     20000   16495492.0    824.8      0.5          r = np.atleast_1d(r)
+  2789     20000  210550717.0  10527.5      6.5          shifted_domains = r[:, None] - self.shifts * self.domain.total_measure
+  2790     20000   12072781.0    603.6      0.4          powers = np.arange(1, self.order + 1)
+  2791                                                   #shifted_poly = np.sum(shifted_domains ** powers, axis=1)
+  2792     20000 2308373299.0 115418.7     71.6          np.power(shifted_domains, powers, out=shifted_domains)
+  2793     20000  171780129.0   8589.0      5.3          shifted_poly = np.sum(shifted_domains, axis=1)
+  2794     60000  193826998.0   3230.4      6.0          sin_poly = np.sin(r * self.frequency + self.shift /
+  2795     40000   69727219.0   1743.2      2.2                              self.domain.total_measure) * shifted_poly
+  2796                                           
+  2797     20000    1888061.0     94.4      0.1          if self.no_sensitivity_regions is not None:
+  2798     40000    4011354.0    100.3      0.1              for region in self.no_sensitivity_regions:
+  2799     20000   48288282.0   2414.4      1.5                  sin_poly[(r >= region[0]) & (r <= region[1])] = 0
+  2800                                           
+  2801     40000   29946530.0    748.7      0.9          gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * \
+  2802     20000   71566786.0   3578.3      2.2              np.exp(-0.5 * ((r - self.mean) / self.std_dev) ** 2)
+  2803     20000    1555459.0     77.8      0.0          if check_if_in_domain:
+  2804     20000   54902412.0   2745.1      1.7              in_domain = self.domain.check_if_in_domain(r)
+  2805     20000    1630617.0     81.5      0.1              if return_points:
+  2806                                                           return r[in_domain], sin_poly[in_domain] * gaussian_function
+  2807                                                       else:
+  2808     20000   25466136.0   1273.3      0.8                  return sin_poly[in_domain] * gaussian_function
+  2809                                                   else:
+  2810                                                       if return_points:
+  2811                                                           return r, sin_poly * gaussian_function
+  2812                                                       else:
+  2813                                                           return sin_poly * gaussian_function
+

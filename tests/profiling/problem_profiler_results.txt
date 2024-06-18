@@ -1,0 +1,179 @@
+Timer unit: 1e-09 s
+
+Total time: 14.1447 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_Lambda at line 437
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   437                                               def _compute_Lambda(self):
+   438         1        1e+10    1e+10    100.0          self.Lambda = self.G._compute_GramMatrix()
+
+Total time: 14.147 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_Lambda_inv at line 440
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   440                                               def _compute_Lambda_inv(self):
+   441         1        800.0    800.0      0.0          if self.Lambda is None:
+   442         1        1e+10    1e+10    100.0              self._compute_Lambda()
+   443         1    2303900.0    2e+06      0.0          self.Lambda_inv = self.Lambda.invert()
+
+Total time: 0.00034 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_norm_prefactor at line 458
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   458                                               def _compute_norm_prefactor(self):
+   459         1       1100.0   1100.0      0.3          if self.least_norm is None:
+   460         1     333500.0 333500.0     98.1              self._compute_least_norm()
+   461         1        800.0    800.0      0.2          if self.norm_bound is None:
+   462                                                       raise ValueError('Norm bouns is None. '
+   463                                                                        'Add a norm bound using change_bound() method.')
+   464         1       4600.0   4600.0      1.4          self.npf = np.sqrt(self.norm_bound**2 - self.least_norm**2)
+
+Total time: 12.9365 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_Gamma at line 471
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   471                                               def _compute_Gamma(self):
+   472         1        1e+10    1e+10    100.0          self.Gamma = self.T * self.G_adjoint
+
+Total time: 27.1273 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_X at line 474
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   474                                               def _compute_X(self):
+   475         1        700.0    700.0      0.0          if self.Gamma is None:
+   476         1        1e+10    1e+10     47.7              self._compute_Gamma()
+   477         1       1100.0   1100.0      0.0          if self.Lambda_inv is None:
+   478         1        1e+10    1e+10     52.2              self._compute_Lambda_inv()
+   479         1   43835900.0    4e+07      0.2          self.X = self.Gamma * self.Lambda_inv
+
+Total time: 0.064368 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_H_diag at line 484
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   484                                               def _compute_H_diag(self):
+   485         1        700.0    700.0      0.0          if self.chi_diag is None:
+   486         1   64327800.0    6e+07     99.9              self._compute_chi_diag()
+   487         1        800.0    800.0      0.0          if self.X is None:
+   488                                                       self._compute_X()
+   489         1        900.0    900.0      0.0          if self.Gamma is None:
+   490                                                       self._compute_Gamma()
+   491         2       2600.0   1300.0      0.0          self.H_diag = self.chi_diag - \
+   492         2      33600.0  16800.0      0.1              np.sum(self.X.matrix * self.Gamma.matrix,
+   493         2       1600.0    800.0      0.0                     axis=1).reshape(self.chi_diag.shape)
+
+Total time: 0.0647364 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_epsilon at line 495
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   495                                               def _compute_epsilon(self):
+   496         1       1200.0   1200.0      0.0          if self.npf is None:
+   497         1     346200.0 346200.0      0.5              self._compute_norm_prefactor()
+   498         1        800.0    800.0      0.0          if self.H_diag is None:
+   499         1   64382800.0    6e+07     99.5              self._compute_H_diag()
+   500         1        100.0    100.0      0.0          try:
+   501         1       5300.0   5300.0      0.0              self.epsilon = self.npf * np.sqrt(self.H_diag)
+   502                                                   except RuntimeWarning:
+   503                                                       print('Error: The norm bound is too small. ')
+
+Total time: 27.1274 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: _compute_least_norm_property at line 510
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   510                                               def _compute_least_norm_property(self):
+   511         1        800.0    800.0      0.0          if self.data is None:
+   512                                                       raise TypeError('The current problem does not have any data.'
+   513                                                                       ' Please add data')
+   514         1        700.0    700.0      0.0          if self.X is None:
+   515         1        3e+10    3e+10    100.0              self._compute_X()
+   516         1      72500.0  72500.0      0.0          self.least_norm_property = self.X.map(self.data)
+
+Total time: 27.1922 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/SOLA_DLI.py
+Function: solve at line 518
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   518                                               def solve(self):
+   519         1       1600.0   1600.0      0.0          if self.least_norm_property is None:
+   520         1        3e+10    3e+10     99.8              self._compute_least_norm_property()
+   521         1       1900.0   1900.0      0.0          if self.epsilon is None:
+   522         1   64741000.0    6e+07      0.2              self._compute_epsilon()
+   523         2       4100.0   2050.0      0.0          self.solution = {'upper bound': self.least_norm_property + self.epsilon, # noqa
+   524         1       1300.0   1300.0      0.0                           'lower bound': self.least_norm_property - self.epsilon} # noqa
+
+Total time: 14.1447 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/mappings.py
+Function: _compute_GramMatrix at line 221
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   221                                               def _compute_GramMatrix(self, return_matrix_only=False):
+   222                                                   """
+   223                                                   Compute the Gram matrix associated with the DirectSumMapping.
+   224                                           
+   225                                                   Parameters:
+   226                                                   - return_matrix_only (bool): If True, only the Gram matrix is returned.
+   227                                           
+   228                                                   Returns:
+   229                                                   - If return_matrix_only is True, the Gram matrix; else, a
+   230                                                   FiniteLinearMapping.
+   231                                                   """
+   232         1      12000.0  12000.0      0.0          matrix = np.zeros((self.codomain.dimension, self.codomain.dimension))
+   233         4       2200.0    550.0      0.0          for mapping in self.mappings:
+   234         3        1e+10    5e+09    100.0              matrix += mapping._compute_GramMatrix(return_matrix_only=True)
+   235         1        100.0    100.0      0.0          if return_matrix_only:
+   236                                                       return matrix
+   237                                                   else:
+   238         2      64400.0  32200.0      0.0              return FiniteLinearMapping(domain=self.codomain,
+   239         1        200.0    200.0      0.0                                         codomain=self.codomain,
+   240         1        100.0    100.0      0.0                                         matrix=matrix)
+
+Total time: 14.064 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/mappings.py
+Function: _compute_GramMatrix at line 451
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   451                                               def _compute_GramMatrix(self, return_matrix_only=False):
+   452                                                   """
+   453                                                   Compute the Gram matrix associated with the IntegralMapping.
+   454                                           
+   455                                                   Parameters:
+   456                                                   - return_matrix_only (bool): If True, only the Gram matrix is returned.
+   457                                           
+   458                                                   Returns:
+   459                                                   - If return_matrix_only is True, the Gram matrix; else, a
+   460                                                   FiniteLinearMapping.
+   461                                                   """
+   462         6       6000.0   1000.0      0.0          GramMatrix = np.empty((self.codomain.dimension,
+   463         3        400.0    133.3      0.0                                 self.codomain.dimension))
+   464       453      60000.0    132.5      0.0          for i in range(self.codomain.dimension):
+   465     34425    8474500.0    246.2      0.1              for j in range(i, self.codomain.dimension):
+   466     67950        1e+10 206144.7     99.6                  entry = self.domain.inner_product(self.kernels[i],
+   467     33975    8059300.0    237.2      0.1                                                    self.kernels[j])
+   468     33975   20581500.0    605.8      0.1                  GramMatrix[i, j] = entry
+   469     33975    7677800.0    226.0      0.1                  if i != j:
+   470     33525   11599500.0    346.0      0.1                      GramMatrix[j, i] = entry
+   471         3        500.0    166.7      0.0          if return_matrix_only:
+   472         3        400.0    133.3      0.0              return GramMatrix
+   473                                                   else:
+   474                                                       return FiniteLinearMapping(domain=self.codomain,
+   475                                                                                  codomain=self.codomain,
+   476                                                                                  matrix=GramMatrix)
+
