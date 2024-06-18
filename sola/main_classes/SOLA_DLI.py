@@ -666,7 +666,9 @@ class Problem():
         fig = plt.figure(figsize=(9, 8))
         # Set excluded areas to NaN to make them transparent
         quantity[uninterpretable_region] = np.nan
+        # Plot the quantity
         plt.imshow(quantity, norm=norm, cmap=cmap)
+        # Add colorbar
         plt.colorbar(ticks=ticks,
                      format=colorbar_format,
                      shrink=0.7).set_label(colorbar_label, fontsize=20)
@@ -691,11 +693,15 @@ class Problem():
         plt.title(title, fontsize=26)
         plt.grid(False)
 
-        # Functions
+        # Set the colors of the pixel boxes (if you select more pixels, the
+        # colors will cycle)
         highlight_colors = ['#ee9617', '#f2ef0c', '#ee1717',
                             'black', '#f20cd6']
-        highlighted_pixels = {}  # Store highlighted pixel coordinates globally
+        # Store highlighted pixel coordinates globally
+        highlighted_pixels = {}
+        # Store rectanle objects
         highlighted_rects = {}
+        # Store target kernel figures
         figures = {}
 
         def snap_to_pixel(x, step):
@@ -732,7 +738,7 @@ class Problem():
                 figures[figure.number] = figure
                 sns.set_theme(style='white')
                 sns.set_palette('YlGnBu')
-                # plt.title('Target vs Resolving kernels', fontsize=25)
+                plt.title('Target vs Resolving kernels', fontsize=25)
                 all_y_values = []
                 for index, (target_mapping, resolving_mapping) in enumerate(zip(self.T.mappings, self.A.mappings)): # noqa
                     resolving_kernel = resolving_mapping.kernels[j + N_target_parameter_1 * i] # noqa
@@ -747,15 +753,6 @@ class Problem():
                     plt.plot(target_kernel.domain.mesh, target_kernel_y_values,
                              label='Target: ' + physical_parameters_symbols[index], # noqa
                              linewidth=2, color=plot_colors[index], linestyle='dashed') # noqa
-                    """ plt.fill_betweenx([y_min, y_max], 0.5, 0.75,
-                                      color='gray', alpha=0.3,
-                                      label='No sensitivity')
-                    plt.fill_betweenx([y_min, y_max], 0, widths[j]/2,
-                                      color='gray', hatch='/',
-                                      alpha=0.3, label='Uninterpretable \n region') # noqa
-                    plt.fill_betweenx([y_min, y_max], domain.bounds[0][1] - widths[j]/2,
-                                       domain.bounds[0][1],
-                                       color='gray', hatch='/', alpha=0.3) """
                     all_y_values.extend(target_kernel_y_values)
                 y_min = min(all_y_values) * 1.2
                 y_max = max(all_y_values) * 1.2
@@ -781,88 +778,50 @@ class Problem():
         fig.tight_layout()
         plt.show()
 
-    def plot_multi_widths_resolving_error(self, enquiry_points, widths,
-                                          domain: domains.Domain,
-                                          physical_parameters_symbols):
-        if self.H_diag is None:
-            self._compute_H_diag()
-        if self.A is None:
-            self._compute_resolving_kernels()
-        # Compute norms of the target kernels
-        norms = np.array([])
-        for target_kernel in self.T.kernels:
-            norms = np.append(norms, [self.M.norm(target_kernel)])
-        norms = norms[:, np.newaxis]  # just for the self.H_diag/norms division
-
-        # Compute exclusion zone
-        domain_min, domain_max = domain.bounds[0]
-        N_enquiry_points = len(enquiry_points)
-        N_widths = len(widths)
-        combinations = list(product(enquiry_points, widths))
-        exclusion_zones = np.array([((center + spread / 2) > domain_max) or # noqa
-                                    ((center - spread / 2) < domain_min) for
-                                    center, spread in combinations])
-        exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
-        H_map = ((np.sqrt(self.H_diag) / norms).reshape(N_enquiry_points, N_widths)).T # noqa
-
-        ticks = [1e-3, 1e-2, 1e-1, 1]
-        colorbar_label = 'Resolving Error'
-        xticks = ['{:.2}'.format(point) for point in
-                  enquiry_points[::int(len(enquiry_points) / 10) + 1]]
-        yticks = ['{:.0%}'.format(spread / (domain_max - domain_min)) for
-                  spread in widths[::int(len(widths) / 10) + 1]]
-        colors = sns.color_palette('YlGnBu', n_colors=100)
-
-        self._plot_on_enquirypts_x_widths(target_parameter_1=enquiry_points,
-                                          target_parameter_2=widths,
-                                          quantity=H_map,
-                                          uninterpretable_region=exclusion_map,
-                                          ticks=ticks, xticks=xticks,
-                                          colorbar_label=colorbar_label,
-                                          yticks=yticks, ylabel='Width',
-                                          xlabel='Enquiry Points',
-                                          title=None,
-                                          plot_colors=['#5ee22d', colors[99], '#fccd1a'], # noqa
-                                          cmap='Blues_r',
-                                          norm=LogNorm(vmin=1e-3, vmax=1),
-                                          physical_parameters_symbols=physical_parameters_symbols, # noqa
-                                          colorbar_format=LogFormatter(10, labelOnlyBase=False)) # noqa
-
-    def plot_multi_widths_errors(self, enquiry_points, widths, error_type,
-                                 domain: domains.Domain,
-                                 physical_parameters_symbols):
+    def resolution_analysis(self, enquiry_points: np.ndarray, widths:np.ndarray,
+                            error_type: str, domain: domains.Domain,
+                            physical_parameters_symbols: dict):
         # Ensure necessary computations are done
         if self.A is None:
             self._compute_resolving_kernels()
+
         if error_type == 'absolute':
+            # Compute absolute errors
             if self.epsilon is None:
                 self._compute_epsilon()
             errors = self.epsilon
         elif error_type == 'relative':
+            # Compute relative errors
             if self.relative_errors is None:
                 self._compute_relative_errors()
             errors = self.relative_errors
         elif error_type == 'relative2':
+            # Compute modified relative errors
             if self.relative_errors2 is None:
                 self._compute_relative_errors2()
             errors = self.relative_errors2
         elif error_type == 'resolution_misfit':
+            # Compute resolution misfit
             errors = self._compute_resoltion_misfit()
         else:
             raise ValueError('Error type must be absolute, '
-                             'relative, or relative2')
+                             'relative, relative2 or resolution_misfit')
+
+        N_enquiry_points = len(enquiry_points)
+        N_widths = len(widths)
+
+        # Compute errors map
+        errors_map = (errors.reshape(N_enquiry_points, N_widths)).T
 
         # Compute exclusion zone
         domain_min, domain_max = domain.bounds[0]
-        N_enquiry_points = len(enquiry_points)
-        N_widths = len(widths)
         combinations = list(product(enquiry_points, widths))
         exclusion_zones = np.array([((center + spread / 2) > domain_max) or # noqa
                                     ((center - spread / 2) < domain_min) for
                                     center, spread in combinations])
         exclusion_map = (exclusion_zones.reshape(N_enquiry_points, N_widths)).T
-        bound_map = (errors.reshape(N_enquiry_points, N_widths)).T
 
+        # Set figure parameters
         ticks = [1, 5, 10, 100, 500, 1000]
         colorbar_label = 'Relative Error bound as %'
         xticks = ['{:.2}'.format(point) for point in
@@ -871,9 +830,10 @@ class Problem():
                   spread in widths[::int(len(widths) / 10) + 1]]
         colors = sns.color_palette('YlGnBu', n_colors=100)
 
+        # Plot the errors map (this gives an interactive plot)
         self._plot_on_enquirypts_x_widths(target_parameter_1=enquiry_points,
                                           target_parameter_2=widths,
-                                          quantity=bound_map,
+                                          quantity=errors_map,
                                           uninterpretable_region=exclusion_map,
                                           ticks=ticks,
                                           colorbar_label=colorbar_label,
@@ -885,8 +845,9 @@ class Problem():
                                           plot_colors=['#5ee22d', colors[99], '#fccd1a'], # noqa
                                           cmap='Blues_r',
                                           norm=LogNorm(vmin=1, vmax=100),
-                                          physical_parameters_symbols=physical_parameters_symbols, # noqa
+                                          physical_parameters_symbols=list(physical_parameters_symbols.values()), # noqa
                                           colorbar_format=LogFormatter(10, labelOnlyBase=False)) # noqa
+
 
     def plot_necessary_norm_bounds(self, relative_error: float,
                                    domain: domains.Domain,
