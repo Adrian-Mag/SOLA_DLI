@@ -1,0 +1,558 @@
+Timer unit: 1e-09 s
+
+Total time: 0.0060876 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 669
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   669                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+   670                                                   """
+   671                                                   Evaluate the null function at a given point or array of points.
+   672                                           
+   673                                                   Args:
+   674                                                       r (float or numpy.ndarray): The point(s) at which to evaluate the
+   675                                                       function.
+   676                                                       check_if_in_domain (bool, optional): Whether to check if the points
+   677                                                       are in the domain. Defaults to True.
+   678                                           
+   679                                                   Returns:
+   680                                                       tuple: A tuple containing the points at which the function was
+   681                                                       evaluated and the function values.
+   682                                                   """
+   683                                           
+   684         1    1625200.0    2e+06     26.7          r = np.array(r, ndmin=1)
+   685         1       1700.0   1700.0      0.0          if check_if_in_domain:
+   686         1    1521000.0    2e+06     25.0              in_domain = self.domain.check_if_in_domain(r)
+   687         1        700.0    700.0      0.0              if return_points:
+   688                                                           return r[in_domain], np.zeros_like(r[in_domain])
+   689                                                       else:
+   690         1    2939000.0    3e+06     48.3                  return np.zeros_like(r[in_domain])
+   691                                                   else:
+   692                                                       if return_points:
+   693                                                           return r, np.zeros_like(r)
+   694                                                       else:
+   695                                                           return np.zeros_like(r)
+
+Total time: 0.0062126 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 748
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   748                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+   749                                                   """
+   750                                                   Evaluate the constant function at a given point or array of points.
+   751                                           
+   752                                                   Args:
+   753                                                       r (float or numpy.ndarray): The point(s) at which to evaluate the
+   754                                                       function.
+   755                                                       check_if_in_domain (bool, optional): Whether to check if the points
+   756                                                       are in the domain. Defaults to True.
+   757                                           
+   758                                                   Returns:
+   759                                                       tuple: A tuple containing the points at which the function was
+   760                                                       evaluated and the function values.
+   761                                                   """
+   762         1    1669600.0    2e+06     26.9          r = np.array(r, ndmin=1)
+   763         1       2100.0   2100.0      0.0          if check_if_in_domain:
+   764         1    1551400.0    2e+06     25.0              in_domain = self.domain.check_if_in_domain(r)
+   765         1       1600.0   1600.0      0.0              if return_points:
+   766                                                           return r[in_domain], np.full_like(r[in_domain], self.value)
+   767                                                       else:
+   768         1    2987900.0    3e+06     48.1                  return np.full_like(r[in_domain], self.value)
+   769                                                   else:
+   770                                                       if return_points:
+   771                                                           return r, np.full_like(r, self.value)
+   772                                                       else:
+   773                                                           return np.full_like(r, self.value)
+
+Total time: 0.0266822 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 980
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+   980                                               def evaluate(self, r: Union[float, np.ndarray],
+   981                                                            check_if_in_domain: bool = True,
+   982                                                            retrun_points: bool = False) -> Tuple[np.ndarray,
+   983                                                                                                  np.ndarray]:
+   984                                                   """
+   985                                                   Evaluates the function at given points.
+   986                                           
+   987                                                   Parameters
+   988                                                   ----------
+   989                                                   r : Union[float, np.ndarray]
+   990                                                       Points at which to evaluate the function
+   991                                                   check_if_in_domain : bool, optional
+   992                                                       Whether to check if points are in the domain (default is True)
+   993                                                   retrun_points : bool, optional
+   994                                                       Whether to return the points (default is False)
+   995                                           
+   996                                                   Returns
+   997                                                   -------
+   998                                                   Tuple[np.ndarray, np.ndarray]
+   999                                                       The points and the function values at the points
+  1000                                                   """
+  1001         2      45900.0  22950.0      0.2          r = np.atleast_1d(r)
+  1002         2       1400.0    700.0      0.0          if check_if_in_domain:
+  1003         2    1627000.0 813500.0      6.1              in_domain = self.domain.check_if_in_domain(r)
+  1004         2       2200.0   1100.0      0.0              if retrun_points:
+  1005                                                           return r[in_domain], self._compute_bump(r[in_domain])
+  1006                                                       else:
+  1007         2   25005700.0    1e+07     93.7                  return self._compute_bump(r[in_domain])
+  1008                                                   else:
+  1009                                                       if retrun_points:
+  1010                                                           return r, self._compute_bump(r)
+  1011                                                       else:
+  1012                                                           return self._compute_bump(r)
+
+Total time: 0.0178688 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1094
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1094                                               def evaluate(self, r: np.ndarray,
+  1095                                                            check_if_in_domain: bool = True,
+  1096                                                            return_points: bool = False) -> Tuple[np.ndarray, np.ndarray]:
+  1097                                                   """
+  1098                                                   Evaluate the Gaussian function at given points.
+  1099                                           
+  1100                                                   Args:
+  1101                                                       r (numpy.ndarray): Points at which to evaluate the function.
+  1102                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1103                                                       in domain. Defaults to True.
+  1104                                           
+  1105                                                   Returns:
+  1106                                                       tuple: Tuple containing points and corresponding function values.
+  1107                                                   """
+  1108         1      20400.0  20400.0      0.1          r = np.atleast_1d(r)
+  1109                                           
+  1110         1        500.0    500.0      0.0          if check_if_in_domain:
+  1111         1    1116500.0    1e+06      6.2              in_domain = self.domain.check_if_in_domain(r)
+  1112         1    1601000.0    2e+06      9.0              dbump = np.zeros_like(r[in_domain])
+  1113         2    1876900.0 938450.0     10.5              where_compact = np.where((r[in_domain] > (self.center - self.width/2)) & # noqa
+  1114         1    1421900.0    1e+06      8.0                                       (r[in_domain] < (self.center + self.width/2))) # noqa
+  1115         1    1507900.0    2e+06      8.4              r_compact = r[in_domain][where_compact]
+  1116         1     279400.0 279400.0      1.6              r_compact_centered = r_compact - self.center
+  1117                                           
+  1118         1    1984200.0    2e+06     11.1              multiplier = self._compute_multiplier(r_compact_centered)
+  1119         2      26700.0  13350.0      0.1              bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
+  1120         1        900.0    900.0      0.0                                      width=self.width,
+  1121         1        600.0    600.0      0.0                                      pointiness=self.pointiness)
+  1122         1    6877900.0    7e+06     38.5              dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
+  1123         1       1400.0   1400.0      0.0              if return_points:
+  1124                                                           return r[in_domain], dbump[in_domain]
+  1125                                                       else:
+  1126         1    1152600.0    1e+06      6.5                  return dbump[in_domain]
+  1127                                                   else:
+  1128                                                       dbump = np.zeros_like(r)
+  1129                                                       where_compact = np.where((r > (self.center - self.width/2)) & # noqa
+  1130                                                                                (r < (self.center + self.width/2))) # noqa
+  1131                                                       r_compact = r[where_compact]
+  1132                                                       r_compact_centered = r_compact - self.center
+  1133                                                       multiplier = self._compute_multiplier(r_compact_centered)
+  1134                                                       bump = Gaussian_Bump_1D(domain=self.domain, center=self.center,
+  1135                                                                               width=self.width,
+  1136                                                                               pointiness=self.pointiness)
+  1137                                                       dbump[where_compact] =  - multiplier * bump.evaluate(r_compact) # noqa
+  1138                                                       if return_points:
+  1139                                                           return r, dbump
+  1140                                                       else:
+  1141                                                           return dbump
+
+Total time: 0.0247225 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1208
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1208                                               def evaluate(self, r: np.ndarray,
+  1209                                                            check_if_in_domain: bool = True,
+  1210                                                            return_points: bool = False) -> Tuple[np.ndarray,
+  1211                                                                                                  np.ndarray]:
+  1212                                                   """
+  1213                                                   Evaluate the Gaussian function at given points.
+  1214                                           
+  1215                                                   Args:
+  1216                                                       r (numpy.ndarray): Points at which to evaluate the function.
+  1217                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1218                                                       in domain. Defaults to True.
+  1219                                                       return_points (bool, optional): Whether to return the points along
+  1220                                                       with the function values. Defaults to False.
+  1221                                           
+  1222                                                   Returns:
+  1223                                                       Union[tuple, numpy.ndarray]: If return_points is True, returns a
+  1224                                                       tuple containing points and corresponding function values.
+  1225                                                       If return_points is False, returns only the function values.
+  1226                                                   """
+  1227         1      19300.0  19300.0      0.1          r = np.atleast_1d(r)
+  1228         1        600.0    600.0      0.0          if check_if_in_domain:
+  1229         1     972100.0 972100.0      3.9              in_domain = self.domain.check_if_in_domain(r)
+  1230         1    1051900.0    1e+06      4.3              r_in_domain = r[in_domain]
+  1231         1    1542100.0    2e+06      6.2              r_normalized = (r_in_domain - self.center) / self.spread
+  1232         1   21132500.0    2e+07     85.5              gaussian_vector = self.normalization * np.exp(-0.5 * (r_normalized) ** 2) # noqa
+  1233         1       3400.0   3400.0      0.0              if return_points:
+  1234                                                           return r_in_domain, gaussian_vector
+  1235                                                       else:
+  1236         1        600.0    600.0      0.0                  return gaussian_vector
+  1237                                                   else:
+  1238                                                       r_normalized = (r - self.center) / self.spread
+  1239                                                       gaussian_vector = self.normalization * np.exp(-0.5 * (r_normalized) ** 2) # noqa
+  1240                                                       if return_points:
+  1241                                                           return r, gaussian_vector
+  1242                                                       else:
+  1243                                                           return gaussian_vector
+
+Total time: 0.0378871 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1313
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1313                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+  1314                                                   """
+  1315                                                   Evaluate the Moorlet function at given points.
+  1316                                           
+  1317                                                   Args:
+  1318                                                       r (numpy.ndarray): Points at which to evaluate the function.
+  1319                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1320                                                       in domain. Defaults to True.
+  1321                                                       return_points (bool, optional): Whether to return the points along
+  1322                                                       with
+  1323                                                       the function values. Defaults to False.
+  1324                                           
+  1325                                                   Returns:
+  1326                                                       Union[tuple, numpy.ndarray]: If return_points is True, returns a
+  1327                                                       tuple containing points and corresponding function values.
+  1328                                                       If return_points is False, returns only the function values.
+  1329                                                   """
+  1330         1      26900.0  26900.0      0.1          r = np.atleast_1d(r)
+  1331         1       1200.0   1200.0      0.0          if check_if_in_domain:
+  1332         1    1166400.0    1e+06      3.1              in_domain = self.domain.check_if_in_domain(r)
+  1333         2   10968700.0    5e+06     29.0              moorlet_vector = np.cos(self.frequency * (r[in_domain] - self.center)) \
+  1334         1   24714500.0    2e+07     65.2                  * np.exp(-0.5 * ((r[in_domain] - self.center) / self.spread) ** 2) # noqa
+  1335         1       1700.0   1700.0      0.0              if return_points:
+  1336                                                           return r[in_domain], moorlet_vector / self.normalization
+  1337                                                       else:
+  1338         1    1007700.0    1e+06      2.7                  return moorlet_vector / self.normalization
+  1339                                                   else:
+  1340                                                       moorlet_vector = np.cos(self.frequency * (r - self.center)) \
+  1341                                                           * np.exp(-0.5 * ((r - self.center) / self.spread) ** 2)
+  1342                                                       if return_points:
+  1343                                                           return r, moorlet_vector / self.normalization
+  1344                                                       else:
+  1345                                                           return moorlet_vector / self.normalization
+
+Total time: 0.0083623 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1405
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1405                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+  1406                                                   """
+  1407                                                   Evaluate the Haar wavelet function at given points.
+  1408                                           
+  1409                                                   Args:
+  1410                                                       r (numpy.ndarray): Points at which to evaluate the function.
+  1411                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1412                                                       in domain. Defaults to True.
+  1413                                                       return_points (bool, optional): Whether to return the points along
+  1414                                                       with the function values. Defaults to False.
+  1415                                           
+  1416                                                   Returns:
+  1417                                                       Union[tuple, numpy.ndarray]: If return_points is True, returns a
+  1418                                                       tuple containing points and corresponding function values.
+  1419                                                       If return_points is False, returns only the function values.
+  1420                                                   """
+  1421         1      23200.0  23200.0      0.3          r = np.atleast_1d(r)
+  1422         1    1577600.0    2e+06     18.9          scaled_domain = (r - self.center) / self.width
+  1423         1    4557600.0    5e+06     54.5          haar_vector = 4 * np.where((scaled_domain >= -0.5) & (scaled_domain < 0.5), np.sign(scaled_domain), 0) / self.width**2 # noqa
+  1424         1       1600.0   1600.0      0.0          if check_if_in_domain:
+  1425         1    1178900.0    1e+06     14.1              in_domain = self.domain.check_if_in_domain(r)
+  1426         1        700.0    700.0      0.0              if return_points:
+  1427                                                           return r[in_domain], haar_vector[in_domain]
+  1428                                                       else:
+  1429         1    1022700.0    1e+06     12.2                  return haar_vector[in_domain]
+  1430                                                   else:
+  1431                                                       if return_points:
+  1432                                                           return r, haar_vector
+  1433                                                       else:
+  1434                                                           return haar_vector
+
+Total time: 0.0398031 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1493
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1493                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+  1494                                                   """
+  1495                                                   Evaluate the Ricker wavelet function at given points.
+  1496                                           
+  1497                                                   Args:
+  1498                                                       r (numpy.ndarray): Points at which to evaluate the function.
+  1499                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1500                                                       in domain. Defaults to True.
+  1501                                                       return_points (bool, optional): Whether to return the points along
+  1502                                                       with the function values. Defaults to False.
+  1503                                           
+  1504                                                   Returns:
+  1505                                                       Union[tuple, numpy.ndarray]: If return_points is True, returns a
+  1506                                                       tuple containing points and corresponding function values.
+  1507                                                       If return_points is False, returns only the function values.
+  1508                                                   """
+  1509         1      25500.0  25500.0      0.1          A = 2 / (np.sqrt(3 * self.width) * (np.pi ** 0.25))
+  1510         1        600.0    600.0      0.0          ricker_specific_width = self.width / 7
+  1511         1      18000.0  18000.0      0.0          r = np.atleast_1d(r)
+  1512         1        400.0    400.0      0.0          if check_if_in_domain:
+  1513         1    1032300.0    1e+06      2.6              in_domain = self.domain.check_if_in_domain(r)
+  1514         4    5834000.0    1e+06     14.7              vector = A * (1 - ((r[in_domain] - self.center) /
+  1515         4   29229000.0    7e+06     73.4                                 ricker_specific_width)**2) * np.exp(
+  1516         1    3660900.0    4e+06      9.2                  -0.5 * ((r[in_domain] - self.center) / ricker_specific_width)**2) # noqa
+  1517         1       1700.0   1700.0      0.0              if return_points:
+  1518                                                           return r[in_domain], vector
+  1519                                                       else:
+  1520         1        700.0    700.0      0.0                  return vector
+  1521                                                   else:
+  1522                                                       vector = A * (1 - ((r - self.center) / ricker_specific_width) ** 2) * np.exp( # noqa
+  1523                                                           -0.5 * ((r - self.center) / ricker_specific_width) ** 2)
+  1524                                                       if return_points:
+  1525                                                           return r, vector
+  1526                                                       else:
+  1527                                                           return vector
+
+Total time: 0.0215491 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1587
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1587                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+  1588                                                   """
+  1589                                                   Evaluate the Polynomial wavelet function at given points.
+  1590                                           
+  1591                                                   Args:
+  1592                                                       r (numpy.ndarray): Points at which to evaluate the function.
+  1593                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1594                                                       in domain. Defaults to True.
+  1595                                                       return_points (bool, optional): Whether to return the points along
+  1596                                                       with the function values. Defaults to False.
+  1597                                           
+  1598                                                   Returns:
+  1599                                                       Union[tuple, numpy.ndarray]: If return_points is True, returns a
+  1600                                                       tuple containing points and corresponding function values.
+  1601                                                       If return_points is False, returns only the function values.
+  1602                                                   """
+  1603         1      23600.0  23600.0      0.1          r = np.atleast_1d(r)
+  1604         1        500.0    500.0      0.0          if check_if_in_domain:
+  1605         1    1107100.0    1e+06      5.1              in_domain = self.domain.check_if_in_domain(r)
+  1606         2   16654400.0    8e+06     77.3              Dgaussian_vector = ((r[in_domain] - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
+  1607         1    3761900.0    4e+06     17.5                  -0.5 * ((r[in_domain] - self.center) / self.spread) ** 2)
+  1608         1       1200.0   1200.0      0.0              if return_points:
+  1609                                                           return r[in_domain], Dgaussian_vector
+  1610                                                       else:
+  1611         1        400.0    400.0      0.0                  return Dgaussian_vector
+  1612                                                   else:
+  1613                                                       Dgaussian_vector = ((r - self.center) / (self.spread ** 3 * np.sqrt(2 * np.pi))) * np.exp( # noqa
+  1614                                                           -0.5 * ((r - self.center) / self.spread) ** 2)
+  1615                                                       if return_points:
+  1616                                                           return r, Dgaussian_vector
+  1617                                                       else:
+  1618                                                           return Dgaussian_vector
+
+Total time: 0.0057153 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1683
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1683                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+  1684                                                   """
+  1685                                                   Evaluate the Boxcar function at given points.
+  1686                                           
+  1687                                                   Args:
+  1688                                                       r (Union[int, float, numpy.ndarray]): Points at which to evaluate
+  1689                                                       the function.
+  1690                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1691                                                       in domain. Defaults to True.
+  1692                                                       return_points (bool, optional): Whether to return the points along
+  1693                                                       with the function values. Defaults to False.
+  1694                                           
+  1695                                                   Returns:
+  1696                                                       Union[tuple, numpy.ndarray]: If return_points is True, returns a
+  1697                                                       tuple containing points and corresponding function values.
+  1698                                                       If return_points is False, returns only the function values.
+  1699                                                   """
+  1700         1      20100.0  20100.0      0.4          r = np.atleast_1d(r)
+  1701                                           
+  1702         1        300.0    300.0      0.0          if check_if_in_domain:
+  1703         1    1121400.0    1e+06     19.6              in_domain = self.domain.check_if_in_domain(r)
+  1704         1    2132500.0    2e+06     37.3              scaled_domain = (r[in_domain] - self.center) / self.width
+  1705         1    2439700.0    2e+06     42.7              boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
+  1706         1       1100.0   1100.0      0.0              if return_points:
+  1707                                                           return r[in_domain], boxcar_vector
+  1708                                                       else:
+  1709         1        200.0    200.0      0.0                  return boxcar_vector
+  1710                                                   else:
+  1711                                                       scaled_domain = (r - self.center) / self.width
+  1712                                                       boxcar_vector = np.where(np.abs(scaled_domain) < 0.5, 1 / self.width, 0) # noqa
+  1713                                                       if return_points:
+  1714                                                           return r, boxcar_vector
+  1715                                                       else:
+  1716                                                           return boxcar_vector
+
+Total time: 0.010803 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 1800
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  1800                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+  1801                                                   """
+  1802                                                   Evaluate the Bump function at given points.
+  1803                                           
+  1804                                                   Args:
+  1805                                                       r (Union[int, float, numpy.ndarray]): Points at which to evaluate
+  1806                                                       the function.
+  1807                                                       check_if_in_domain (bool, optional): Whether to check if points are
+  1808                                                       in domain. Defaults to True.
+  1809                                                       return_points (bool, optional): Whether to return the points along
+  1810                                                       with the function values. Defaults to False.
+  1811                                           
+  1812                                                   Returns:
+  1813                                                       Union[tuple, numpy.ndarray]: If return_points is True, returns a
+  1814                                                       tuple containing points and corresponding function values.
+  1815                                                       If return_points is False, returns only the function values.
+  1816                                                   """
+  1817         1      21400.0  21400.0      0.2          r = np.atleast_1d(r)
+  1818         1        400.0    400.0      0.0          if check_if_in_domain:
+  1819         1    1187200.0    1e+06     11.0              in_domain = self.domain.check_if_in_domain(r)
+  1820         2       5000.0   2500.0      0.0              limits = [-0.5 * self.width + self.center,
+  1821         1        400.0    400.0      0.0                        0.5 * self.width + self.center]
+  1822         1    3337700.0    3e+06     30.9              mask = (r[in_domain] > limits[0]) & (r[in_domain] < limits[1])
+  1823         1    1626300.0    2e+06     15.1              bump_vector = np.zeros_like(r[in_domain])
+  1824         2    1591400.0 795700.0     14.7              bump_vector[mask] = np.exp(
+  1825         1    1957600.0    2e+06     18.1                  1 / ((2 * (r[in_domain][mask] - self.center) / self.width) ** 2 - 1)) # noqa
+  1826         1       1400.0   1400.0      0.0              if return_points:
+  1827                                                           return r[in_domain], bump_vector / self.normalization
+  1828                                                       else:
+  1829         1    1074200.0    1e+06      9.9                  return bump_vector / self.normalization
+  1830                                                   else:
+  1831                                                       limits = [-0.5 * self.width + self.center,
+  1832                                                                 0.5 * self.width + self.center]
+  1833                                                       mask = (r > limits[0]) & (r < limits[1])
+  1834                                                       bump_vector = np.zeros_like(r)
+  1835                                                       bump_vector[mask] = np.exp(
+  1836                                                           1 / ((2 * (r[mask] - self.center) / self.width) ** 2 - 1))
+  1837                                                       bump_vector[mask] = np.nan_to_num(bump_vector[mask], nan=0.0,
+  1838                                                                                         posinf=0.0, neginf=0.0)
+  1839                                                       if return_points:
+  1840                                                           return r, bump_vector / self.normalization
+  1841                                                       else:
+  1842                                                           return bump_vector / self.normalization
+
+Total time: 0.0086945 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 2002
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  2002                                               def evaluate(self, r, check_if_in_domain=True, return_points=False):
+  2003                                                   """
+  2004                                                   Evaluate the Triangular function at given points.
+  2005                                           
+  2006                                                   Args:
+  2007                                                   - r (numpy.ndarray): Points at which to evaluate the function.
+  2008                                                   - check_if_in_domain (bool, optional): Whether to check if points are
+  2009                                                   in the domain. Defaults to True.
+  2010                                                   - return_points (bool, optional): Whether to return the points along
+  2011                                                   with the function values. Defaults to False.
+  2012                                           
+  2013                                                   Returns:
+  2014                                                   - numpy.ndarray: Function values at the given points. If return_points
+  2015                                                   is True, also return the points.
+  2016                                                   """
+  2017         1      20300.0  20300.0      0.2          r = np.atleast_1d(r)
+  2018         2       3700.0   1850.0      0.0          limits = [-0.5 * self.width + self.center,
+  2019         1        300.0    300.0      0.0                    0.5 * self.width + self.center]
+  2020         1        200.0    200.0      0.0          if check_if_in_domain:
+  2021         1    1097300.0    1e+06     12.6              in_domain = self.domain.check_if_in_domain(r)
+  2022         1    3042100.0    3e+06     35.0              mask = (r[in_domain] >= limits[0]) & (r[in_domain] <= limits[1])
+  2023         1    1666500.0    2e+06     19.2              triangular_vector = np.zeros_like(r[in_domain])
+  2024         1    2862700.0    3e+06     32.9              triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[in_domain][mask] - self.center) / self.width**2 # noqa
+  2025         1       1400.0   1400.0      0.0              return (r[in_domain], triangular_vector) if return_points else triangular_vector # noqa
+  2026                                                   else:
+  2027                                                       mask = (r >= limits[0]) & (r <= limits[1])
+  2028                                                       triangular_vector = np.zeros_like(r)
+  2029                                                       triangular_vector[mask] = 2 / self.width - 4 * np.abs(r[mask] - self.center) / self.width**2 # noqa
+  2030                                                       return (r, triangular_vector) if return_points else triangular_vector # noqa
+
+Total time: 0.192501 s
+File: /home/adrian/PhD/BGSOLA/SOLA_DLI/sola/main_classes/functions.py
+Function: evaluate at line 2770
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+  2770                                               def evaluate(self, r, check_if_in_domain=True,
+  2771                                                            return_points: bool = False) -> Tuple[np.array, np.array]:
+  2772                                                   """
+  2773                                                   Evaluates the function at given points.
+  2774                                           
+  2775                                                   Parameters
+  2776                                                   ----------
+  2777                                                   r : np.array
+  2778                                                       Points at which to evaluate the function
+  2779                                                   check_if_in_domain : bool, optional
+  2780                                                       Whether to check if points are in the domain (default is True)
+  2781                                           
+  2782                                                   Returns
+  2783                                                   -------
+  2784                                                   r : np.array
+  2785                                                       Points at which the function was evaluated
+  2786                                                   result : np.array
+  2787                                                       Function values at the points
+  2788                                                   """
+  2789         1      19700.0  19700.0      0.0          r = np.atleast_1d(r)
+  2790         1     699900.0 699900.0      0.4          shifted_poly = np.zeros_like(r)
+  2791         3      14200.0   4733.3      0.0          for i in range(self.order):
+  2792         2    3924800.0    2e+06      2.0              shifted_domain = r - self.shifts[i] * (np.max(r) - np.min(r))
+  2793         2  148190100.0    7e+07     77.0              shifted_poly += np.power(shifted_domain, i + 1)
+  2794         3   10307400.0    3e+06      5.4          sin_poly = np.sin(r * self.frequency +
+  2795         2     925600.0 462800.0      0.5                            self.shift / (np.max(r) - np.min(r))) * shifted_poly
+  2796                                           
+  2797         1       2800.0   2800.0      0.0          if self.no_sensitivity_regions is not None:
+  2798                                                       for region in self.no_sensitivity_regions:
+  2799                                                           sin_poly[(r >= region[0]) & (r <= region[1])] = 0
+  2800                                           
+  2801         2     632500.0 316250.0      0.3          gaussian_function = (1 / (self.std_dev * np.sqrt(2 * np.pi))) * \
+  2802         1   24769700.0    2e+07     12.9              np.exp(-0.5 * ((r - self.mean) / self.std_dev) ** 2)
+  2803         1       1900.0   1900.0      0.0          if check_if_in_domain:
+  2804         1    1170800.0    1e+06      0.6              in_domain = self.domain.check_if_in_domain(r)
+  2805         1       1100.0   1100.0      0.0              if return_points:
+  2806                                                           return r[in_domain], sin_poly[in_domain] * gaussian_function
+  2807                                                       else:
+  2808         1    1840700.0    2e+06      1.0                  return sin_poly[in_domain] * gaussian_function
+  2809                                                   else:
+  2810                                                       if return_points:
+  2811                                                           return r, sin_poly * gaussian_function
+  2812                                                       else:
+  2813                                                           return sin_poly * gaussian_function
+
+
+Total times for each function:
+Null_1D: 0.0060876 | 1.0651409374835967
+Constant_1D: 0.0062126 | 1.0870120553601736
+Gaussian_Bump_1D: 0.0266822 | 4.668556331251202
+Dgaussian_Bump_1D: 0.0178688 | 3.1264850489038194
+Gaussian_1D: 0.0247225 | 4.325669693629381
+Moorlet_1D: 0.0378871 | 6.629065840813255
+Haar_1D: 0.0083623 | 1.4631427921543925
+Ricker_1D: 0.0398031 | 6.964306335625426
+Dgaussian_1D: 0.0215491 | 3.7704232498731476
+Boxcar_1D: 0.0057153 | 1.0
+Bump_1D: 0.010803 | 1.8901894913652826
+Triangular_1D: 0.0086945 | 1.5212674750231834
+NormalModes_1D: 0.192501 | 33.681696498871446

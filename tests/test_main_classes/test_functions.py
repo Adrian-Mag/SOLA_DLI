@@ -2,8 +2,7 @@ import unittest
 import numpy as np
 from scipy.interpolate import interp1d
 
-from sola.main_classes.functions import Piecewise_1D, Null_1D, Constant_1D, Random_1D, Interpolation_1D, ComplexExponential_1D, Polynomial_1D, SinusoidalPolynomial_1D, SinusoidalGaussianPolynomial_1D, NormalModes_1D, Gaussian_Bump_1D, Dgaussian_Bump_1D, Gaussian_1D, Moorlet_1D, Boxcar_1D, Haar_1D, Ricker_1D, Dgaussian_1D, Bump_1D, Dbump_1D, Triangular_1D, Fourier # noqa
-
+from sola.main_classes import functions
 from sola.main_classes.domains import HyperParalelipiped
 
 
@@ -13,7 +12,7 @@ class TestPiecewise_1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[0, 10]])
         self.intervals = np.array([0, 2, 4, 6, 8, 10])
         self.values = np.array([1, 2, 3, 4, 5])
-        self.piecewise = Piecewise_1D(self.domain, self.intervals, self.values)
+        self.piecewise = functions.Piecewise_1D(self.domain, self.intervals, self.values)
 
     def test_evaluate_single_point(self):
         self.assertEqual(self.piecewise.evaluate(1), np.array([1]))
@@ -47,7 +46,7 @@ class TestPiecewise_1D(unittest.TestCase):
 class TestNull_1D(unittest.TestCase):
     def setUp(self):
         self.domain = HyperParalelipiped([[0, 10]])
-        self.null_1d = Null_1D(self.domain)
+        self.null_1d = functions.Null_1D(self.domain)
 
     def test_evaluate_single_point(self):
         self.assertEqual(self.null_1d.evaluate(1), np.array([0]))
@@ -79,7 +78,7 @@ class TestNull_1D(unittest.TestCase):
 class TestConstant_1D(unittest.TestCase):
     def setUp(self):
         self.domain = HyperParalelipiped([[0, 10]])
-        self.constant_1d = Constant_1D(self.domain, value=3)
+        self.constant_1d = functions.Constant_1D(self.domain, value=3)
 
     def test_evaluate_single_point(self):
         self.assertEqual(self.constant_1d.evaluate(1), np.array([3]))
@@ -114,7 +113,7 @@ class TestConstant_1D(unittest.TestCase):
 class TestRandom1D(unittest.TestCase):
     def setUp(self):
         self.domain = HyperParalelipiped(bounds=[[0, 1]])
-        self.random_1d = Random_1D(self.domain, seed=42)
+        self.random_1d = functions.Random_1D(self.domain, seed=42)
 
     def test_init(self):
         self.assertEqual(self.random_1d.seed, 42)
@@ -156,7 +155,7 @@ class TestInterpolation_1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[0, 10]])
         self.values = np.array([1, 2, 3])
         self.raw_domain = np.array([1, 2, 3])
-        self.interpolation = Interpolation_1D(self.values, self.raw_domain,
+        self.interpolation = functions.Interpolation_1D(self.values, self.raw_domain,
                                               self.domain)
 
     def test_evaluate(self):
@@ -183,7 +182,7 @@ class TestComplexExponential_1D(unittest.TestCase):
     def setUp(self):
         self.domain = HyperParalelipiped([[0, 1]])
         self.frequency = 1.0
-        self.func = ComplexExponential_1D(self.domain, self.frequency)
+        self.func = functions.ComplexExponential_1D(self.domain, self.frequency)
 
     def test_init(self):
         self.assertEqual(self.func.domain, self.domain)
@@ -203,7 +202,7 @@ class TestComplexExponential_1D(unittest.TestCase):
 class TestPolynomial_1D(unittest.TestCase):
     def setUp(self):
         self.domain = HyperParalelipiped([[-10, 10]])
-        self.poly = Polynomial_1D(self.domain, order=2, min_val=-1, max_val=1,
+        self.poly = functions.Polynomial_1D(self.domain, order=2, min_val=-1, max_val=1,
                                   stretching=1, center=0)
 
     def test_init(self):
@@ -236,7 +235,7 @@ class TestPolynomial_1D(unittest.TestCase):
 class TestSinusoidalPolynomial_1D(unittest.TestCase):
     def setUp(self):
         self.domain = HyperParalelipiped([[0, 10]])
-        self.sin_poly = SinusoidalPolynomial_1D(self.domain, order=2,
+        self.sin_poly = functions.SinusoidalPolynomial_1D(self.domain, order=2,
                                                 min_val=-1, max_val=1,
                                                 min_f=0, max_f=1, seed=0)
 
@@ -276,7 +275,7 @@ class TestSinusoidalGaussianPolynomial_1D(unittest.TestCase):
         self.max_f = 1
         self.spread = 1
         self.seed = 42
-        self.function = SinusoidalGaussianPolynomial_1D(self.domain,
+        self.function = functions.SinusoidalGaussianPolynomial_1D(self.domain,
                                                         self.order,
                                                         self.min_val,
                                                         self.max_val,
@@ -310,7 +309,7 @@ class TestSinusoidalGaussianPolynomial_1D(unittest.TestCase):
 
     def test_negative_order(self):
         with self.assertRaises(ValueError):
-            SinusoidalGaussianPolynomial_1D(self.domain, -1, self.min_val,
+            functions.SinusoidalGaussianPolynomial_1D(self.domain, -1, self.min_val,
                                             self.max_val, self.min_f,
                                             self.max_f, self.spread, self.seed)
 
@@ -323,7 +322,7 @@ class TestNormalModes_1D(unittest.TestCase):
         self.max_freq = 1.0
         self.no_sensitivity_regions = [[0.2, 0.3]]
         self.seed = 42
-        self.normal_modes = NormalModes_1D(self.domain, self.order,
+        self.normal_modes = functions.NormalModes_1D(self.domain, self.order,
                                            self.spread, self.max_freq,
                                            self.no_sensitivity_regions,
                                            self.seed)
@@ -366,7 +365,7 @@ class TestGaussianBump1D(unittest.TestCase):
         self.width = 1.0
         self.pointiness = 2
         self.unimodularity_precision = 1000
-        self.gaussian_bump = Gaussian_Bump_1D(self.domain, self.center,
+        self.gaussian_bump = functions.Gaussian_Bump_1D(self.domain, self.center,
                                               self.width, self.pointiness,
                                               self.unimodularity_precision)
 
@@ -377,13 +376,8 @@ class TestGaussianBump1D(unittest.TestCase):
         self.assertEqual(self.gaussian_bump.unimodularity_precision,
                          self.unimodularity_precision)
 
-    def test_compute_bump(self):
-        r = np.array([0.2, 0.5, 0.8])
-        bump = self.gaussian_bump._compute_bump(r)
-        self.assertEqual(bump.shape, r.shape)
-
     def test_normalization(self):
-        norm = self.gaussian_bump.normalization
+        norm = self.gaussian_bump._normalization
         self.assertIsInstance(norm, float)
 
     def test_str(self):
@@ -397,7 +391,7 @@ class TestDgaussianBump1D(unittest.TestCase):
         self.width = 2
         self.pointiness = 0.1
         self.unimodularity_precision = 1000
-        self.dgaussian_bump_1d = Dgaussian_Bump_1D(self.domain, self.center,
+        self.dgaussian_bump_1d = functions.Dgaussian_Bump_1D(self.domain, self.center,
                                                    self.width, self.pointiness,
                                                    self.unimodularity_precision) # noqa
 
@@ -407,12 +401,13 @@ class TestDgaussianBump1D(unittest.TestCase):
         self.assertEqual(self.dgaussian_bump_1d.pointiness, self.pointiness)
         self.assertEqual(self.dgaussian_bump_1d.unimodularity_precision,
                          self.unimodularity_precision)
-        self.assertIsInstance(self.dgaussian_bump_1d.bump, Gaussian_Bump_1D)
+        self.assertIsInstance(self.dgaussian_bump_1d.bump, functions.Gaussian_Bump_1D)
 
     def test_compute_multiplier(self):
         r_compact_centered = np.array([0, 2, 3])
         expected_multiplier = np.array([0.0, -0.844444444, -0.69375])
-        actual_multiplier = self.dgaussian_bump_1d._compute_multiplier(r_compact_centered) # noqa
+        actual_multiplier = functions._compute_multiplier(r_compact_centered,
+                                                          self.width, self.pointiness) # noqa
         np.testing.assert_almost_equal(actual_multiplier, expected_multiplier)
 
     def test_evaluate(self):
@@ -427,7 +422,7 @@ class TestGaussian1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[0, 10]])
         self.center = 5
         self.width = 2
-        self.gaussian = Gaussian_1D(self.domain, self.center, self.width)
+        self.gaussian = functions.Gaussian_1D(self.domain, self.center, self.width)
 
     def test_initialization(self):
         self.assertEqual(self.gaussian.center, self.center)
@@ -451,7 +446,7 @@ class TestMoorlet1D(unittest.TestCase):
         self.center = 5
         self.spread = 2
         self.frequency = 1
-        self.moorlet = Moorlet_1D(self.domain, self.center,
+        self.moorlet = functions.Moorlet_1D(self.domain, self.center,
                                   self.spread, self.frequency)
 
     def test_initialization(self):
@@ -463,7 +458,7 @@ class TestMoorlet1D(unittest.TestCase):
         moorlet_vector = np.cos(self.frequency * (self.domain.dynamic_mesh(self.moorlet.unimodularity_precision) - self.center)) \
             * np.exp(-0.5 * ((self.domain.dynamic_mesh(self.moorlet.unimodularity_precision) - self.center) / self.spread) ** 2) # noqa
         area = np.trapz(moorlet_vector, self.domain.dynamic_mesh(self.moorlet.unimodularity_precision)) # noqa
-        self.assertEqual(self.moorlet.normalization, area)
+        self.assertEqual(self.moorlet._normalization, area)
 
     def test_evaluate(self):
         points, values = self.moorlet.evaluate(np.array([1, 2, 3]),
@@ -472,7 +467,7 @@ class TestMoorlet1D(unittest.TestCase):
         moorlet_vector = np.cos(self.frequency * (points - self.center)) \
             * np.exp(-0.5 * ((points - self.center) / self.spread) ** 2)
         self.assertTrue(np.all(values == moorlet_vector /
-                               self.moorlet.normalization))
+                               self.moorlet._normalization))
 
     def test_str(self):
         self.assertEqual(str(self.moorlet), 'Moorlet_1D')
@@ -483,7 +478,7 @@ class TestHaar1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[0, 2]])
         self.center = 1.0
         self.width = 1.0
-        self.haar = Haar_1D(self.domain, self.center, self.width)
+        self.haar = functions.Haar_1D(self.domain, self.center, self.width)
 
     def test_init(self):
         self.assertEqual(self.haar.center, self.center)
@@ -512,7 +507,7 @@ class TestRicker1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[0, 10]])
         self.center = 5
         self.width = 2
-        self.ricker = Ricker_1D(self.domain, self.center, self.width)
+        self.ricker = functions.Ricker_1D(self.domain, self.center, self.width)
 
     def test_init(self):
         self.assertEqual(self.ricker.center, self.center)
@@ -537,7 +532,7 @@ class TestDgaussian_1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[0, 10]])
         self.center = 5
         self.width = 2
-        self.dgaussian = Dgaussian_1D(self.domain, self.center, self.width)
+        self.dgaussian = functions.Dgaussian_1D(self.domain, self.center, self.width)
 
     def test_init(self):
         self.assertEqual(self.dgaussian.center, self.center)
@@ -568,7 +563,7 @@ class TestBoxcar1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[-1, 1]])
         self.center = 0
         self.width = 1
-        self.boxcar = Boxcar_1D(self.domain, self.center, self.width)
+        self.boxcar = functions.Boxcar_1D(self.domain, self.center, self.width)
 
     def test_init(self):
         self.assertEqual(self.boxcar.center, self.center)
@@ -614,17 +609,17 @@ class TestBump1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[-1, 1]])
         self.center = 0.0
         self.width = 1.0
-        self.bump = Bump_1D(self.domain, self.center, self.width)
+        self.bump = functions.Bump_1D(self.domain, self.center, self.width)
 
     def test_init(self):
         self.assertEqual(self.bump.center, self.center)
         self.assertEqual(self.bump.width, self.width)
-        self.assertIsNotNone(self.bump.normalization)
+        self.assertIsNotNone(self.bump._normalization)
 
     def test_compute_normalization(self):
         normalization = self.bump._compute_normalization()
         self.assertIsNotNone(normalization)
-        self.assertEqual(self.bump.normalization, normalization)
+        self.assertEqual(self.bump._normalization, normalization)
 
     def test_evaluate(self):
         r = np.array([0.0, 0.5, 0.9])
@@ -641,7 +636,7 @@ class TestDbump_1D(unittest.TestCase):
         self.center = 0.0
         self.width = 1.0
         self.unimodularity_precision = 1000
-        self.dbump = Dbump_1D(self.domain, self.center, self.width,
+        self.dbump = functions.Dbump_1D(self.domain, self.center, self.width,
                               self.unimodularity_precision)
 
     def test_init(self):
@@ -653,7 +648,7 @@ class TestDbump_1D(unittest.TestCase):
     def test_compute_area(self):
         # Compare with a known value
         known_area = 0.2219969080840397
-        self.assertAlmostEqual(self.dbump._compute_area(), known_area)
+        self.assertAlmostEqual(self.dbump._compute_normalization(), known_area)
 
     def test_evaluate(self):
         # Compare with known values
@@ -670,7 +665,7 @@ class TestTriangular1D(unittest.TestCase):
         self.domain = HyperParalelipiped([[0, 10]])
         self.center = 5
         self.width = 2
-        self.triangular = Triangular_1D(self.domain, self.center, self.width)
+        self.triangular = functions.Triangular_1D(self.domain, self.center, self.width)
 
     def test_init(self):
         self.assertEqual(self.triangular.center, self.center)
@@ -697,8 +692,8 @@ class TestTriangular1D(unittest.TestCase):
 class TestFourier(unittest.TestCase):
     def setUp(self):
         self.domain = HyperParalelipiped([[0, 1]])
-        self.fourier_sin = Fourier(self.domain, 'sin', 1)
-        self.fourier_cos = Fourier(self.domain, 'cos', 1)
+        self.fourier_sin = functions.Fourier(self.domain, 'sin', 1)
+        self.fourier_cos = functions.Fourier(self.domain, 'cos', 1)
 
     def test_init(self):
         self.assertEqual(self.fourier_sin.type, 'sin')

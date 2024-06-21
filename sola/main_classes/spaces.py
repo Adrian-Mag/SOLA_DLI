@@ -49,6 +49,7 @@ class Subspace():
             space (Space): The space in which the subspace exists.
             basis (list): The basis vectors defining the subspace.
         """
+        self.type = 'Subspace'
         self.space = space
         self.basis = basis
 
@@ -122,6 +123,7 @@ class DirectSumSpace(Space):
             spaces (tuple): A tuple of spaces that form the direct sum space.
         """
         super().__init__()
+        self.type = 'DirectSumSpace'
         self.spaces = spaces
 
     def random_member(self, args_list: list):
@@ -144,7 +146,7 @@ class DirectSumSpace(Space):
 
         return tuple(list_of_random_members)
 
-    def inner_product(self, member1: tuple, member2: tuple):
+    def inner_product(self, member1: tuple, member2: tuple, fineness=1000):
         """
         Calculates the inner product of `member1` and `member2` by summing up
         the inner products of their corresponding components in each space in
@@ -162,7 +164,10 @@ class DirectSumSpace(Space):
         inner_product = 0
         for sub_member1, sub_member2, space in zip(member1, member2,
                                                    self.spaces):
-            inner_product += space.inner_product(sub_member1, sub_member2)
+            if space.type == 'RN':
+                inner_product += space.inner_product(sub_member1, sub_member2)
+            elif space.type == 'PCb':
+                inner_product += space.inner_product(sub_member1, sub_member2, fineness)
 
         return inner_product
 
@@ -234,6 +239,7 @@ class PCb(Space):
         domain : HyperParalelipiped
             The domain on which the functions are defined.
         """
+        self.type = 'PCb'
         self.domain = domain
         self.members = {}
 
@@ -305,7 +311,7 @@ class PCb(Space):
                             ' not match the domain of the space')
         self.members[member_name] = member
 
-    def inner_product(self, member1, member2) -> float:
+    def inner_product(self, member1, member2, fineness=1000) -> float:
         """
         Calculates the inner product of two functions.
 
@@ -343,13 +349,13 @@ class PCb(Space):
                 lambda x: (member1.evaluate(x) * member2.evaluate(x))[0],
                 self.domain.bounds[0][0], self.domain.bounds[0][1])[0] """
             function_to_integrate = member1 * member2
-            return integration.integrate(function_to_integrate)
+            return integration.integrate(function_to_integrate, fineness)
         else:
             raise Exception('The inner product is not '
                             'implemented for this domain')
 
     def norm(self, member) -> float:
-        """
+        """a
         Calculates the norm of a function.
 
         Parameters
@@ -416,6 +422,7 @@ class RN(Space):
         --------
         >>> space = RN(3)
         """
+        self.type = 'RN'
         self.dimension = dimension
         self.members = {}
         self.subspaces = {}
