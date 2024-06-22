@@ -786,6 +786,9 @@ class Problem():
         fig.tight_layout()
         plt.show()
 
+    def a(self):
+        pass
+
     def resolution_analysis(self, enquiry_points: np.ndarray, widths:np.ndarray,
                             error_type: str, domain: domains.Domain,
                             physical_parameters_symbols: dict,
@@ -905,7 +908,6 @@ class Problem():
                                           norm=norm,
                                           physical_parameters_symbols=list(physical_parameters_symbols.values()), # noqa
                                           colorbar_format=LogFormatter(10, labelOnlyBase=False)) # noqa
-
 
     def plot_necessary_norm_bounds(self, relative_error: float,
                                    domain: domains.Domain,
