@@ -772,6 +772,7 @@ class Problem():
                 plt.xlim([target_kernel.domain.bounds[0][0],
                           target_kernel.domain.bounds[0][1]])
                 plt.ylim([y_min, y_max])
+                plt.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
                 plt.xticks(fontsize=20)
                 plt.yticks(fontsize=20)
                 plt.xlabel('Enquiry Points', fontsize=20)
