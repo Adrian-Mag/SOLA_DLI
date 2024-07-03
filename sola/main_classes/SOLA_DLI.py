@@ -545,13 +545,13 @@ class Problem():
         self.relative_errors2 = 100 * self.epsilon / property_range
 
     def _compute_resoltion_misfit(self):
-        resolution_misfit = np.zeros(self.P.dimension)
+        resolving_misfit = np.zeros(self.P.dimension)
         if self.H_diag is None:
             self._compute_H_diag()
         for index, target in enumerate(self.T.kernels):
-            resolution_misfit[index] = np.sqrt(self.H_diag[index]) / self.M.norm(target) # noqa
+            resolving_misfit[index] = np.sqrt(self.H_diag[index]) / self.M.norm(target) # noqa
 
-        return resolution_misfit
+        return resolving_misfit
 
     def plot_solution(self, enquiry_points):
         # Will plot the property bounds, the least norm property, the resolving
@@ -805,7 +805,7 @@ class Problem():
         - enquiry_points (np.ndarray): Array of enquiry points at which the resolution is evaluated.
         - widths (np.ndarray): Array of widths defining the scale of analysis around each enquiry point.
         - error_type (str): Type of error to compute and visualize. Supported values are 'absolute', 'relative',
-        and 'resolution_misfit'.
+        and 'resolving_misfit'.
         - domain (domains.Domain): The domain over which the analysis is performed, providing context such as
         bounds and discretization.
         - physical_parameters_symbols (dict): Dictionary mapping physical parameters to their symbols for
@@ -837,12 +837,12 @@ class Problem():
             if self.relative_errors2 is None:
                 self._compute_relative_errors2()
             errors = self.relative_errors2
-        elif error_type == 'resolution_misfit':
+        elif error_type == 'resolving_misfit':
             # Compute resolution misfit
             errors = self._compute_resoltion_misfit()
         else:
             raise ValueError('Error type must be absolute, '
-                             'relative, relative2 or resolution_misfit')
+                             'relative, relative2 or resolving_misfit')
 
         # Compute exclusion zone
         domain_min, domain_max = domain.bounds[0]
@@ -879,8 +879,8 @@ class Problem():
             norm = LogNorm(vmin=plot_range[0], vmax=plot_range[1])
             if ticks is None:
                 ticks = [1, 10, 100, 1000]
-        elif error_type == 'resolution_misfit':
-            title = 'Resolution Misfit'
+        elif error_type == 'resolving_misfit':
+            title = 'Resolving Misfit'
             if plot_range is None:
                 plot_range = [0.001, 1]
             norm = LogNorm(vmin=plot_range[0], vmax=plot_range[1])
