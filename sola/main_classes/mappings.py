@@ -418,7 +418,7 @@ class IntegralMapping(Mapping):
         """
         result = np.empty((self.codomain.dimension, 1))
         for index, kernel in enumerate(self.kernels):
-            result[index, 0] = self.domain.inner_product(kernel, member, fineness) # noqa
+            result[index, 0] = self.domain.inner_product(kernel, member) # noqa
         return result
 
     @property
@@ -585,6 +585,8 @@ class FunctionMapping(Mapping):
         """
         if self.domain.check_if_member(member):
             result = 0 * functions.Constant_1D(domain=self.kernels[0].domain)
+            if type(member) == int or type(member) == float:
+                return member * self.kernels[0]
             for index, member_i in enumerate(member):
                 result = result + member_i[0] * self.kernels[index]
             return result
