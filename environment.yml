@@ -1,4 +1,4 @@
-name: sola
+name: sola_dli
 channels:
   - defaults
 dependencies:
