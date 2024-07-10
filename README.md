@@ -14,11 +14,11 @@ sola package. Go the the directory in which you want to install sola and run:
 ```bash
 git clone https://github.com/Adrian-Mag/SOLA_DLI.git
 cd SOLA_DLI
-conda env create -f environment.yml
+conda env create --name sola_dli -f environment.yml
 conda activate sola
 ```
 
-Creating the conda environment might take a few minutes. After the installation
+Creating the conda environment might take a few minutes. You can name the conda env differently; simply change "sola_dli" to whatever name you want (this will not change the name of the package! only the name of the conda environment in which the package will be installed). After the installation
 is done, you can run the provided tests (while still in SOLA_DLI) using:
 
 ```bash
