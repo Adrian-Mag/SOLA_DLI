@@ -1,6 +1,6 @@
 # Sola
 
-Sola is a Python package for solving Backus-Gilbert SOLA inference problems.
+Sola is a Python package for solving Backus-Gilbert SOLA-DLI inference problems.
 
 As of right now, only 1D problems with no data errors are supported. Functionality for dealing with data errors and 2D/3D models will be implemented soon.
 
