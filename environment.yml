@@ -2,7 +2,6 @@ channels:
   - defaults
 dependencies:
   - python=3.11
-  - numpy
   - scipy=1.11.2
   - pandas
   - matplotlib
