@@ -5,9 +5,16 @@ from typing import Tuple, Union
 import numpy as np
 from abc import ABC, abstractmethod
 from scipy.interpolate import interp1d
-import matplotlib
+import os
 import matplotlib.pyplot as plt
-matplotlib.use('TkAgg')
+import matplotlib
+# Check if a display is available
+if os.environ.get('DISPLAY', '') == '':
+    print('No display found. Using non-interactive Agg backend.')
+    matplotlib.use('Agg')
+else:
+    print('Display found. Using TkAgg backend.')
+    matplotlib.use('TkAgg')
 from numba import jit
 
 
