@@ -1,6 +1,6 @@
 # Sola
 
-Sola is a Python package for solving Backus-Gilbert SOLA inference problems.
+Sola is a Python package for solving Backus-Gilbert SOLA-DLI inference problems.
 
 As of right now, only 1D problems with no data errors are supported. Functionality for dealing with data errors and 2D/3D models will be implemented soon.
 
@@ -14,11 +14,11 @@ sola package. Go the the directory in which you want to install sola and run:
 ```bash
 git clone https://github.com/Adrian-Mag/SOLA_DLI.git
 cd SOLA_DLI
-conda env create -f environment.yml
+conda env create --name sola_dli -f environment.yml
 conda activate sola
 ```
 
-Creating the conda environment might take a few minutes. After the installation
+Creating the conda environment might take a few minutes. You can name the conda env differently; simply change "sola_dli" to whatever name you want (this will not change the name of the package! only the name of the conda environment in which the package will be installed). After the installation
 is done, you can run the provided tests (while still in SOLA_DLI) using:
 
 ```bash

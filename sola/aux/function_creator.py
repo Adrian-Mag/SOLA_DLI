@@ -18,7 +18,9 @@ class FunctionDrawer:
         self.points = []
         self.domain = domain
         self.min_y, self.max_y = min_y, max_y
-        self.drawing = False  # Track whether the mouse button is pressed
+        self.drawing = False
+        # Track whether the mouse button is pressed
+        # sjkvsfvkusfheiugfwuighewghweioghiewuhgiewhiugfewioghitigtr
 
     def draw_function(self):
         self.points = []

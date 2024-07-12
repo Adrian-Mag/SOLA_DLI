@@ -612,8 +612,7 @@ class Piecewise_1D(Function):
         Plots the piecewise function.
         """
         plt.plot(self.domain.mesh, self.evaluate(self.domain.mesh,
-                                                 check_if_in_domain=False,
-                                                 return_points=True))
+                                                 check_if_in_domain=False))
         plt.show()
 
     def __str__(self) -> str:
