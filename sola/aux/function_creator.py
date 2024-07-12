@@ -1,11 +1,17 @@
-import matplotlib
+import os
 import matplotlib.pyplot as plt
+import matplotlib
+# Check if a display is available
+if os.environ.get('DISPLAY', '') == '':
+    print('No display found. Using non-interactive Agg backend.')
+    matplotlib.use('Agg')
+else:
+    print('Display found. Using TkAgg backend.')
+    matplotlib.use('TkAgg')
 import numpy as np
 from scipy.interpolate import interp1d
 from sola.main_classes.domains import HyperParalelipiped
 from sola.main_classes.functions import Interpolation_1D
-matplotlib.use('tkagg')
-
 
 def as_function(values: np.ndarray, domain: np.ndarray) -> callable:
     if np.array_equal(values.shape, domain.shape):
